@@ -1,6 +1,6 @@
 using System;
 
-namespace TrainingProject.Web
+namespace DeliveryClub.Web
 {
     public class WeatherForecast
     {

@@ -1,8 +1,7 @@
-﻿using System;
-using Microsoft.Extensions.DependencyInjection;
-using TrainingProject.Data;
+﻿using Microsoft.Extensions.DependencyInjection;
+using DeliveryClub.Data;
 
-namespace TrainingProject.Domain.Logic
+namespace DeliveryClub.Domain.Logic
 {
     public static class DomainLogicExtensions
     {

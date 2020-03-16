@@ -1,13 +1,13 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\TrainingProject.Common\TrainingProject.Common.csproj" />
-      <ProjectReference Include="..\TrainingProject.Data\TrainingProject.Data.csproj" />
-      <ProjectReference Include="..\TrainingProject.Domain\TrainingProject.Domain.csproj" />
+      <ProjectReference Include="..\DeliveryClub.Common\DeliveryClub.Common.csproj" />
+      <ProjectReference Include="..\DeliveryClub.Data\DeliveryClub.Data.csproj" />
+      <ProjectReference Include="..\DeliveryClub.Domain\DeliveryClub.Domain.csproj" />
     </ItemGroup>
 
     <ItemGroup>
