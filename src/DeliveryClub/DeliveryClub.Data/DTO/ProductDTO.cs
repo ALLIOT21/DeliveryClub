@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DeliveryClub.Data.DTO
 {
-    public class DishDTO
+    public class ProductDTO
     {
         int Id { get; set; }
 
