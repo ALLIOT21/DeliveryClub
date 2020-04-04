@@ -12,7 +12,7 @@ namespace DeliveryClub.Domain.Logic
         {
             services.AddDataServices(configuration);
             services.AddScoped<IGuestService, GuestService>();
-            //configure your Domain Logic Layer services here
+            
             return services;
         }
     }

@@ -10,7 +10,7 @@ namespace DeliveryClub.Data.Context
 {
     public class ApplicationDbContext : IdentityDbContext, IApplicationDbContext
     {
-        public ApplicationDbContext(DbContextOptions options) : base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
             Database.Migrate();
         }

@@ -6,9 +6,9 @@ namespace DeliveryClub.Domain.Logic.Services
 {
     public class GuestService : IGuestService
     {
-        private readonly IApplicationDbContext _dbContext;
+        private readonly ApplicationDbContext _dbContext;
 
-        public GuestService(IApplicationDbContext context)
+        public GuestService(ApplicationDbContext context)
         {
             _dbContext = context;
         }

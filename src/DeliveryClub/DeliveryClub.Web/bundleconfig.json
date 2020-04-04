@@ -1,0 +1,11 @@
+[
+  {
+    "outputFileName": "wwwroot/css/site/bundle.css",
+    "inputFiles": [
+      "wwwroot/css/site/content/content.css",
+      "wwwroot/css/site/header/header-div.css",
+      "wwwroot/css/site/header/home-div.css",
+      "wwwroot/css/site/header/login-div.css"
+    ]
+  }  
+]

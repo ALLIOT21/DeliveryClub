@@ -1,23 +1,32 @@
-﻿@{
-    Layout = null;
-}
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 
 <html>
     <head>
         <meta name="viewport" content="width=device-width" />
         <title>Delivery Club</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link rel="stylesheet" href="~/css/reset.css"/>
+        <link rel="stylesheet" href="~/css/bootstrap.css"/>
+        <link rel="stylesheet" href="~/css/site/bundle.css"/>
     </head>
-<body>
-    <header>
-        <h1>Delivery Club</h1>
-        <partial name="_LoginPartial" />
-        <p>Log in</p>
-        <p>Register</p>
-    </header>
+    <body>
+        <header>
+            <div class="header-div">
+                <div class="home-div">
+                    <a asp-action="Index"><h1>Delivery Club</h1></a>
+                </div>
+                <div class="login-div">
+                    <partial name="_LoginPartial" />
+                </div>
+            </div>                 
+        </header>
+        <div class="content">            
+            @RenderBody()
+        </div>
+        
+        @if (IsSectionDefined("scripts"))
+        {
+            RenderSection("scripts");
+        }
+    </body>
 
-@RenderBody()
-</body>
 </html>

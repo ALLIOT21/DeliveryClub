@@ -1,8 +1,6 @@
 using AutoMapper;
 using DeliveryClub.Data.Context;
-using DeliveryClub.Data.DTO.ActorsDTO;
 using DeliveryClub.Domain.Logic;
-using DeliveryClub.Domain.Models.Actors;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -21,14 +19,14 @@ namespace DeliveryClub.Web
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDomainServices(Configuration);
 
-            services.AddIdentityCore<IdentityUser>()
+            services.AddDefaultIdentity<IdentityUser>()
                 .AddRoles<IdentityRole>()
-                .AddDefaultTokenProviders();
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders(); 
 
             services.AddRazorPages();
             services.AddOpenApiDocument();
@@ -51,6 +49,7 @@ namespace DeliveryClub.Web
 
             app.UseAuthorization();
             app.UseAuthentication();
+            app.UseStaticFiles();
 
             app.UseEndpoints(endpoints =>
             {
