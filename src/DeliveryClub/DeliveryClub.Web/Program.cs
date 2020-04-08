@@ -3,12 +3,14 @@ using Microsoft.Extensions.Hosting;
 using Serilog;
 using System;
 using Microsoft.Extensions.DependencyInjection;
+using System.Threading.Tasks;
+using DeliveryClub.Infrastructure.Initialization;
 
 namespace DeliveryClub.Web
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             Log.Logger = new LoggerConfiguration()
             .Enrich.FromLogContext()
@@ -17,8 +19,14 @@ namespace DeliveryClub.Web
             
             try
             {
-                Log.Information("Starting up");
-                CreateHostBuilder(args).Build().Run();
+                IHost host = CreateHostBuilder(args).Build();
+
+                using (IServiceScope scope = host.Services.CreateScope())
+                {
+                    await AppStart.Run(scope.ServiceProvider);
+                }
+
+                host.Run();
             }
             catch (Exception ex)
             {

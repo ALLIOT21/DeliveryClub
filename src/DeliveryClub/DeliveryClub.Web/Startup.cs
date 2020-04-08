@@ -1,8 +1,10 @@
 using AutoMapper;
 using DeliveryClub.Data.Context;
 using DeliveryClub.Domain.Logic;
+using DeliveryClub.Infrastructure.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,7 +25,17 @@ namespace DeliveryClub.Web
         {
             services.AddDomainServices(Configuration);
 
-            services.AddDefaultIdentity<IdentityUser>()
+            services.AddDefaultIdentity<IdentityUser>(options => {
+                options.Password = new PasswordOptions
+                {
+                    RequireDigit = false,
+                    RequiredLength = 0,
+                    RequiredUniqueChars = 0,
+                    RequireLowercase = false,
+                    RequireUppercase = false,
+                    RequireNonAlphanumeric = false,
+                };
+            })
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders(); 
@@ -32,6 +44,9 @@ namespace DeliveryClub.Web
             services.AddOpenApiDocument();
             services.AddControllersWithViews();
             services.AddAutoMapper(typeof(Startup).Assembly);
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            services.Configure<SuperUser>(Configuration.GetSection("SuperUser"));
         }
 
 

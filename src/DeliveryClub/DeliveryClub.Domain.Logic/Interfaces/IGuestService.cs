@@ -6,6 +6,6 @@ namespace DeliveryClub.Domain.Logic.Interfaces
 {
     public interface IGuestService
     {
-
+        string GetUserRole();
     }
 }
