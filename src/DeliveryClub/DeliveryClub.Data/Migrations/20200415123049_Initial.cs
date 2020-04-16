@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DeliveryClub.Data.Migrations
 {
-    public partial class AddedAppUser : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -52,7 +52,8 @@ namespace DeliveryClub.Data.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ReviewRating = table.Column<int>(nullable: false)
+                    ReviewRating = table.Column<int>(nullable: false),
+                    UserId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -75,6 +76,18 @@ namespace DeliveryClub.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_RestaurantAdditionalInfos", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserRestaurants",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(nullable: false),
+                    RestaurantId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserRestaurants", x => new { x.UserId, x.RestaurantId });
                 });
 
             migrationBuilder.CreateTable(
@@ -123,8 +136,8 @@ namespace DeliveryClub.Data.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(nullable: false),
-                    ProviderKey = table.Column<string>(nullable: false),
+                    LoginProvider = table.Column<string>(maxLength: 128, nullable: false),
+                    ProviderKey = table.Column<string>(maxLength: 128, nullable: false),
                     ProviderDisplayName = table.Column<string>(nullable: true),
                     UserId = table.Column<string>(nullable: false)
                 },
@@ -168,8 +181,8 @@ namespace DeliveryClub.Data.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<string>(nullable: false),
-                    LoginProvider = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(nullable: false),
+                    LoginProvider = table.Column<string>(maxLength: 128, nullable: false),
+                    Name = table.Column<string>(maxLength: 128, nullable: false),
                     Value = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -181,6 +194,27 @@ namespace DeliveryClub.Data.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RegisteredUsers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(nullable: true),
+                    Surname = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RegisteredUsers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RegisteredUsers_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -219,6 +253,58 @@ namespace DeliveryClub.Data.Migrations
                         name: "FK_Restaurants_RestaurantAdditionalInfos_InfoId",
                         column: x => x.InfoId,
                         principalTable: "RestaurantAdditionalInfos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Admins",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(nullable: true),
+                    RestaurantId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Admins", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Admins_Restaurants_RestaurantId",
+                        column: x => x.RestaurantId,
+                        principalTable: "Restaurants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Admins_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Dispatchers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(nullable: true),
+                    RestaurantId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Dispatchers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Dispatchers_Restaurants_RestaurantId",
+                        column: x => x.RestaurantId,
+                        principalTable: "Restaurants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Dispatchers_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -366,6 +452,16 @@ namespace DeliveryClub.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Admins_RestaurantId",
+                table: "Admins",
+                column: "RestaurantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Admins_UserId",
+                table: "Admins",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
                 column: "RoleId");
@@ -405,6 +501,16 @@ namespace DeliveryClub.Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Dispatchers_RestaurantId",
+                table: "Dispatchers",
+                column: "RestaurantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Dispatchers_UserId",
+                table: "Dispatchers",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OrderedProducts_OrderId",
                 table: "OrderedProducts",
                 column: "OrderId");
@@ -440,6 +546,11 @@ namespace DeliveryClub.Data.Migrations
                 column: "ProductGroupId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_RegisteredUsers_UserId",
+                table: "RegisteredUsers",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Restaurants_InfoId",
                 table: "Restaurants",
                 column: "InfoId");
@@ -459,6 +570,9 @@ namespace DeliveryClub.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Admins");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
             migrationBuilder.DropTable(
@@ -474,10 +588,16 @@ namespace DeliveryClub.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Dispatchers");
+
+            migrationBuilder.DropTable(
                 name: "OrderedProducts");
 
             migrationBuilder.DropTable(
                 name: "PaymentMethodDTO");
+
+            migrationBuilder.DropTable(
+                name: "RegisteredUsers");
 
             migrationBuilder.DropTable(
                 name: "Reviews");
@@ -486,16 +606,19 @@ namespace DeliveryClub.Data.Migrations
                 name: "SpecializationDTO");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoles");
+                name: "UserRestaurants");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "Orders");
 
             migrationBuilder.DropTable(
                 name: "PortionPrices");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "Products");

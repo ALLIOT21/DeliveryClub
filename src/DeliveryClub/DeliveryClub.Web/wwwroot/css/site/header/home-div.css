@@ -1,3 +1,8 @@
 ﻿.home-div {
     flex-grow : 1;
 }
+
+.home-div_logo-h1__size_m {
+    display : block;
+    width : 13vw;
+}

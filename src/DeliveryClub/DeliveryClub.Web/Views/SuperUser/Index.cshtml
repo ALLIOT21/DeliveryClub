@@ -1,15 +1,46 @@
-﻿
+﻿@model IEnumerable<DeliveryClub.Web.ViewModels.GetAdminViewModel>
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Special Users</h1>
-<ul class="nav nav-tabs" id="tab-container" data-active-tab="">
-    <li class="nav-item">
-        <a class="nav-link active" id="admins-tab" href="" data-toggle="tab">Administrators</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" id="dispatchers-tab" href="" data-toggle="tab">Dispatchers</a>
-    </li>
-</ul>
+<div class="superuser-div">
+    <h2>Administrators</h2>
+    <a class="superuser-div_create-a__size_m" id="createSpecialUser-a" asp-action="CreateAdmin" asp-controller="SuperUser">Create</a>
+    <table class="table superuser-div_specialusers-table__fixed">
+        <thead class="thead-dark">
+            <tr>
+                <th>
+                    Login
+                </th>
+                <th>
+                    Restaurant
+                </th>
+                <th>
+                    Options
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var admin in Model)
+            {
+            <tr>
+                <td>
+                    @admin.Email
+                </td>
+                <td>
+                    @admin.RestaurantName
+                </td>
+                <td>
+                    <a class="specialusers-table_option-a__no-highlight" asp-action="Update">✏️</a>
+                    <a class="specialusers-table_option-a__no-highlight" asp-action="Delete">🗑️</a>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script src="~/js/tabs.js"></script>
+
+
 

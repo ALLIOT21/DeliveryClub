@@ -1,14 +1,13 @@
-﻿using DeliveryClub.Data.DTO.EntitiesDTO;
-using DeliveryClub.Data.DTO.ActorsDTO;
+﻿using DeliveryClub.Data.DTO.ActorsDTO;
+using DeliveryClub.Data.DTO.EntitiesDTO;
+using DeliveryClub.Data.DTO.Enumerations;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using DeliveryClub.Data.DTO.Enumerations;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DeliveryClub.Data.Context
 {
-    public class ApplicationDbContext : IdentityDbContext, IApplicationDbContext
+    public class ApplicationDbContext : IdentityDbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
@@ -52,5 +51,11 @@ namespace DeliveryClub.Data.Context
         public DbSet<RestaurantDTO> Restaurants { get; set; }
 
         public DbSet<ReviewDTO> Reviews { get; set; }
+
+        public DbSet<AdminDTO> Admins { get; set; }
+
+        public DbSet<DispatcherDTO> Dispatchers { get; set; }
+
+        public DbSet<RegisteredUserDTO> RegisteredUsers { get; set; }
     }
 }

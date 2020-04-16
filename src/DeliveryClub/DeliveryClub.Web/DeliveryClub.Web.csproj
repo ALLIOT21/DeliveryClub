@@ -38,7 +38,6 @@
 
     <ItemGroup>
       <Folder Include="wwwroot\css\site\footer\" />
-      <Folder Include="wwwroot\js\" />
     </ItemGroup>
 
     <ProjectExtensions><VisualStudio><UserProperties properties_4launchsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>

@@ -29,7 +29,7 @@ namespace DeliveryClub.Web
                 options.Password = new PasswordOptions
                 {
                     RequireDigit = false,
-                    RequiredLength = 0,
+                    RequiredLength = 2,
                     RequiredUniqueChars = 0,
                     RequireLowercase = false,
                     RequireUppercase = false,

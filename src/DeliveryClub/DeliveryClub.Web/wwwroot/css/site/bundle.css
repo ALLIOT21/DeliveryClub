@@ -14,6 +14,27 @@
     flex-grow : 1;
 }
 
+.home-div_logo-h1__size_m {
+    display : block;
+    width : 13vw;
+}
+
 .login-div {
     flex-grow : 2;
+}
+
+.superuser-div_create-a__size_m {
+    display : block;
+    font-size : 24px;
+    width : 4vw;
+    margin-top : 2vh;
+    margin-bottom : 2vh;
+}
+
+.superuser-div_specialusers-table__fixed {
+    table-layout : fixed;
+}
+
+.specialusers-table_option-a__no-highlight:hover {
+    text-decoration : none;
 }

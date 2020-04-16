@@ -26,8 +26,8 @@ namespace DeliveryClub.Infrastructure.Initialization
 
         private static async Task EnsureUsersAndRoles(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, SuperUser superUser)
         {
-            await EnsureSuperUser(userManager, superUser);
             await EnsureRoles(roleManager);
+            await EnsureSuperUser(userManager, superUser);            
         }
 
         private static async Task EnsureRoles(RoleManager<IdentityRole> roleManager)

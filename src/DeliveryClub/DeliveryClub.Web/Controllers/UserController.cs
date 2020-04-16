@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DeliveryClub.Web.Controllers
 {
-    [Authorize(Roles = "User")]
     public class UserController : Controller
     {
         public IActionResult Index()
