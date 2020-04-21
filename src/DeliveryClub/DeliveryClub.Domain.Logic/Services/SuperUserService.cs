@@ -8,9 +8,6 @@ using DeliveryClub.Domain.Models.Actors;
 using DeliveryClub.Domain.Models.Entities;
 using DeliveryClub.Infrastructure.Mapping;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -32,19 +29,7 @@ namespace DeliveryClub.Domain.Logic.Services
             _mapper = new Mapper(Assembly.GetExecutingAssembly());
         }
 
-        public async Task<IdentityResult> CreateAdminAndRestaurant(CreateAdminModel model)
-        {
-            var result = await CreateIdentityUser(model);
-            if (result.Item2.Succeeded)
-            {
-                var restaurant = await CreateRestaurant();
-                await CreateAdmin(result.Item1, restaurant);
-                await _dbContext.SaveChangesAsync();
-            }
-            return result.Item2;
-        }
-
-        public IEnumerable<Admin> GetAdmins()
+        public IEnumerable<GetAdminModel> GetAdmins()
         {
             var adminsDto = _dbContext.Admins.ToList();
             foreach (var adminDto in adminsDto)
@@ -52,23 +37,92 @@ namespace DeliveryClub.Domain.Logic.Services
                 adminDto.User = _dbContext.Users.Find(adminDto.UserId);
                 adminDto.Restaurant = _dbContext.Restaurants.Find(adminDto.RestaurantId);
             }
+
             var admins = new List<Admin>();
             foreach (var ad in adminsDto)
             {
                 admins.Add(_mapper.Map<AdminDTO, Admin>(ad));
             }
-            return admins;
+
+            var adminsView = new List<GetAdminModel>();
+            foreach (var ad in admins)
+            {
+                adminsView.Add(new GetAdminModel()
+                {
+                    Id = ad.Id,
+                    RestaurantName = ad.Restaurant.Name,
+                    Email = ad.User.Email
+                });
+            }
+
+            return adminsView;
+        }
+
+        public async Task<UpdateAdminModel> GetAdmin(int id)
+        {
+            var adminDto = await _dbContext.Admins.FindAsync(id);
+            adminDto.User = _dbContext.Users.Find(adminDto.UserId);
+            adminDto.Restaurant = _dbContext.Restaurants.Find(adminDto.RestaurantId);
+            var updateAdminModel = new UpdateAdminModel()
+            {
+                OldEmail = adminDto.User.Email,
+            };
+            return updateAdminModel;
+        }
+
+        public async Task<IdentityResult> CreateAdminAndRestaurant(CreateAdminModel model)
+        {
+            var result = await CreateIdentityUser(model);
+            if (result.Item2.Succeeded)
+            {
+                var restaurant = CreateRestaurant();
+                await CreateAdmin(result.Item1, restaurant);
+                await _dbContext.SaveChangesAsync();
+            }
+            return result.Item2;
+        }
+        
+        public async Task<IdentityResult> UpdateAdmin(UpdateAdminModel model)
+        {
+            var iuser = _dbContext.Users.Where(u => u.Email == model.OldEmail).FirstOrDefault();
+            var passwordValidationResult = ValidatePassword(_userManager, iuser, model.Password);
+            if (passwordValidationResult.Succeeded)
+            {
+                iuser.Email = model.NewEmail;
+                iuser.PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(iuser, model.Password);
+                var updateResult = await _userManager.UpdateAsync(iuser);
+                if (updateResult.Succeeded)
+                {
+                    await _dbContext.SaveChangesAsync();
+                }
+                return updateResult;
+            }
+            return passwordValidationResult;
+            
+        }
+
+        public async Task DeleteAdmin(int id)
+        {
+            var admin = _dbContext.Admins.Find(id);
+            _dbContext.Restaurants.Remove(_dbContext.Restaurants.Find(admin.RestaurantId));
+            _dbContext.Users.Remove(_dbContext.Users.Find(admin.UserId));
+            await _dbContext.SaveChangesAsync();
         }
 
         private async Task<(IdentityUser, IdentityResult)> CreateIdentityUser(CreateAdminModel model)
         {
             var iuser = new IdentityUser { UserName = model.Email, Email = model.Email };
-            var createResult = await _userManager.CreateAsync(iuser, model.Password);
-            if (createResult.Succeeded)
+            var passwordValidationResult = ValidatePassword(_userManager, iuser, model.Password);
+            if (passwordValidationResult.Succeeded)
             {
-                await _userManager.AddToRoleAsync(iuser, Role.Admin);                
+                var createResult = await _userManager.CreateAsync(iuser, model.Password);
+                if (createResult.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(iuser, Role.Admin);
+                }
+                return (iuser, createResult);
             }
-            return (iuser, createResult);
+            return (iuser, passwordValidationResult);
         }
 
         private async Task<Admin> CreateAdmin(IdentityUser iuser, Restaurant restaurant)
@@ -84,11 +138,17 @@ namespace DeliveryClub.Domain.Logic.Services
             return _mapper.Map<AdminDTO, Admin>(result.Entity);
         }
 
-        private async Task<Restaurant> CreateRestaurant()
+        private Restaurant CreateRestaurant()
         {
-            var restaurant = new Restaurant();
-            var result = await _dbContext.Restaurants.AddAsync(_mapper.Map<Restaurant, RestaurantDTO>(restaurant));
-            return _mapper.Map<RestaurantDTO, Restaurant>(result.Entity);
+            var restaurant = new Restaurant();            
+            return restaurant;
+        }        
+
+        private IdentityResult ValidatePassword(UserManager<IdentityUser> userManager, IdentityUser user, string password)
+        {
+            var passwordValidator = new PasswordValidator<IdentityUser>();
+            var passwordValidationResult = passwordValidator.ValidateAsync(userManager, user, password);
+            return passwordValidationResult.Result;
         }        
     }
 }

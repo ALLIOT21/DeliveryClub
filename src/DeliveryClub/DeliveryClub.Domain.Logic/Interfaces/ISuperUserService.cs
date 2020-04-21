@@ -8,8 +8,14 @@ namespace DeliveryClub.Domain.Logic.Interfaces
 {
     public interface ISuperUserService
     {
+        IEnumerable<GetAdminModel> GetAdmins();
+
+        Task<UpdateAdminModel> GetAdmin(int id);
+
         Task<IdentityResult> CreateAdminAndRestaurant(CreateAdminModel model);
 
-        IEnumerable<Admin> GetAdmins();
+        Task<IdentityResult> UpdateAdmin(UpdateAdminModel model);
+
+        Task DeleteAdmin(int id);
     }
 }

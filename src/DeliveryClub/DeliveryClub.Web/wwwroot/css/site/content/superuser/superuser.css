@@ -6,10 +6,21 @@
     margin-bottom : 2vh;
 }
 
-.superuser-div_specialusers-table__fixed {
+.superuser-div_create-a__no-highlight:hover {
+    text-decoration : none;
+}
+
+.superuser-div_admins-table__fixed {
     table-layout : fixed;
 }
 
-.specialusers-table_option-a__no-highlight:hover {
-    text-decoration : none;
+.admin-table_option-a__no-highlight:hover {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.admin-table_option-column {
+    display: flex;
+    flex-direction : row;
+    flex-wrap : wrap;
 }

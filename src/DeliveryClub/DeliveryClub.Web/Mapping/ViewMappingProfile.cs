@@ -9,6 +9,8 @@ namespace DeliveryClub.Web.Mapping
         public ViewMappingProfile()
         {
             CreateMap<CreateAdminViewModel, CreateAdminModel>().ReverseMap();
+            CreateMap<GetAdminViewModel, GetAdminModel>().ReverseMap();
+            CreateMap<UpdateAdminViewModel, UpdateAdminModel>().ReverseMap();
         }
     }
 }

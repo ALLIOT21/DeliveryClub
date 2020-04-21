@@ -4,5 +4,11 @@
 
 .home-div_logo-h1__size_m {
     display : block;
-    width : 13vw;
+    width : auto;
+    
+}
+
+.home-div_logo-a__size_m:hover {
+    text-decoration: none;
+    cursor: pointer;
 }

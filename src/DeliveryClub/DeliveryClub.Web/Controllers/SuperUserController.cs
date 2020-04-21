@@ -1,9 +1,10 @@
 ﻿using DeliveryClub.Domain.AuxiliaryModels;
 using DeliveryClub.Domain.Logic.Interfaces;
-using DeliveryClub.Domain.Models.Actors;
 using DeliveryClub.Infrastructure.Mapping;
 using DeliveryClub.Web.ViewModels;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -23,54 +24,71 @@ namespace DeliveryClub.Web.Controllers
 
         public IActionResult Index()
         {
-            return View(GetAdminsView(_superUserService.GetAdmins()));
+            var adminsView = new List<GetAdminViewModel>();
+            foreach (var ad in _superUserService.GetAdmins())
+            {
+                adminsView.Add(_mapper.Map<GetAdminModel, GetAdminViewModel>(ad));
+            }
+            return View(adminsView);
         }
 
         [HttpGet]
         public IActionResult CreateAdmin()
         {
             return View();
-        }       
+        }
 
         [HttpPost]
         public async Task<IActionResult> CreateAdmin(CreateAdminViewModel model)
-        {            
+        {
             if (ModelState.IsValid)
             {
-                var result = await _superUserService.CreateAdminAndRestaurant(_mapper.Map<CreateAdminViewModel, CreateAdminModel>(model));
-                if (result.Succeeded)
+                var createResult = await _superUserService.CreateAdminAndRestaurant(_mapper.Map<CreateAdminViewModel, CreateAdminModel>(model));
+                if (createResult.Succeeded)
                 {
                     return RedirectToAction("CreateAdmin");
-                }
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(string.Empty, error.Description);
                 }                
+                AddModelErrors(ModelState, createResult);                                             
             }
-            return View(model);                        
+            return View(model);
         }
 
-        public IActionResult UpdateAdmin()
+        [HttpGet]
+        public IActionResult UpdateAdmin(int id)
         {
-            return View();
+            var admin = _superUserService.GetAdmin(id);
+            return View(_mapper.Map<UpdateAdminModel, UpdateAdminViewModel>(admin.Result));
         }
-
-        public IActionResult DeleteAdmin()
+        
+        [HttpPost]
+        public async Task<IActionResult> UpdateAdmin(UpdateAdminViewModel model)
         {
-            return View();
-        }        
-
-        private IEnumerable<GetAdminViewModel> GetAdminsView(IEnumerable<Admin> admins)
-        {
-            var result = new List<GetAdminViewModel>();
-            foreach (var admin in admins)
+            if (ModelState.IsValid)
             {
-                var adminView = new GetAdminViewModel();
-                adminView.Email = admin.User.Email;
-                adminView.RestaurantName = admin.Restaurant.Name;
-                result.Add(adminView);
+                var updateResult = await _superUserService.UpdateAdmin(_mapper.Map<UpdateAdminViewModel, UpdateAdminModel>(model));
+                if (updateResult.Succeeded)
+                {
+                    return RedirectToAction(nameof(Index));
+                }                
+                AddModelErrors(ModelState, updateResult);                            
             }
-            return result;
+            return View(model);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteAdmin(int id)
+        {
+            await _superUserService.DeleteAdmin(id);
+            return RedirectToAction(nameof(Index));
+        }
+
+        private void AddModelErrors(ModelStateDictionary modelState, IdentityResult result)
+        {
+            foreach (var error in result.Errors)
+            {
+                modelState.AddModelError(string.Empty, error.Description);
+            }
+        }
+
     }
 }

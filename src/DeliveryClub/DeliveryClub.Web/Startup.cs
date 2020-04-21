@@ -49,7 +49,6 @@ namespace DeliveryClub.Web
             services.Configure<SuperUser>(Configuration.GetSection("SuperUser"));
         }
 
-
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())

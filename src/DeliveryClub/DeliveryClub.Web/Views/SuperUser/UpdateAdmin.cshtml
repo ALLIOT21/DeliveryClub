@@ -1,0 +1,21 @@
+﻿@model DeliveryClub.Web.ViewModels.UpdateAdminViewModel
+@{
+    ViewData["Title"] = "Update";
+}
+
+<h2>Update an administrator</h2>
+
+<form method="post" asp-action="UpdateAdmin">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="form-group">
+        <p>E-mail:</p>
+        <input type="text" asp-for="NewEmail" value="@Model.OldEmail" class="input-group-text" />
+    </div>
+    <div class="form-group">
+        <p>Password:</p>
+        <input type="password" asp-for="Password" value="" class="input-group-text">
+    </div>
+    <input type="hidden" asp-for="OldEmail" value="@Model.OldEmail">
+    <input type="submit" class="btn" value="Update">
+</form>
+
