@@ -10,9 +10,13 @@ namespace DeliveryClub.Domain.Models.Entities
 
         public string Name { get; set; }
 
+        public double DeliveryCost { get; set; }
+
+        public double MinimalOrderPrice { get; set; }
+
         public virtual HashSet<Specialization> Specializations { get; set; }
 
-        public RestaurantAdditionalInfo AdditionalInfo { get; set; }
+        public RestaurantAdditionalInfo RestaurantAdditionalInfo { get; set; }
 
         public IEnumerable<ProductGroup> Menu { get; set; }
 

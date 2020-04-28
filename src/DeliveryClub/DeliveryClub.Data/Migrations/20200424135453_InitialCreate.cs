@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DeliveryClub.Data.Migrations
 {
-    public partial class Initial : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -52,7 +52,7 @@ namespace DeliveryClub.Data.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ReviewRating = table.Column<int>(nullable: false),
+                    ReviewRating = table.Column<int>(nullable: true),
                     UserId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -61,33 +61,32 @@ namespace DeliveryClub.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RestaurantAdditionalInfos",
+                name: "PortionPrices",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Description = table.Column<string>(nullable: true),
-                    DeliveryCost = table.Column<double>(nullable: false),
-                    MinimalOrderPrice = table.Column<double>(nullable: false),
-                    DeliveryMaxTime = table.Column<TimeSpan>(nullable: true),
-                    OrderTimeBegin = table.Column<TimeSpan>(nullable: true),
-                    OrderTimeEnd = table.Column<TimeSpan>(nullable: true)
+                    Portion = table.Column<string>(nullable: false),
+                    Price = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RestaurantAdditionalInfos", x => x.Id);
+                    table.PrimaryKey("PK_PortionPrices", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserRestaurants",
+                name: "Restaurants",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(nullable: false),
-                    RestaurantId = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: true),
+                    MinimalOrderPrice = table.Column<double>(nullable: true),
+                    DeliveryCost = table.Column<double>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserRestaurants", x => new { x.UserId, x.RestaurantId });
+                    table.PrimaryKey("PK_Restaurants", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -218,52 +217,12 @@ namespace DeliveryClub.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PaymentMethodDTO",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PaymentMethod = table.Column<int>(nullable: false),
-                    RestaurantAdditionalInfoDTOId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PaymentMethodDTO", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_PaymentMethodDTO_RestaurantAdditionalInfos_RestaurantAdditionalInfoDTOId",
-                        column: x => x.RestaurantAdditionalInfoDTOId,
-                        principalTable: "RestaurantAdditionalInfos",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Restaurants",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(nullable: true),
-                    InfoId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Restaurants", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Restaurants_RestaurantAdditionalInfos_InfoId",
-                        column: x => x.InfoId,
-                        principalTable: "RestaurantAdditionalInfos",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Admins",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<string>(nullable: true),
+                    UserId = table.Column<string>(nullable: false),
                     RestaurantId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -289,7 +248,7 @@ namespace DeliveryClub.Data.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<string>(nullable: true),
+                    UserId = table.Column<string>(nullable: false),
                     RestaurantId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -330,6 +289,29 @@ namespace DeliveryClub.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "RestaurantAdditionalInfos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Description = table.Column<string>(nullable: true),
+                    DeliveryMaxTime = table.Column<TimeSpan>(nullable: true),
+                    OrderTimeBegin = table.Column<TimeSpan>(nullable: true),
+                    OrderTimeEnd = table.Column<TimeSpan>(nullable: true),
+                    RestaurantId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RestaurantAdditionalInfos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RestaurantAdditionalInfos_Restaurants_RestaurantId",
+                        column: x => x.RestaurantId,
+                        principalTable: "Restaurants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Reviews",
                 columns: table => new
                 {
@@ -351,23 +333,47 @@ namespace DeliveryClub.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "SpecializationDTO",
+                name: "Specializations",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Specialization = table.Column<int>(nullable: false),
-                    RestaurantDTOId = table.Column<int>(nullable: true)
+                    RestaurantId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SpecializationDTO", x => x.Id);
+                    table.PrimaryKey("PK_Specializations", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SpecializationDTO_Restaurants_RestaurantDTOId",
-                        column: x => x.RestaurantDTOId,
+                        name: "FK_Specializations_Restaurants_RestaurantId",
+                        column: x => x.RestaurantId,
                         principalTable: "Restaurants",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PortionPriceProductGroups",
+                columns: table => new
+                {
+                    ProductGroupId = table.Column<int>(nullable: false),
+                    PortionPriceId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PortionPriceProductGroups", x => new { x.PortionPriceId, x.ProductGroupId });
+                    table.ForeignKey(
+                        name: "FK_PortionPriceProductGroups_PortionPrices_PortionPriceId",
+                        column: x => x.PortionPriceId,
+                        principalTable: "PortionPrices",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PortionPriceProductGroups_ProductGroups_ProductGroupId",
+                        column: x => x.ProductGroupId,
+                        principalTable: "ProductGroups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -392,31 +398,23 @@ namespace DeliveryClub.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PortionPrices",
+                name: "PaymentMethods",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Portion = table.Column<string>(nullable: true),
-                    Price = table.Column<int>(nullable: false),
-                    ProductDTOId = table.Column<int>(nullable: true),
-                    ProductGroupDTOId = table.Column<int>(nullable: true)
+                    PaymentMethod = table.Column<int>(nullable: false),
+                    RestaurantAdditionalInfoId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PortionPrices", x => x.Id);
+                    table.PrimaryKey("PK_PaymentMethods", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PortionPrices_Products_ProductDTOId",
-                        column: x => x.ProductDTOId,
-                        principalTable: "Products",
+                        name: "FK_PaymentMethods_RestaurantAdditionalInfos_RestaurantAdditionalInfoId",
+                        column: x => x.RestaurantAdditionalInfoId,
+                        principalTable: "RestaurantAdditionalInfos",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_PortionPrices_ProductGroups_ProductGroupDTOId",
-                        column: x => x.ProductGroupDTOId,
-                        principalTable: "ProductGroups",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -445,6 +443,30 @@ namespace DeliveryClub.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_OrderedProducts_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PortionPriceProducts",
+                columns: table => new
+                {
+                    ProductId = table.Column<int>(nullable: false),
+                    PortionPriceId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PortionPriceProducts", x => new { x.PortionPriceId, x.ProductId });
+                    table.ForeignKey(
+                        name: "FK_PortionPriceProducts_PortionPrices_PortionPriceId",
+                        column: x => x.PortionPriceId,
+                        principalTable: "PortionPrices",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PortionPriceProducts_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
                         principalColumn: "Id",
@@ -521,19 +543,19 @@ namespace DeliveryClub.Data.Migrations
                 column: "PortionPriceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PaymentMethodDTO_RestaurantAdditionalInfoDTOId",
-                table: "PaymentMethodDTO",
-                column: "RestaurantAdditionalInfoDTOId");
+                name: "IX_PaymentMethods_RestaurantAdditionalInfoId",
+                table: "PaymentMethods",
+                column: "RestaurantAdditionalInfoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PortionPrices_ProductDTOId",
-                table: "PortionPrices",
-                column: "ProductDTOId");
+                name: "IX_PortionPriceProductGroups_ProductGroupId",
+                table: "PortionPriceProductGroups",
+                column: "ProductGroupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PortionPrices_ProductGroupDTOId",
-                table: "PortionPrices",
-                column: "ProductGroupDTOId");
+                name: "IX_PortionPriceProducts_ProductId",
+                table: "PortionPriceProducts",
+                column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductGroups_RestaurantId",
@@ -551,9 +573,10 @@ namespace DeliveryClub.Data.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Restaurants_InfoId",
-                table: "Restaurants",
-                column: "InfoId");
+                name: "IX_RestaurantAdditionalInfos_RestaurantId",
+                table: "RestaurantAdditionalInfos",
+                column: "RestaurantId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reviews_RestaurantId",
@@ -562,9 +585,9 @@ namespace DeliveryClub.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_SpecializationDTO_RestaurantDTOId",
-                table: "SpecializationDTO",
-                column: "RestaurantDTOId");
+                name: "IX_Specializations_RestaurantId",
+                table: "Specializations",
+                column: "RestaurantId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -594,7 +617,13 @@ namespace DeliveryClub.Data.Migrations
                 name: "OrderedProducts");
 
             migrationBuilder.DropTable(
-                name: "PaymentMethodDTO");
+                name: "PaymentMethods");
+
+            migrationBuilder.DropTable(
+                name: "PortionPriceProductGroups");
+
+            migrationBuilder.DropTable(
+                name: "PortionPriceProducts");
 
             migrationBuilder.DropTable(
                 name: "RegisteredUsers");
@@ -603,10 +632,7 @@ namespace DeliveryClub.Data.Migrations
                 name: "Reviews");
 
             migrationBuilder.DropTable(
-                name: "SpecializationDTO");
-
-            migrationBuilder.DropTable(
-                name: "UserRestaurants");
+                name: "Specializations");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -615,22 +641,22 @@ namespace DeliveryClub.Data.Migrations
                 name: "Orders");
 
             migrationBuilder.DropTable(
+                name: "RestaurantAdditionalInfos");
+
+            migrationBuilder.DropTable(
                 name: "PortionPrices");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Products");
 
             migrationBuilder.DropTable(
-                name: "Products");
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "ProductGroups");
 
             migrationBuilder.DropTable(
                 name: "Restaurants");
-
-            migrationBuilder.DropTable(
-                name: "RestaurantAdditionalInfos");
         }
     }
 }

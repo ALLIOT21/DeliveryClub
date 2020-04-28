@@ -34,6 +34,14 @@ namespace DeliveryClub.Data.Context
             builder
                 .Entity<OrderedProductDTO>()
                 .HasKey(o => new { o.ProductId, o.OrderId, o.PortionPriceId });
+
+            builder
+                .Entity<PortionPriceProductsDTO>()
+                .HasKey(o => new { o.PortionPriceId, o.ProductId });
+
+            builder
+                .Entity<PortionPriceProductGroupsDTO>()
+                .HasKey(o => new { o.PortionPriceId, o.ProductGroupId });
         }
 
         public DbSet<OrderDTO> Orders { get; set; }
@@ -41,6 +49,10 @@ namespace DeliveryClub.Data.Context
         public DbSet<OrderedProductDTO> OrderedProducts { get; set; }
 
         public DbSet<PortionPriceDTO> PortionPrices { get; set; }
+
+        public DbSet<PortionPriceProductsDTO> PortionPriceProducts { get; set; }
+
+        public DbSet<PortionPriceProductGroupsDTO> PortionPriceProductGroups { get; set; }
 
         public DbSet<ProductDTO> Products { get; set; }
 
@@ -50,6 +62,10 @@ namespace DeliveryClub.Data.Context
 
         public DbSet<RestaurantDTO> Restaurants { get; set; }
 
+        public DbSet<SpecializationDTO> Specializations { get; set; }
+
+        public DbSet<PaymentMethodDTO> PaymentMethods { get; set; }
+ 
         public DbSet<ReviewDTO> Reviews { get; set; }
 
         public DbSet<AdminDTO> Admins { get; set; }

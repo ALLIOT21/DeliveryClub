@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DeliveryClub.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200415123049_Initial")]
-    partial class Initial
+    [Migration("20200424135453_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -95,7 +95,7 @@ namespace DeliveryClub.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ReviewRating")
+                    b.Property<int?>("ReviewRating")
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
@@ -139,14 +139,14 @@ namespace DeliveryClub.Data.Migrations
                     b.Property<int>("PaymentMethod")
                         .HasColumnType("int");
 
-                    b.Property<int?>("RestaurantAdditionalInfoDTOId")
+                    b.Property<int>("RestaurantAdditionalInfoId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RestaurantAdditionalInfoDTOId");
+                    b.HasIndex("RestaurantAdditionalInfoId");
 
-                    b.ToTable("PaymentMethodDTO");
+                    b.ToTable("PaymentMethods");
                 });
 
             modelBuilder.Entity("DeliveryClub.Data.DTO.EntitiesDTO.PortionPriceDTO", b =>
@@ -162,19 +162,39 @@ namespace DeliveryClub.Data.Migrations
                     b.Property<int>("Price")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ProductDTOId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ProductGroupDTOId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductDTOId");
-
-                    b.HasIndex("ProductGroupDTOId");
-
                     b.ToTable("PortionPrices");
+                });
+
+            modelBuilder.Entity("DeliveryClub.Data.DTO.EntitiesDTO.PortionPriceProductGroupsDTO", b =>
+                {
+                    b.Property<int>("PortionPriceId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductGroupId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PortionPriceId", "ProductGroupId");
+
+                    b.HasIndex("ProductGroupId");
+
+                    b.ToTable("PortionPriceProductGroups");
+                });
+
+            modelBuilder.Entity("DeliveryClub.Data.DTO.EntitiesDTO.PortionPriceProductsDTO", b =>
+                {
+                    b.Property<int>("PortionPriceId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PortionPriceId", "ProductId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("PortionPriceProducts");
                 });
 
             modelBuilder.Entity("DeliveryClub.Data.DTO.EntitiesDTO.ProductDTO", b =>
@@ -227,17 +247,11 @@ namespace DeliveryClub.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<double>("DeliveryCost")
-                        .HasColumnType("float");
-
                     b.Property<TimeSpan?>("DeliveryMaxTime")
                         .HasColumnType("time");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("MinimalOrderPrice")
-                        .HasColumnType("float");
 
                     b.Property<TimeSpan?>("OrderTimeBegin")
                         .HasColumnType("time");
@@ -245,7 +259,13 @@ namespace DeliveryClub.Data.Migrations
                     b.Property<TimeSpan?>("OrderTimeEnd")
                         .HasColumnType("time");
 
+                    b.Property<int>("RestaurantId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("RestaurantId")
+                        .IsUnique();
 
                     b.ToTable("RestaurantAdditionalInfos");
                 });
@@ -257,15 +277,16 @@ namespace DeliveryClub.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("InfoId")
-                        .HasColumnType("int");
+                    b.Property<double?>("DeliveryCost")
+                        .HasColumnType("float");
+
+                    b.Property<double?>("MinimalOrderPrice")
+                        .HasColumnType("float");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("InfoId");
 
                     b.ToTable("Restaurants");
                 });
@@ -301,7 +322,7 @@ namespace DeliveryClub.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("RestaurantDTOId")
+                    b.Property<int>("RestaurantId")
                         .HasColumnType("int");
 
                     b.Property<int>("Specialization")
@@ -309,22 +330,9 @@ namespace DeliveryClub.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RestaurantDTOId");
+                    b.HasIndex("RestaurantId");
 
-                    b.ToTable("SpecializationDTO");
-                });
-
-            modelBuilder.Entity("DeliveryClub.Data.DTO.EntitiesDTO.UserRestaurantDTO", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("RestaurantId")
-                        .HasColumnType("int");
-
-                    b.HasKey("UserId", "RestaurantId");
-
-                    b.ToTable("UserRestaurants");
+                    b.ToTable("Specializations");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -583,20 +591,41 @@ namespace DeliveryClub.Data.Migrations
 
             modelBuilder.Entity("DeliveryClub.Data.DTO.EntitiesDTO.PaymentMethodDTO", b =>
                 {
-                    b.HasOne("DeliveryClub.Data.DTO.EntitiesDTO.RestaurantAdditionalInfoDTO", null)
+                    b.HasOne("DeliveryClub.Data.DTO.EntitiesDTO.RestaurantAdditionalInfoDTO", "RestaurantAdditionalInfo")
                         .WithMany("PaymentMethods")
-                        .HasForeignKey("RestaurantAdditionalInfoDTOId");
+                        .HasForeignKey("RestaurantAdditionalInfoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
-            modelBuilder.Entity("DeliveryClub.Data.DTO.EntitiesDTO.PortionPriceDTO", b =>
+            modelBuilder.Entity("DeliveryClub.Data.DTO.EntitiesDTO.PortionPriceProductGroupsDTO", b =>
                 {
-                    b.HasOne("DeliveryClub.Data.DTO.EntitiesDTO.ProductDTO", null)
-                        .WithMany("PortionPrices")
-                        .HasForeignKey("ProductDTOId");
+                    b.HasOne("DeliveryClub.Data.DTO.EntitiesDTO.PortionPriceDTO", "PortionPrice")
+                        .WithMany()
+                        .HasForeignKey("PortionPriceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("DeliveryClub.Data.DTO.EntitiesDTO.ProductGroupDTO", null)
+                    b.HasOne("DeliveryClub.Data.DTO.EntitiesDTO.ProductGroupDTO", "ProductGroup")
                         .WithMany("PortionPrices")
-                        .HasForeignKey("ProductGroupDTOId");
+                        .HasForeignKey("ProductGroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DeliveryClub.Data.DTO.EntitiesDTO.PortionPriceProductsDTO", b =>
+                {
+                    b.HasOne("DeliveryClub.Data.DTO.EntitiesDTO.PortionPriceDTO", "PortionPrice")
+                        .WithMany()
+                        .HasForeignKey("PortionPriceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DeliveryClub.Data.DTO.EntitiesDTO.ProductDTO", "Product")
+                        .WithMany("PortionPrices")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("DeliveryClub.Data.DTO.EntitiesDTO.ProductDTO", b =>
@@ -617,11 +646,13 @@ namespace DeliveryClub.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("DeliveryClub.Data.DTO.EntitiesDTO.RestaurantDTO", b =>
+            modelBuilder.Entity("DeliveryClub.Data.DTO.EntitiesDTO.RestaurantAdditionalInfoDTO", b =>
                 {
-                    b.HasOne("DeliveryClub.Data.DTO.EntitiesDTO.RestaurantAdditionalInfoDTO", "Info")
-                        .WithMany()
-                        .HasForeignKey("InfoId");
+                    b.HasOne("DeliveryClub.Data.DTO.EntitiesDTO.RestaurantDTO", "Restaurant")
+                        .WithOne("Info")
+                        .HasForeignKey("DeliveryClub.Data.DTO.EntitiesDTO.RestaurantAdditionalInfoDTO", "RestaurantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("DeliveryClub.Data.DTO.EntitiesDTO.ReviewDTO", b =>
@@ -635,9 +666,11 @@ namespace DeliveryClub.Data.Migrations
 
             modelBuilder.Entity("DeliveryClub.Data.DTO.EntitiesDTO.SpecializationDTO", b =>
                 {
-                    b.HasOne("DeliveryClub.Data.DTO.EntitiesDTO.RestaurantDTO", null)
+                    b.HasOne("DeliveryClub.Data.DTO.EntitiesDTO.RestaurantDTO", "Restaurant")
                         .WithMany("Specializations")
-                        .HasForeignKey("RestaurantDTOId");
+                        .HasForeignKey("RestaurantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

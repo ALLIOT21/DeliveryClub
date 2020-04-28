@@ -8,18 +8,18 @@ namespace DeliveryClub.Data.DTO.EntitiesDTO
     {
         public int Id { get; set; }
 
-        public string Description { get; set; }
+        public string Description { get; set; }        
 
-        public double DeliveryCost { get; set; }
-
-        public virtual HashSet<PaymentMethodDTO> PaymentMethods { get; set; }
-
-        public double MinimalOrderPrice { get; set; }
+        public virtual HashSet<PaymentMethodDTO> PaymentMethods { get; set; }        
 
         public TimeSpan? DeliveryMaxTime { get; set; }
 
         public TimeSpan? OrderTimeBegin { get; set; }
 
         public TimeSpan? OrderTimeEnd { get; set; }
+
+        public int RestaurantId { get; set; }
+
+        public RestaurantDTO Restaurant { get; set; }
     }
 }

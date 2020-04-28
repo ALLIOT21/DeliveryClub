@@ -10,7 +10,7 @@ namespace DeliveryClub.Data.DTO.EntitiesDTO
 
         public HashSet<OrderedProductDTO> OrderedProducts { get; set; }        
 
-        public int ReviewRating { get; set; }
+        public int? ReviewRating { get; set; }
 
         public string UserId { get; set; }
     }

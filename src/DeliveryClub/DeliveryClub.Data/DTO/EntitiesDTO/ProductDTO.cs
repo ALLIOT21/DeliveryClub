@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace DeliveryClub.Data.DTO.EntitiesDTO
 {
@@ -12,7 +10,7 @@ namespace DeliveryClub.Data.DTO.EntitiesDTO
 
         public string Description { get; set; }
 
-        public HashSet<PortionPriceDTO> PortionPrices { get; set; }
+        public HashSet<PortionPriceProductsDTO> PortionPrices { get; set; }
 
         public int ProductGroupId { get; set; }
 

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using DeliveryClub.Data.DTO.Enumerations;
+﻿using System.Collections.Generic;
 
 namespace DeliveryClub.Data.DTO.EntitiesDTO
 {
@@ -9,6 +7,10 @@ namespace DeliveryClub.Data.DTO.EntitiesDTO
         public int Id { get; set; }
 
         public string Name { get; set; }
+
+        public double? MinimalOrderPrice { get; set; }
+
+        public double? DeliveryCost { get; set; }
 
         public virtual HashSet<SpecializationDTO> Specializations { get; set; }
 

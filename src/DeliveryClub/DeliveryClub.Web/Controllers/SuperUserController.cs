@@ -78,7 +78,7 @@ namespace DeliveryClub.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> DeleteAdmin(int id)
         {
-            await _superUserService.DeleteAdmin(id);
+            await _superUserService.DeleteAdminAndRestaurant(id);
             return RedirectToAction(nameof(Index));
         }
 

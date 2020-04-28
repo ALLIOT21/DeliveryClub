@@ -76,7 +76,7 @@ namespace DeliveryClub.Domain.Logic.Services
             if (result.Item2.Succeeded)
             {
                 var restaurant = CreateRestaurant();
-                await CreateAdmin(result.Item1, restaurant);
+                await CreateAdmin(result.Item1.Id, restaurant.Result.Id);
                 await _dbContext.SaveChangesAsync();
             }
             return result.Item2;
@@ -101,11 +101,16 @@ namespace DeliveryClub.Domain.Logic.Services
             
         }
 
-        public async Task DeleteAdmin(int id)
+        public async Task DeleteAdminAndRestaurant(int id)
         {
             var admin = _dbContext.Admins.Find(id);
-            _dbContext.Restaurants.Remove(_dbContext.Restaurants.Find(admin.RestaurantId));
-            _dbContext.Users.Remove(_dbContext.Users.Find(admin.UserId));
+            var restaurant = _dbContext.Restaurants.Find(admin.RestaurantId);
+
+            DeleteAdmin(admin.Id);
+            DeleteRestaurant(restaurant.Id);
+            DeleteRestaurantInfo(restaurant.Id);         
+            DeleteIdentityUser(admin.UserId);
+
             await _dbContext.SaveChangesAsync();
         }
 
@@ -125,23 +130,24 @@ namespace DeliveryClub.Domain.Logic.Services
             return (iuser, passwordValidationResult);
         }
 
-        private async Task<Admin> CreateAdmin(IdentityUser iuser, Restaurant restaurant)
+        private async Task<Admin> CreateAdmin(string iuserId, int restaurantId)
         {
             var admin = new Admin()
             {
-                Restaurant = restaurant,
-                RestaurantId = restaurant.Id,
-                User = iuser,
-                UserId = iuser.Id,
+                RestaurantId = restaurantId,
+                UserId = iuserId,
             };
             var result = await _dbContext.Admins.AddAsync(_mapper.Map<Admin, AdminDTO>(admin));
             return _mapper.Map<AdminDTO, Admin>(result.Entity);
         }
 
-        private Restaurant CreateRestaurant()
+        private async Task<Restaurant> CreateRestaurant()
         {
-            var restaurant = new Restaurant();            
-            return restaurant;
+            var restaurant = new Restaurant();
+            var createRestResult = await _dbContext.Restaurants.AddAsync(_mapper.Map<Restaurant, RestaurantDTO>(restaurant));
+            await _dbContext.SaveChangesAsync();
+            await CreateRestaurantAdditionalInfo(createRestResult.Entity.Id);
+            return _mapper.Map<RestaurantDTO, Restaurant>(_dbContext.Restaurants.Find(createRestResult.Entity.Id));
         }        
 
         private IdentityResult ValidatePassword(UserManager<IdentityUser> userManager, IdentityUser user, string password)
@@ -150,5 +156,37 @@ namespace DeliveryClub.Domain.Logic.Services
             var passwordValidationResult = passwordValidator.ValidateAsync(userManager, user, password);
             return passwordValidationResult.Result;
         }        
+
+        private async Task<RestaurantAdditionalInfo> CreateRestaurantAdditionalInfo(int restaurantId)
+        {
+            var info = new RestaurantAdditionalInfo
+            {
+                RestaurantId = restaurantId,
+            };
+            var createResult = await _dbContext.RestaurantAdditionalInfos.AddAsync(_mapper.Map<RestaurantAdditionalInfo, RestaurantAdditionalInfoDTO>(info));
+            await _dbContext.SaveChangesAsync();
+            return _mapper.Map<RestaurantAdditionalInfoDTO, RestaurantAdditionalInfo>(createResult.Entity);
+           
+        }
+
+        private void DeleteRestaurant(int id)
+        {
+            _dbContext.Restaurants.Remove(_dbContext.Restaurants.Find(id));            
+        }
+
+        private void DeleteRestaurantInfo(int id)
+        {
+            _dbContext.RestaurantAdditionalInfos.Remove(_dbContext.RestaurantAdditionalInfos.Where(o => o.RestaurantId == id).FirstOrDefault());
+        }
+
+        private void DeleteIdentityUser(string id)
+        {
+            _dbContext.Users.Remove(_dbContext.Users.Find(id));
+        }
+
+        private void DeleteAdmin(int id)
+        {
+            _dbContext.Admins.Remove(_dbContext.Admins.Find(id));
+        }
     }
 }

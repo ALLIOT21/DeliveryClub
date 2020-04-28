@@ -16,6 +16,6 @@ namespace DeliveryClub.Domain.Logic.Interfaces
 
         Task<IdentityResult> UpdateAdmin(UpdateAdminModel model);
 
-        Task DeleteAdmin(int id);
+        Task DeleteAdminAndRestaurant(int id);
     }
 }

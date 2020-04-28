@@ -23,6 +23,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\DeliveryClub.Common\DeliveryClub.Common.csproj" />
+      <ProjectReference Include="..\DeliveryClub.Domain\DeliveryClub.Domain.csproj" />
     </ItemGroup>
 
 </Project>

@@ -12,7 +12,7 @@ namespace DeliveryClub.Data.DTO.EntitiesDTO
 
         public HashSet<ProductDTO> Products { get; set; }
 
-        public HashSet<PortionPriceDTO> PortionPrices { get; set; }
+        public HashSet<PortionPriceProductGroupsDTO> PortionPrices { get; set; }
 
         public int RestaurantId { get; set; }
 

@@ -10,5 +10,9 @@ namespace DeliveryClub.Data.DTO.EntitiesDTO
         public int Id { get; set; }
 
         public PaymentMethod PaymentMethod { get; set; }
+
+        public int RestaurantAdditionalInfoId { get; set; }
+
+        public RestaurantAdditionalInfoDTO RestaurantAdditionalInfo { get; set; }
     }
 }

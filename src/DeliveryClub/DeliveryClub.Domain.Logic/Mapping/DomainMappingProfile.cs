@@ -15,6 +15,7 @@ namespace DeliveryClub.Domain.Logic.Mapping
         {
             CreateMap<Admin, AdminDTO>().ReverseMap();
             CreateMap<Restaurant, RestaurantDTO>().ReverseMap();
+            CreateMap<RestaurantAdditionalInfo, RestaurantAdditionalInfoDTO>().ReverseMap();
         }
     }
 }
