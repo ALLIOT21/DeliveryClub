@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using DeliveryClub.Data.DTO.Enumerations;
+﻿using DeliveryClub.Domain.Models.Enumerations;
 
 namespace DeliveryClub.Data.DTO.EntitiesDTO
 {

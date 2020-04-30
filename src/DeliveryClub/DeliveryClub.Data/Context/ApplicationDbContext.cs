@@ -1,6 +1,6 @@
 ﻿using DeliveryClub.Data.DTO.ActorsDTO;
 using DeliveryClub.Data.DTO.EntitiesDTO;
-using DeliveryClub.Data.DTO.Enumerations;
+using DeliveryClub.Domain.Models.Enumerations;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;

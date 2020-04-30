@@ -1,5 +1,4 @@
-﻿using DeliveryClub.Data.DTO.Enumerations;
-
+﻿using DeliveryClub.Domain.Models.Enumerations;
 
 namespace DeliveryClub.Data.DTO.EntitiesDTO
 {

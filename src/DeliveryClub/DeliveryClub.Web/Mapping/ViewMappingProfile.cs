@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
-using DeliveryClub.Domain.AuxiliaryModels;
-using DeliveryClub.Web.ViewModels;
+using DeliveryClub.Domain.AuxiliaryModels.SuperUser;
+using DeliveryClub.Web.ViewModels.SuperUser;
+using DeliveryClub.Web.ViewModels.Admin;
+using DeliveryClub.Domain.AuxiliaryModels.Admin;
 
 namespace DeliveryClub.Web.Mapping
 {
@@ -11,6 +13,9 @@ namespace DeliveryClub.Web.Mapping
             CreateMap<CreateAdminViewModel, CreateAdminModel>().ReverseMap();
             CreateMap<GetAdminViewModel, GetAdminModel>().ReverseMap();
             CreateMap<UpdateAdminViewModel, UpdateAdminModel>().ReverseMap();
+            CreateMap<RestaurantInfoViewModel, RestaurantInfoModel>().ReverseMap();
+            CreateMap<SpecializationViewModel, SpecializationModel>().ReverseMap();
+            CreateMap<PaymentMethodViewModel, PaymentMethodModel>().ReverseMap();
         }
     }
 }

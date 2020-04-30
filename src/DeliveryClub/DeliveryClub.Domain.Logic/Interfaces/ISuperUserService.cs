@@ -1,4 +1,5 @@
 ﻿using DeliveryClub.Domain.AuxiliaryModels;
+using DeliveryClub.Domain.AuxiliaryModels.SuperUser;
 using DeliveryClub.Domain.Models.Actors;
 using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;

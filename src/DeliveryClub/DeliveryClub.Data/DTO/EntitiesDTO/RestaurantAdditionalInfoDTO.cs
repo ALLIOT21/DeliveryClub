@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using DeliveryClub.Data.DTO.Enumerations;
 
 namespace DeliveryClub.Data.DTO.EntitiesDTO
 {

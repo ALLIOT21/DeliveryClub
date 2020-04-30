@@ -10,7 +10,7 @@ namespace DeliveryClub.Domain.Models.Entities
 
         public string Description { get; set; }
 
-        public virtual HashSet<PaymentMethod> PaymentMethods { get; set; }        
+        public HashSet<PaymentMethod> PaymentMethods { get; set; }        
 
         public TimeSpan? DeliveryMaxTime { get; set; }
 

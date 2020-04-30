@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace DeliveryClub.Domain.AuxiliaryModels
+namespace DeliveryClub.Web.ViewModels.SuperUser
 {
-    public class UpdateAdminModel
+    public class UpdateAdminViewModel
     {
         public string OldEmail { get; set; }
 

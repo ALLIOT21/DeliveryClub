@@ -8,11 +8,7 @@ namespace DeliveryClub.Domain.Models.Enumerations
     {
         Sushi, 
         Pizza, 
-        FastFood, 
-        Burgers,
-        Breakfast, 
-        Dinner, 
-        Desserts, 
-        Healthy
+        FastFood,
+        
     }
 }

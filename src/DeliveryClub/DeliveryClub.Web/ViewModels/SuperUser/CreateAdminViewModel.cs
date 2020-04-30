@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DeliveryClub.Web.ViewModels
+namespace DeliveryClub.Web.ViewModels.SuperUser
 {
     public class CreateAdminViewModel
     {

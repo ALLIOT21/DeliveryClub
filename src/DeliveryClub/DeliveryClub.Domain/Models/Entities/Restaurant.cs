@@ -14,7 +14,7 @@ namespace DeliveryClub.Domain.Models.Entities
 
         public double MinimalOrderPrice { get; set; }
 
-        public virtual HashSet<Specialization> Specializations { get; set; }
+        public HashSet<Specialization> Specializations { get; set; }
 
         public RestaurantAdditionalInfo RestaurantAdditionalInfo { get; set; }
 

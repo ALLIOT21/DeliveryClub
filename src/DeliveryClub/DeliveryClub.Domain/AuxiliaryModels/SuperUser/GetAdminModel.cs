@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 
-namespace DeliveryClub.Web.ViewModels
+namespace DeliveryClub.Domain.AuxiliaryModels.SuperUser
 {
-    public class GetAdminViewModel
+    public class GetAdminModel
     {
         public int Id { get; set; }
 

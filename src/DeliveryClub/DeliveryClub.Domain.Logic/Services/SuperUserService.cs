@@ -1,7 +1,7 @@
 ﻿using DeliveryClub.Data.Context;
 using DeliveryClub.Data.DTO.ActorsDTO;
 using DeliveryClub.Data.DTO.EntitiesDTO;
-using DeliveryClub.Domain.AuxiliaryModels;
+using DeliveryClub.Domain.AuxiliaryModels.SuperUser;
 using DeliveryClub.Domain.Logic.Interfaces;
 using DeliveryClub.Domain.Models;
 using DeliveryClub.Domain.Models.Actors;

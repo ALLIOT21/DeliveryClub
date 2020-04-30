@@ -6,8 +6,20 @@
       "wwwroot/css/site/header/header-div.css",
       "wwwroot/css/site/header/home-div.css",
       "wwwroot/css/site/header/login-div.css",
-      "wwwroot/css/site/content/superuser/superuser.css"      
+      "wwwroot/css/site/content/superuser/superuser.css",
+      "wwwroot/css/site/content/admin/admin.css"
     ]
+  },
+  {
+    "outputFileName": "wwwroot/js/site/bundle.js",
+    "inputFiles": [
+      "wwwroot/js/admin.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
   }
 
 ]
