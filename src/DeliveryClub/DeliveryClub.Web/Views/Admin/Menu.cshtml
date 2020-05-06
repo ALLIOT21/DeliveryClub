@@ -1,0 +1,60 @@
+﻿@model ICollection<DeliveryClub.Web.ViewModels.Admin.ProductGroupViewModel>
+@{
+    ViewData["Title"] = "Menu";
+}
+<ul class="nav nav-pills nav-fill" id="pills-tab" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link" href="/Admin" id="pills-info-tab" data-toggle="pill" role="tab" aria-controls="pills-home" onclick="ChangeTabs()">Info</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" href="/Admin/Menu" id="pills-menu-tab" data-toggle="pill" role="tab" aria-controls="pills-menu" onclick="ChangeTabs()">Menu</a>
+    </li>
+</ul>
+
+<div class="menu-content-header">
+    <h2>Menu</h2>
+</div>
+<div class="menu-content-create_group" id="div-create-product-group">
+    <button class="btn btn-primary" id="btn-create-menu-group" onclick="CreateMenuGroupFormDiv()">Create new menu group</button>
+</div>
+<div class="menu-content-menu">
+    @foreach (var pg in Model)
+    {
+    <div class="product-group">
+        <div class="product-group-title">
+            <div class="product-group-title-info">
+                <div class="product-group-title-info-name">
+                    <h2>@pg.Name</h2>
+                </div>
+                <div class="product-group-title-info-portion_prices">
+                    @foreach (var pp in pg.PortionPrices)
+                    {
+                        <div class="product-group-title-portion_price">
+                            <span>@pp.Portion</span>
+                            <span>—</span>
+                            <span>@pp.Price r.</span>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="product-group-title-options">
+                <button class="btn btn-secondary button-edit-product-group">
+                    Edit ✏️
+                </button>
+                <form method="post" asp-action="DeleteProductGroup">
+                    <input type="hidden" name="Id" value=@pg.Id />
+                    <button class="btn btn-secondary">
+                        Delete 🗑️
+                    </button>
+                </form>
+                
+            </div>
+        </div>
+        <div class="product-group-content">
+
+        </div>        
+    </div>
+    }            
+</div>
+<script src="~/js/site/bundle.js"></script>
+

@@ -8,12 +8,12 @@ using DeliveryClub.Domain.Models.Entities;
 using DeliveryClub.Domain.Models.Enumerations;
 using DeliveryClub.Infrastructure.Mapping;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DeliveryClub.Domain.Logic.Services
@@ -49,6 +49,65 @@ namespace DeliveryClub.Domain.Logic.Services
             var updatedRestaurant = await UpdateRestaurant(restaurant, restaurantInfoModel);
             var result = CreateRestaurantInfoModel(updatedRestaurant);
             return result;
+        }
+
+        public async Task<ProductGroupModel> CreateProductGroup(ClaimsPrincipal currentUser, ProductGroupModel model)
+        {
+            var currentIdentityUser = await GetCurrentIdentityUser(currentUser);
+            var admin = GetAdmin(currentIdentityUser);
+            var restaurant = GetRestaurant(admin);
+            var newProductGroup = CreateProductGroup(model, restaurant);
+
+            var newPortionPriceModels = new List<PortionPriceModel>();
+            foreach (var pp in newProductGroup.PortionPrices)
+            {
+                var newPortionPriceModel = new PortionPriceModel
+                {
+                    Id = pp.PortionPriceId,
+                    Portion = pp.PortionPrice.Portion,
+                    Price = pp.PortionPrice.Price,
+                };
+                newPortionPriceModels.Add(newPortionPriceModel);
+            }
+
+            var newProductGroupModel = new ProductGroupModel
+            {
+                Id = newProductGroup.Id,
+                Name = newProductGroup.Name,
+                PortionPrices = newPortionPriceModels,
+            };
+
+            await _dbContext.SaveChangesAsync();
+
+            return newProductGroupModel;
+        }
+
+        public async Task<ICollection<ProductGroupModel>> GetProductGroups(ClaimsPrincipal currentUser)
+        {
+            var currentIdentityUser = await GetCurrentIdentityUser(currentUser);
+            var admin = GetAdmin(currentIdentityUser);
+            var restaurant = GetRestaurant(admin);
+            var productGroups = GetProductGroupsFull(restaurant);
+            var result = CreateProductGroupModels(productGroups);
+
+            return result;
+        }
+
+        public async Task DeleteProductGroup(ClaimsPrincipal currentUser, int id)
+        {
+            var currentIdentityUser = await GetCurrentIdentityUser(currentUser);
+            var admin = GetAdmin(currentIdentityUser);
+            var restaurant = GetRestaurant(admin);
+
+            var productGroupDTO = GetProductGroupDTOById(id);
+            foreach (var pp in productGroupDTO.PortionPrices)
+            {
+                var resultPPPG = _dbContext.PortionPriceProductGroups.Remove(pp);
+                var resultPP = _dbContext.PortionPrices.Remove(pp.PortionPrice);
+            }
+            _dbContext.ProductGroups.Remove(productGroupDTO);
+
+            _dbContext.SaveChanges();
         }
 
         private Restaurant GetRestaurant(Admin admin)
@@ -109,32 +168,14 @@ namespace DeliveryClub.Domain.Logic.Services
         {
             var oldSpecializations = GetSpecializations(restaurant);
 
-            var toAdd = new HashSet<Specialization>();
-            var toDelete = new HashSet<Specialization>();
-            foreach (var osp in oldSpecializations)
+            foreach (var os in oldSpecializations)
             {
-                if (!newSpecializations.Contains(osp))
-                {
-                    toDelete.Add(osp);
-                }
+                DeleteSpecialization(restaurant, os);
             }
 
-            foreach (var nsp in newSpecializations)
+            foreach (var ns in newSpecializations)
             {
-                if (!oldSpecializations.Contains(nsp))
-                {
-                    toAdd.Add(nsp);
-                }
-            }
-
-            foreach (var ta in toAdd)
-            {
-                await CreateSpecialization(restaurant, ta);
-            }
-
-            foreach (var td in toDelete)
-            {
-                DeleteSpecialization(restaurant, td);
+                await CreateSpecialization(restaurant, ns);
             }
         }
 
@@ -142,32 +183,14 @@ namespace DeliveryClub.Domain.Logic.Services
         {
             var oldPaymentMethod = GetPaymentMethods(restaurantAdditionalInfo);
 
-            var toAdd = new HashSet<PaymentMethod>();
-            var toDelete = new HashSet<PaymentMethod>();
             foreach (var osp in oldPaymentMethod)
             {
-                if (!newPaymentMethods.Contains(osp))
-                {
-                    toDelete.Add(osp);
-                }
+                DeletePaymentMethod(restaurantAdditionalInfo, osp);
             }
 
             foreach (var nsp in newPaymentMethods)
             {
-                if (!oldPaymentMethod.Contains(nsp))
-                {
-                    toAdd.Add(nsp);
-                }
-            }
-
-            foreach (var ta in toAdd)
-            {
-                await CreatePaymentMethod(restaurantAdditionalInfo, ta);
-            }
-
-            foreach (var td in toDelete)
-            {
-                DeletePaymentMethod(restaurantAdditionalInfo, td);
+                await CreatePaymentMethod(restaurantAdditionalInfo, nsp);
             }
         }
 
@@ -179,50 +202,55 @@ namespace DeliveryClub.Domain.Logic.Services
             restaurant.MinimalOrderPrice = restaurantInfoModel.MinimalOrderPrice;
             var updateInfoResult = await UpdateRestaurantAdditionalInfo(restaurant.RestaurantAdditionalInfo, restaurantInfoModel);
             restaurant.RestaurantAdditionalInfo = updateInfoResult;
-            var updateResult = _dbContext.Restaurants.Update(_mapper.Map<Restaurant, RestaurantDTO>(restaurant));
+            var updateResultDTO = _dbContext.Restaurants.Update(_mapper.Map<Restaurant, RestaurantDTO>(restaurant));
+            var updateResult = _mapper.Map<RestaurantDTO, Restaurant>(updateResultDTO.Entity);
+            updateResult.Specializations = GetSpecializations(updateResult);
+            updateResult.RestaurantAdditionalInfo = GetRestaurantAdditionalInfo(updateResult);
             await _dbContext.SaveChangesAsync();
-            return _mapper.Map<RestaurantDTO, Restaurant>(updateResult.Entity);
-            
+            return updateResult;
         }
 
         private async Task<RestaurantAdditionalInfo> UpdateRestaurantAdditionalInfo(RestaurantAdditionalInfo restaurantAdditionalInfo, RestaurantInfoModel restaurantInfoModel)
         {
+            restaurantAdditionalInfo.Description = restaurantInfoModel.Description;
+            restaurantAdditionalInfo.DeliveryMaxTime = StringToTimeSpan(restaurantInfoModel.DeliveryMaxTime);
             restaurantAdditionalInfo.OrderTimeBegin = StringToTimeSpan(restaurantInfoModel.OrderTimeBegin);
             restaurantAdditionalInfo.OrderTimeEnd = StringToTimeSpan(restaurantInfoModel.OrderTimeEnd);
-            await UpdatePaymentMethods(restaurantAdditionalInfo, CreatePaymentMethodHashSet(restaurantInfoModel.PaymentMethods));
             var updateResult = _dbContext.RestaurantAdditionalInfos.Update(_mapper.Map<RestaurantAdditionalInfo, RestaurantAdditionalInfoDTO>(restaurantAdditionalInfo));
+            await UpdatePaymentMethods(restaurantAdditionalInfo, CreatePaymentMethodHashSet(restaurantInfoModel.PaymentMethods));
             return _mapper.Map<RestaurantAdditionalInfoDTO, RestaurantAdditionalInfo>(updateResult.Entity);
         }
 
         private RestaurantInfoModel CreateRestaurantInfoModel(Restaurant restaurant)
         {
-            var restaurantInfo = new RestaurantInfoModel()
-            {
-                Name = restaurant.Name,
-                Specializations = CreateSpecializationList(restaurant.Specializations),
-                DeliveryCost = restaurant.DeliveryCost,
-                MinimalOrderPrice = restaurant.MinimalOrderPrice,
-                Description = restaurant.RestaurantAdditionalInfo.Description,
-                PaymentMethods = CreatePaymentMethodList(restaurant.RestaurantAdditionalInfo.PaymentMethods),
-                DeliveryMaxTime = TimeSpanToString(restaurant.RestaurantAdditionalInfo.DeliveryMaxTime),
-                OrderTimeBegin = TimeSpanToString(restaurant.RestaurantAdditionalInfo.OrderTimeBegin),
-                OrderTimeEnd = TimeSpanToString(restaurant.RestaurantAdditionalInfo.OrderTimeEnd),
-            };
+            var restaurantInfo = new RestaurantInfoModel();
+            restaurantInfo.Name = restaurant.Name;
+            restaurantInfo.Specializations = CreateSpecializationList(restaurant.Specializations);
+            restaurantInfo.DeliveryCost = restaurant.DeliveryCost;
+            restaurantInfo.MinimalOrderPrice = restaurant.MinimalOrderPrice;
+            restaurantInfo.Description = restaurant.RestaurantAdditionalInfo.Description;
+            restaurantInfo.PaymentMethods = CreatePaymentMethodList(restaurant.RestaurantAdditionalInfo.PaymentMethods);
+            restaurantInfo.DeliveryMaxTime = TimeSpanToString(restaurant.RestaurantAdditionalInfo.DeliveryMaxTime);
+            restaurantInfo.OrderTimeBegin = TimeSpanToString(restaurant.RestaurantAdditionalInfo.OrderTimeBegin);
+            restaurantInfo.OrderTimeEnd = TimeSpanToString(restaurant.RestaurantAdditionalInfo.OrderTimeEnd);
             return restaurantInfo;
         }
 
         private List<SpecializationModel> CreateSpecializationList(HashSet<Specialization> specializations)
         {
             var result = new List<SpecializationModel>();
-            foreach (var sp in Enum.GetValues(typeof(Specialization)))
+            if (specializations != null)
             {
-                if (specializations.Contains((Specialization)sp))
+                foreach (var sp in Enum.GetValues(typeof(Specialization)))
                 {
-                    result.Add(new SpecializationModel { Specialization = (Specialization)sp, IsSelected = true });
-                }
-                else
-                {
-                    result.Add(new SpecializationModel { Specialization = (Specialization)sp, IsSelected = false });
+                    if (specializations.Contains((Specialization)sp))
+                    {
+                        result.Add(new SpecializationModel { Specialization = (Specialization)sp, IsSelected = true });
+                    }
+                    else
+                    {
+                        result.Add(new SpecializationModel { Specialization = (Specialization)sp, IsSelected = false });
+                    }
                 }
             }
             return result;
@@ -253,7 +281,7 @@ namespace DeliveryClub.Domain.Logic.Services
                 if (sp.IsSelected)
                 {
                     result.Add(sp.Specialization);
-                }          
+                }
             }
             return result;
         }
@@ -338,6 +366,138 @@ namespace DeliveryClub.Domain.Logic.Services
             }
             else
                 return null;
+        }
+
+        private ProductGroup CreateProductGroup(ProductGroupModel model, Restaurant restaurant)
+        {
+            var newProductGroup = new ProductGroup
+            {
+                Name = model.Name,
+                RestaurantId = restaurant.Id,
+            };
+            var newProductGroupDTO = _dbContext.ProductGroups.Add(_mapper.Map<ProductGroup, ProductGroupDTO>(newProductGroup));
+            _dbContext.SaveChanges();
+
+            var portionPrices = CreatePortionPrices(model.PortionPrices);
+            var portionPricesProductGroup = CreatePortionPricesProductGroup(portionPrices, _mapper.Map<ProductGroupDTO, ProductGroup>(newProductGroupDTO.Entity));
+
+            newProductGroup.PortionPrices = portionPricesProductGroup.ToHashSet();
+            return newProductGroup;
+        }
+
+        private ICollection<PortionPrice> CreatePortionPrices(IEnumerable<PortionPriceModel> portionPriceModels)
+        {
+            if (portionPriceModels != null)
+            {
+                var portionPrices = new List<PortionPrice>();
+                foreach (var pp in portionPriceModels)
+                {
+                    var portionPrice = new PortionPrice
+                    {
+                        Portion = pp.Portion,
+                        Price = pp.Price
+                    };
+                    portionPrices.Add(portionPrice);
+                }
+                return portionPrices;
+            }
+            return null;
+        }
+
+        private ICollection<PortionPriceProductGroup> CreatePortionPricesProductGroup(IEnumerable<PortionPrice> portionPrices, ProductGroup productGroup)
+        {
+            var portionPricesProductGroup = new List<PortionPriceProductGroup>();
+            foreach (var pp in portionPrices)
+            {
+                var newPortionPriceProductGroup = new PortionPriceProductGroup
+                {
+                    PortionPriceId = pp.Id,
+                    PortionPrice = pp,
+                    ProductGroupId = productGroup.Id,
+                };
+                portionPricesProductGroup.Add(newPortionPriceProductGroup);
+            }
+
+            var portionPricesProductGroupDTO = new List<PortionPriceProductGroupsDTO>();
+            foreach (var pppg in portionPricesProductGroup)
+            {
+                portionPricesProductGroupDTO.Add(_mapper.Map<PortionPriceProductGroup, PortionPriceProductGroupsDTO>(pppg));
+            }
+            _dbContext.PortionPriceProductGroups.AddRange(portionPricesProductGroupDTO);
+
+            var result = new List<PortionPriceProductGroup>();
+            foreach (var pppg in portionPricesProductGroupDTO)
+            {
+                result.Add(_mapper.Map<PortionPriceProductGroupsDTO, PortionPriceProductGroup>(pppg));
+            }
+
+            return result;
+        }
+
+        private ICollection<ProductGroup> GetProductGroupsFull(Restaurant restaurant)
+        {
+            var productGroupsDTO = _dbContext.ProductGroups
+                .Where(pg => pg.RestaurantId == restaurant.Id)
+                .ToList();
+
+            foreach (var pgdto in productGroupsDTO)
+            {
+                pgdto.PortionPrices = _dbContext.PortionPriceProductGroups
+                    .Where(pppg => pppg.ProductGroupId == pgdto.Id)
+                    .Include(pp => pp.PortionPrice)
+                    .ToHashSet();
+            }
+
+            var productGroups = new List<ProductGroup>();
+            foreach (var pgdto in productGroupsDTO)
+            {
+                productGroups.Add(_mapper.Map<ProductGroupDTO, ProductGroup>(pgdto));
+            }
+
+            return productGroups;
+        }
+
+        private ICollection<ProductGroupModel> CreateProductGroupModels(ICollection<ProductGroup> productGroups)
+        {
+            var result = new List<ProductGroupModel>();
+            foreach (var pg in productGroups)
+            {
+                var productGroupModel = new ProductGroupModel
+                {
+                    Id = pg.Id,
+                    Name = pg.Name,
+                    PortionPrices = CreatePortionPriceModels(pg.PortionPrices).ToList(),
+                };
+                result.Add(productGroupModel);
+            }
+            return result;
+        }    
+
+        private ICollection<PortionPriceModel> CreatePortionPriceModels(ICollection<PortionPriceProductGroup> portionPrices)
+        {
+            var result = new List<PortionPriceModel>();
+            foreach (var pp in portionPrices)
+            {
+                var ppm = new PortionPriceModel
+                {
+                    Id = pp.PortionPrice.Id,
+                    Portion = pp.PortionPrice.Portion,
+                    Price = pp.PortionPrice.Price,
+                };
+                result.Add(ppm);
+            }
+            return result;
+        }
+
+        private ProductGroupDTO GetProductGroupDTOById(int id)
+        {
+            var result = _dbContext.ProductGroups.Where(pg => pg.Id == id)
+                .FirstOrDefault();
+            result.PortionPrices = _dbContext.PortionPriceProductGroups.
+                Where(pp => pp.ProductGroupId == result.Id)
+                .Include(pp => pp.PortionPrice)
+                .ToHashSet();
+            return result;
         }
     }
 }

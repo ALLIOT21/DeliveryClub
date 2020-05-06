@@ -1,20 +1,26 @@
 .content {
     margin-left: 15vw;
     margin-right: 15vw;
+    padding-top: 2vh;
+    padding-left: 5vw;
+    padding-right: 5vw;
     padding-bottom: 5vh;
+}
+
+.center-div {
+    flex-grow: 10;
 }
 
 .header-div {
     display : flex;
     flex-direction : row;
     height : 10vh;
-    margin-left : 15vw;
-    margin-right : 15vw;
-    margin-top : 1vh;
-    margin-bottom : 5vh;
+    border-bottom : 1px solid rgb(200, 200, 200);
 }
 .home-div {
-    flex-grow : 1;
+    flex-grow: 1;
+    border-right: 1px solid rgb(200, 200, 200);
+    text-align : center;
 }
 
 .home-div_logo-h1__size_m {
@@ -63,7 +69,7 @@
 .info-div {
     background-color: rgb(219, 219, 219);
     border-radius: 25px;
-    width : 70%;
+    width : 100%;
     display: flex;
     flex-direction: column;
     word-wrap: break-word;
@@ -76,7 +82,7 @@
 }
 
 .primary_info {
-    
+    padding-top : 2vh;
 }
 
 .additional_info {
@@ -102,7 +108,7 @@
 }
 
 .edit-div {
-    width: 70%;
+    width: 100%;
     text-align: end;
     padding-top: 2vh;
 }
@@ -138,4 +144,121 @@
 
 .payment {
 
+}
+
+
+.menu-content-header {
+    padding-top: 2vh;
+}
+
+.menu-content-create_group {
+    padding-top: 2vh;
+}
+
+.menu-content-menu {
+    padding-top: 2vh;
+}
+
+.menu-content-create_group_active {
+    width: 40%;
+    border: solid 1px rgb(200, 200, 200);
+    padding-left: 1vw;
+    padding-right: 1vw;
+    padding-bottom: 2vh;
+}
+
+.display-none {
+    display: none;
+}
+
+.div-name {
+
+}
+
+.div-name-label {
+    display: inline-block;
+}
+
+.div-name-input {
+    display: inline-block;
+    padding-left: 1vw;
+}
+
+.div-button-portion_price {
+    padding-top: 1vh;
+}
+
+.div-button-create {
+    padding-top: 1vh;
+}
+
+.div-portion-price {
+    padding-top: 2vh;
+    padding-bottom: 2vh;
+    padding-left: 1vw;
+    padding-right: 1vw;
+    margin-bottom: 0.5vh;
+    width: 90%;
+    border: 1px solid rgb(200, 200, 200);
+}
+
+.div-portion {
+    display: inline-block;
+}
+
+.div-price {
+    display: inline-block;
+}
+
+.div-portion-price-label {
+    display: inline-block;
+    width : 30%;
+}
+
+.div-portion-price-input {
+    display: inline-block;
+}
+
+.product-group {
+    
+}
+
+.product-group-title {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    background-color: rgb(200, 200, 200);
+    padding: 1vh 1vw 1vh 1vw;
+    border-radius: 0.25rem;
+}
+
+.product-group-content {
+    align-items: end;
+}
+
+.product-group-title-info {
+    flex-grow : 1;
+    vertical-align: top;
+}
+
+.product-group-title-info-name {
+
+}
+
+.product-group-title-info-portion_prices {
+    
+}
+
+.product-group-title-options {
+    flex-grow: 1;
+    vertical-align : top;
+    text-align: end;
+}
+
+.product-group-title-portion_price {
+    
+}
+
+.button-edit-product-group {
+    margin-bottom: 0.5vh;
 }

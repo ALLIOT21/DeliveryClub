@@ -1,5 +1,7 @@
 ﻿.home-div {
-    flex-grow : 1;
+    flex-grow: 1;
+    border-right: 1px solid rgb(200, 200, 200);
+    text-align : center;
 }
 
 .home-div_logo-h1__size_m {

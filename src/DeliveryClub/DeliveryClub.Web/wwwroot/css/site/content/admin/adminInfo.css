@@ -5,7 +5,7 @@
 .info-div {
     background-color: rgb(219, 219, 219);
     border-radius: 25px;
-    width : 70%;
+    width : 100%;
     display: flex;
     flex-direction: column;
     word-wrap: break-word;
@@ -18,7 +18,7 @@
 }
 
 .primary_info {
-    
+    padding-top : 2vh;
 }
 
 .additional_info {
@@ -44,7 +44,7 @@
 }
 
 .edit-div {
-    width: 70%;
+    width: 100%;
     text-align: end;
     padding-top: 2vh;
 }
@@ -81,3 +81,4 @@
 .payment {
 
 }
+

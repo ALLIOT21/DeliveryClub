@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using DeliveryClub.Domain.AuxiliaryModels.Admin;
+﻿using DeliveryClub.Domain.AuxiliaryModels.Admin;
 using DeliveryClub.Domain.Logic.Interfaces;
-using DeliveryClub.Domain.Models.Enumerations;
 using DeliveryClub.Infrastructure.Mapping;
 using DeliveryClub.Web.ViewModels.Admin;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Threading.Tasks;
 
 namespace DeliveryClub.Web.Controllers
 {
@@ -28,35 +22,42 @@ namespace DeliveryClub.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            RestaurantInfoViewModel restaurantInfoMock = new RestaurantInfoViewModel
-            {
-                Name = "2 берега",
-                Specializations = new List<SpecializationViewModel> {
-                    new SpecializationViewModel { Specialization = Specialization.Pizza, IsSelected = true },
-                    new SpecializationViewModel { Specialization = Specialization.FastFood, IsSelected = false },
-                    new SpecializationViewModel { Specialization = Specialization.Sushi, IsSelected = false },
-                },
-                DeliveryCost = 0,
-                MinimalOrderPrice = 500,
-                Description = "Горячая пицца, свежие роллы или сочные бургеры для перекуса без хлопот дома или в офисе. Широкий ассортимент простых и понятных блюд европейской и паназиатской кухонь, приготовленных из свежайших продуктов по традиционным рецептам.",
-                PaymentMethods = new List<PaymentMethodViewModel> {
-                    new PaymentMethodViewModel { PaymentMethod = PaymentMethod.Card, IsSelected = true },
-                    new PaymentMethodViewModel { PaymentMethod = PaymentMethod.Cash, IsSelected = false },
-                },
-                DeliveryMaxTime = "45",
-                OrderTimeBegin = "08:30",
-                OrderTimeEnd = "22:30",
-            };
             var restaurantInfoModel = await _adminService.GetRestaurantInfo(HttpContext.User);
             var restaurantInfoViewModel = _mapper.Map<RestaurantInfoModel, RestaurantInfoViewModel>(restaurantInfoModel);
             return View(restaurantInfoViewModel);
+        }
+
+        public async Task<IActionResult> Menu()
+        {
+            var productGroups = await _adminService.GetProductGroups(HttpContext.User);
+            var productGroupsView = new List<ProductGroupViewModel>();
+            foreach (var pg in productGroups)
+            {
+                productGroupsView.Add(_mapper.Map<ProductGroupModel, ProductGroupViewModel>(pg));
+            }
+            return View(productGroupsView);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateProductGroup(ProductGroupViewModel model)
+        {
+            var newProductGroup = await _adminService.CreateProductGroup(HttpContext.User, _mapper.Map<ProductGroupViewModel, ProductGroupModel>(model));
+            var productGroupView = _mapper.Map<ProductGroupModel, ProductGroupViewModel>(newProductGroup);
+            return RedirectToAction(nameof(Menu));
         }
 
         [HttpPost]
         public async Task<IActionResult> UpdateRestaurant(RestaurantInfoViewModel model)
         {
             var updatedRestaurantInfo = await _adminService.UpdateRestaurantInfo(HttpContext.User, _mapper.Map<RestaurantInfoViewModel, RestaurantInfoModel>(model));
-            return await Index();
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteProductGroup(int id)
+        {
+            await _adminService.DeleteProductGroup(HttpContext.User, id);
+            return RedirectToAction(nameof(Menu));
         }
     }
 }

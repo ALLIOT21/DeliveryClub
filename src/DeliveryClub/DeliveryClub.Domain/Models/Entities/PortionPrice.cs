@@ -10,7 +10,7 @@ namespace DeliveryClub.Domain.Models.Entities
 
         public string Portion { get; set; }
 
-        public int Price { get; set; }
+        public double Price { get; set; }
 
     }
 }

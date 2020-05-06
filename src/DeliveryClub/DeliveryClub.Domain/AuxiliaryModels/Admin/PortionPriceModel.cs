@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DeliveryClub.Data.DTO.EntitiesDTO
+namespace DeliveryClub.Domain.AuxiliaryModels.Admin
 {
-    public class PortionPriceDTO
+    public class PortionPriceModel
     {
         public int Id { get; set; }
 

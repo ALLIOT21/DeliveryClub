@@ -3,9 +3,6 @@ using DeliveryClub.Data.DTO.ActorsDTO;
 using DeliveryClub.Data.DTO.EntitiesDTO;
 using DeliveryClub.Domain.Models.Actors;
 using DeliveryClub.Domain.Models.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DeliveryClub.Domain.Logic.Mapping
 {
@@ -13,9 +10,29 @@ namespace DeliveryClub.Domain.Logic.Mapping
     {
         public DomainMappingProfile()
         {
-            CreateMap<Admin, AdminDTO>().ReverseMap();
-            CreateMap<Restaurant, RestaurantDTO>().ReverseMap();
-            CreateMap<RestaurantAdditionalInfo, RestaurantAdditionalInfoDTO>().ReverseMap();
+            CreateMap<Admin, AdminDTO>()
+                .ReverseMap();
+
+            CreateMap<Restaurant, RestaurantDTO>()
+                .ForMember(m => m.Specializations, act => act.Ignore());
+
+            CreateMap<RestaurantDTO, Restaurant>()
+                .ForMember(m => m.Specializations, act => act.Ignore());
+
+            CreateMap<RestaurantAdditionalInfo, RestaurantAdditionalInfoDTO>()
+                .ForMember(m => m.PaymentMethods, act => act.Ignore());
+
+            CreateMap<RestaurantAdditionalInfoDTO, RestaurantAdditionalInfo>()
+                .ForMember(m => m.PaymentMethods, act => act.Ignore());
+
+            CreateMap<PortionPrice, PortionPriceDTO>()
+                .ReverseMap();
+
+            CreateMap<PortionPriceProductGroup, PortionPriceProductGroupsDTO>()
+                .ReverseMap();
+
+            CreateMap<ProductGroup, ProductGroupDTO>()
+                .ReverseMap();
         }
     }
 }

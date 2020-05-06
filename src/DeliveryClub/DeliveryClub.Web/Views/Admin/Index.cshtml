@@ -1,131 +1,138 @@
 ﻿@using DeliveryClub.Domain.Models.Enumerations
 @model DeliveryClub.Web.ViewModels.Admin.RestaurantInfoViewModel
-<form method="post" asp-action="UpdateRestaurant" id="form-update-restaurant">
-    <div class="primary_info">
-        <div class="info-label">
-            <h2>Primary info</h2>
-        </div>
-        <div class="info-div">
-            <div class="info-item">
-                <div class="info-item-title">
-                    <h5>Name: </h5>
-                </div>
-                <div class="info-item-content">
-                    <span class="is-visible to-edit" id="display-name">@Model.Name</span>
-                    <input type="text" class="info-input non-visible to-edit" asp-for="Name" id="edit-name"/>
-                </div>
-            </div>
-            <div class="info-item">
-                <div class="info-item-title">
-                    <h5>Specializations: </h5>
-                </div>
-                <div class="info-item-content">
-                    @for (int i = 0; i < Model.Specializations.Count; i++)
-                    {
-                        string specName = Enum.GetName(typeof(Specialization), Model.Specializations[i].Specialization);
-                    <div class="checkbox">
-                        @Html.CheckBoxFor(m => m.Specializations[i].IsSelected,
-                            new
-                            {
-                                @class = "checkbox-disabled specialization",
-                                @id = "spec" + specName,
-                                @value = specName,
-                                @disabled = true,
-                            })
-                        <label class="form-check-label" for="@specName">@specName</label>
-                        @Html.HiddenFor(m => m.Specializations[i].Specialization)
-                    </div>
-                    }
-                </div>
-            </div>
-            <div class="info-item">
-                <div class="info-item-title">
-                    <h5>Delivery cost: </h5>
-                </div>
-                <div class="info-item-content">
-                    <span class="is-visible to-edit" id="display-deliverycost">@Model.DeliveryCost</span>
-                    <input type="number" class="info-input non-visible to-edit" asp-for="DeliveryCost" id="edit-deliverycost"/>
-                </div>
-            </div>
-            <div class="info-item last-item">
-                <div class="info-item-title">
-                    <h5>Minimal order price: </h5>
-                </div>
-                <div class="info-item-content">
-                    <span class="is-visible to-edit" id="display-minorderprice">@Model.MinimalOrderPrice</span>
-                    <input type="number" class="info-input non-visible to-edit" asp-for="MinimalOrderPrice" id="edit-minorderprice"/>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="additional_info">
-        <div class="info-label">
-            <h2>Additional info</h2>
-        </div>
-        <div class="info-div">
-            <div class="info-item">
-                <div class="info-item-title">
-                    <h5>Description: </h5>
-                </div>
-                <div class="info-item-content">
-                    <span class="is-visible to-edit" id="display-description">@Model.Description</span>
-                    <textarea class="info-input info-textarea non-visible to-edit" asp-for="Description" id="edit-description" rows="3"></textarea>
-                </div>
-            </div>
-            <div class="info-item">
-                <div class="info-item-title">
-                    <h5>Payment methods: </h5>
-                </div>
-                <div class="info-item-content">
-                    @for (int i = 0; i < Model.PaymentMethods.Count; i++)
-                    {
-                        string paymentName = Enum.GetName(typeof(PaymentMethod), Model.PaymentMethods[i].PaymentMethod);
-                        <div class="checkbox">
-                            @Html.CheckBoxFor(m => m.PaymentMethods[i].IsSelected,
-                                new
-                                {
-                                    @class = "checkbox-disabled payment-method",
-                                    @id = "spec" + paymentName,
-                                    @value = paymentName,
-                                    @disabled = true,
-                                })
-                            <label class="form-check-label" for="@paymentName">@paymentName</label>
-                            @Html.HiddenFor(m => m.PaymentMethods[i].PaymentMethod)
-                        </div>
-                    }
-                </div>
-            </div>
-            <div class="info-item">
-                <div class="info-item-title">
-                    <h5>Delivery maximum time: </h5>
-                </div>
-                <div class="info-item-content">
-                    <span class="is-visible to-edit" id="display-deliverymaxtime">@Model.DeliveryMaxTime</span>
-                    <span class="is-visible to-edit"> min</span>
-                    <input class="info-input non-visible to-edit" asp-for="DeliveryMaxTime" type="time" id="edit-deliverymaxtime" />
-                    <span class="non-visible to-edit"> min</span>
-                </div>
-            </div>
-            <div class="info-item last-item">
-                <div class="info-item-title">
-                    <h5>Order time: </h5>
-                </div>                        
-                <div class="info-item-content">
-                    <span class="is-visible to-edit" id="display-ordertimebegin">@(Model.OrderTimeBegin)</span>
-                    <span class="is-visible to-edit">-</span>
-                    <span class="is-visible to-edit" id="display-ordertimeend">@(Model.OrderTimeEnd)</span>
-                    <input class="info-input non-visible to-edit" asp-for="OrderTimeBegin" type="time" id="edit-ordertimebegin"/>
-                    <span class="non-visible to-edit">-</span>
-                    <input class="info-input non-visible to-edit" asp-for="OrderTimeEnd" type="time" id="edit-ordertimeend"/>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="edit-div">
-        <button class="btn btn-primary to-edit is-visible" form="" onclick="setEditMode()">Edit ✏️</button>
-        <button class="btn btn-primary to-edit non-visible" form="form-update-restaurant">Save 💾</button>
-        <button class="btn btn-light to-edit non-visible" form="" onclick="setSaveMode()">Decline ✖</button>
-    </div>
 
-</form>
+<ul class="nav nav-pills nav-fill" id="pills-tab" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" href="/Admin" id="pills-info-tab" data-toggle="pill" role="tab" aria-controls="pills-home" onclick="ChangeTabs()">Info</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/Admin/Menu" id="pills-menu-tab" data-toggle="pill" role="tab" aria-controls="pills-menu" onclick="ChangeTabs()">Menu</a>
+    </li>
+</ul>
+
+<div class="tab-pane fade show active" id="pills-info" role="tabpanel">
+    <form method="post" asp-action="UpdateRestaurant" id="form-update-restaurant">
+        <div class="primary_info">
+            <div class="info-label">
+                <h2>Primary info</h2>
+            </div>
+            <div class="info-div">
+                <div class="info-item">
+                    <div class="info-item-title">
+                        <h5>Name: </h5>
+                    </div>
+                    <div class="info-item-content">
+                        <span class="is-visible to-edit" id="display-name">@Model.Name</span>
+                        <input type="text" class="info-input non-visible to-edit" asp-for="Name" id="edit-name" />
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-item-title">
+                        <h5>Specializations: </h5>
+                    </div>
+                    <div class="info-item-content">
+                        @for (int i = 0; i < Model.Specializations.Count; i++)
+                        {
+                            <div class="checkbox">
+                                @Html.CheckBoxFor(m => m.Specializations[i].IsSelected,
+                                    new
+                                    {
+                                        @class = "checkbox-disabled specialization",
+                                        @disabled = true,
+                                    })
+                                @Html.LabelFor(m => m.Specializations[i].IsSelected, Model.Specializations[i].Specialization.ToString())
+                                @Html.HiddenFor(m => m.Specializations[i].Specialization)
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-item-title">
+                        <h5>Delivery cost: </h5>
+                    </div>
+                    <div class="info-item-content">
+                        <span class="is-visible to-edit" id="display-deliverycost">@Model.DeliveryCost</span>
+                        <input type="number" class="info-input non-visible to-edit" asp-for="DeliveryCost" id="edit-deliverycost" />
+                    </div>
+                </div>
+                <div class="info-item last-item">
+                    <div class="info-item-title">
+                        <h5>Minimal order price: </h5>
+                    </div>
+                    <div class="info-item-content">
+                        <span class="is-visible to-edit" id="display-minorderprice">@Model.MinimalOrderPrice</span>
+                        <input type="number" class="info-input non-visible to-edit" asp-for="MinimalOrderPrice" id="edit-minorderprice" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="additional_info">
+            <div class="info-label">
+                <h2>Additional info</h2>
+            </div>
+            <div class="info-div">
+                <div class="info-item">
+                    <div class="info-item-title">
+                        <h5>Description: </h5>
+                    </div>
+                    <div class="info-item-content">
+                        <span class="is-visible to-edit" id="display-description">@Model.Description</span>
+                        <textarea class="info-input info-textarea non-visible to-edit" asp-for="Description" id="edit-description" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-item-title">
+                        <h5>Payment methods: </h5>
+                    </div>
+                    <div class="info-item-content">
+                        @for (int i = 0; i < Model.PaymentMethods.Count; i++)
+                        {
+                            <div class="checkbox">
+                                @Html.CheckBoxFor(m => m.PaymentMethods[i].IsSelected,
+                                    new
+                                    {
+                                        @class = "checkbox-disabled payment-method",
+                                        @disabled = true,
+                                    })
+                                @Html.LabelFor(m => m.PaymentMethods[i].IsSelected, Model.PaymentMethods[i].PaymentMethod.ToString())
+                                @Html.HiddenFor(m => m.PaymentMethods[i].PaymentMethod)
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-item-title">
+                        <h5>Delivery maximum time: </h5>
+                    </div>
+                    <div class="info-item-content">
+                        <span class="is-visible to-edit" id="display-deliverymaxtime">@Model.DeliveryMaxTime</span>
+                        <span class="is-visible to-edit"> min</span>
+                        <input class="info-input non-visible to-edit" asp-for="DeliveryMaxTime" type="time" id="edit-deliverymaxtime" />
+                        <span class="non-visible to-edit"> min</span>
+                    </div>
+                </div>
+                <div class="info-item last-item">
+                    <div class="info-item-title">
+                        <h5>Order time: </h5>
+                    </div>
+                    <div class="info-item-content">
+                        <span class="is-visible to-edit" id="display-ordertimebegin">@(Model.OrderTimeBegin)</span>
+                        <span class="is-visible to-edit">-</span>
+                        <span class="is-visible to-edit" id="display-ordertimeend">@(Model.OrderTimeEnd)</span>
+                        <input class="info-input non-visible to-edit" asp-for="OrderTimeBegin" type="time" id="edit-ordertimebegin" />
+                        <span class="non-visible to-edit">-</span>
+                        <input class="info-input non-visible to-edit" asp-for="OrderTimeEnd" type="time" id="edit-ordertimeend" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="edit-div">
+            <button class="btn btn-primary to-edit is-visible" form="" onclick="setEditMode()">Edit ✏️</button>
+            <button class="btn btn-primary to-edit non-visible" form="form-update-restaurant">Save 💾</button>
+            <button class="btn btn-light to-edit non-visible" form="" onclick="setSaveMode()">Decline ✖</button>
+        </div>
+
+    </form>
+</div>
+
 <script src="~/js/site/bundle.js"></script>

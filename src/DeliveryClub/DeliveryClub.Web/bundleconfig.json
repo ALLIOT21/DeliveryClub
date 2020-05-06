@@ -3,17 +3,21 @@
     "outputFileName": "wwwroot/css/site/bundle.css",
     "inputFiles": [
       "wwwroot/css/site/content/content.css",
+      "wwwroot/css/site/header/center-div.css",
       "wwwroot/css/site/header/header-div.css",
       "wwwroot/css/site/header/home-div.css",
       "wwwroot/css/site/header/login-div.css",
       "wwwroot/css/site/content/superuser/superuser.css",
-      "wwwroot/css/site/content/admin/admin.css"
+      "wwwroot/css/site/content/admin/adminInfo.css",
+      "wwwroot/css/site/content/admin/adminMenu.css"
     ]
   },
   {
     "outputFileName": "wwwroot/js/site/bundle.js",
     "inputFiles": [
-      "wwwroot/js/admin.js"
+      "wwwroot/js/adminInfo.js",
+      "wwwroot/js/adminMenu.js",
+      "wwwroot/js/adminTabs.js"
     ],
     "minify": {
       "enabled": true,

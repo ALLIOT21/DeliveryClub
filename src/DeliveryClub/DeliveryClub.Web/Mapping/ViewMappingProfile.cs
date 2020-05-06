@@ -16,6 +16,8 @@ namespace DeliveryClub.Web.Mapping
             CreateMap<RestaurantInfoViewModel, RestaurantInfoModel>().ReverseMap();
             CreateMap<SpecializationViewModel, SpecializationModel>().ReverseMap();
             CreateMap<PaymentMethodViewModel, PaymentMethodModel>().ReverseMap();
+            CreateMap<PortionPriceViewModel, PortionPriceModel>().ReverseMap();
+            CreateMap<ProductGroupViewModel, ProductGroupModel>().ReverseMap();
         }
     }
 }
