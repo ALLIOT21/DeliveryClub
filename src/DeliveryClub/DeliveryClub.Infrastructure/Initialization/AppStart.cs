@@ -62,6 +62,6 @@ namespace DeliveryClub.Infrastructure.Initialization
             {
                 await userManager.AddToRoleAsync(user, Role.SuperUser);
             }
-        }
+        }     
     }
 }

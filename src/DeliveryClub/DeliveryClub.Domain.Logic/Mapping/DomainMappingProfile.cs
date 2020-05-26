@@ -33,6 +33,12 @@ namespace DeliveryClub.Domain.Logic.Mapping
 
             CreateMap<ProductGroup, ProductGroupDTO>()
                 .ReverseMap();
+
+            CreateMap<Product, ProductDTO>()
+                .ReverseMap();
+
+            CreateMap<PortionPriceProduct, PortionPriceProductsDTO>()
+                .ReverseMap();
         }
     }
 }

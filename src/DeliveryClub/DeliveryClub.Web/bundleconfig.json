@@ -15,9 +15,12 @@
   {
     "outputFileName": "wwwroot/js/site/bundle.js",
     "inputFiles": [
-      "wwwroot/js/adminInfo.js",
-      "wwwroot/js/adminMenu.js",
-      "wwwroot/js/adminTabs.js"
+      "wwwroot/js/admin/Info.js",
+      "wwwroot/js/admin/MenuCreateProductGroup.js",
+      "wwwroot/js/admin/MenuEditProductGroup.js",
+      "wwwroot/js/admin/Tabs.js",
+      "wwwroot/js/admin/ProductCreate.js",
+      "wwwroot/js/admin/PortionPriceSwitch.js"
     ],
     "minify": {
       "enabled": true,

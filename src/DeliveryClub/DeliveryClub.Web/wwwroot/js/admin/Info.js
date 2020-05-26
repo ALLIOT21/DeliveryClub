@@ -1,8 +1,8 @@
 "use strict"
 
-function setEditMode() {
+function setEditModeIndex() {
     const toEditList = document.getElementsByClassName("to-edit");
-    toggleVisibilityClassesInList(toEditList);
+    toggleVisibilityClassesInListIndex(toEditList);
 
     const checkboxDisabledList = document.getElementsByClassName("checkbox-disabled");
     setDisabledAttributeToList(checkboxDisabledList, false);
@@ -13,9 +13,9 @@ function setEditMode() {
     fillEditFields();
 }
 
-function setSaveMode() {
+function setSaveModeIndex() {
     const toEditList = document.getElementsByClassName("to-edit");
-    toggleVisibilityClassesInList(toEditList);
+    toggleVisibilityClassesInListIndex(toEditList);
 
     const checkboxDisabledList = document.getElementsByClassName("checkbox-disabled");
     setDisabledAttributeToList(checkboxDisabledList, true);
@@ -24,13 +24,14 @@ function setSaveMode() {
     setCheckboxValues(getPaymentList());
 }
 
-function toggleVisibilityClassesInList(list)
+function toggleVisibilityClassesInListIndex(list)
 {
     const listLength = list.length;
     for (let i = 0; i < listLength; i++)
     {
         var item = list.item(i);
         item.classList.toggle("is-visible");
+        item.classList.toggle("inline");
         item.classList.toggle("non-visible");
     }
 }

@@ -1,0 +1,46 @@
+﻿@model DeliveryClub.Web.ViewModels.Admin.ProductViewModel
+
+@{
+    ViewData["Title"] = "View";
+}
+
+<h1>Create new product</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="CreateProduct" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group portion-prices">
+                
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductGroupName" class="control-label">Product Group</label>
+                <select asp-for="ProductGroupName" asp-items="@new SelectList(ViewBag.ProductGroupNames)" class="form-control"></select>
+                <span asp-validation-for="ProductGroupName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+<script src="~/js/site/bundle.js">
+</script>
+<script>
+    addPortionPrices();
+</script>

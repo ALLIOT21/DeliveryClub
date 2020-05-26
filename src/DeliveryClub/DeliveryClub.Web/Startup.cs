@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Globalization;
 
 namespace DeliveryClub.Web
 {
@@ -64,6 +65,10 @@ namespace DeliveryClub.Web
             app.UseAuthorization();
             app.UseAuthentication();
             app.UseStaticFiles();
+
+            app.UseRequestLocalization();
+            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
+            CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en-US");
 
             app.UseEndpoints(endpoints =>
             {

@@ -59,8 +59,12 @@
 }
 
 .is-visible {
-    display: inline;
+    
 }
+
+.inline {
+    display: inline;
+} 
 
 .to-edit {
     

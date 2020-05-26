@@ -16,5 +16,9 @@ namespace DeliveryClub.Domain.Logic.Interfaces
         Task<ICollection<ProductGroupModel>> GetProductGroups(ClaimsPrincipal currentUser);
 
         Task DeleteProductGroup(ClaimsPrincipal currentUser, int id);
+
+        Task UpdateProductGroup(ClaimsPrincipal currentUser, ProductGroupModel model);
+
+        Task CreateProduct(ClaimsPrincipal currentUser, ProductModel model);
     }
 }

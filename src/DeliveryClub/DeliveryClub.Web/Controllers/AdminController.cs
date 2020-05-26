@@ -27,10 +27,11 @@ namespace DeliveryClub.Web.Controllers
             return View(restaurantInfoViewModel);
         }
 
-        public async Task<IActionResult> Menu()
+        public async Task<IActionResult> Menu(ProductGroupViewModel model)
         {
             var productGroups = await _adminService.GetProductGroups(HttpContext.User);
             var productGroupsView = new List<ProductGroupViewModel>();
+           
             foreach (var pg in productGroups)
             {
                 productGroupsView.Add(_mapper.Map<ProductGroupModel, ProductGroupViewModel>(pg));
@@ -41,8 +42,11 @@ namespace DeliveryClub.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateProductGroup(ProductGroupViewModel model)
         {
-            var newProductGroup = await _adminService.CreateProductGroup(HttpContext.User, _mapper.Map<ProductGroupViewModel, ProductGroupModel>(model));
-            var productGroupView = _mapper.Map<ProductGroupModel, ProductGroupViewModel>(newProductGroup);
+            if (ModelState.IsValid)
+            {
+                var newProductGroup = await _adminService.CreateProductGroup(HttpContext.User, _mapper.Map<ProductGroupViewModel, ProductGroupModel>(model));
+                var productGroupView = _mapper.Map<ProductGroupModel, ProductGroupViewModel>(newProductGroup);
+            }
             return RedirectToAction(nameof(Menu));
         }
 
@@ -58,6 +62,55 @@ namespace DeliveryClub.Web.Controllers
         {
             await _adminService.DeleteProductGroup(HttpContext.User, id);
             return RedirectToAction(nameof(Menu));
+        }
+
+        public async Task<IActionResult> UpdateProductGroup(ProductGroupViewModel model)
+        {
+            await _adminService.UpdateProductGroup(HttpContext.User, _mapper.Map<ProductGroupViewModel, ProductGroupModel>(model));
+            return RedirectToAction(nameof(Menu));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateProduct(ProductViewModel model)
+        {
+            await _adminService.CreateProduct(HttpContext.User, _mapper.Map<ProductViewModel, ProductModel>(model));
+            return RedirectToAction(nameof(CreateProduct));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CreateProduct()
+        {
+            var productGroupModels = await _adminService.GetProductGroups(HttpContext.User);
+            var productGroupViewModels = new List<ProductGroupViewModel>();
+            foreach (var pgm in productGroupModels)
+            {
+                productGroupViewModels.Add(_mapper.Map<ProductGroupModel, ProductGroupViewModel>(pgm));
+            }
+
+            var productGroupNames = GetProductGroupNames(productGroupViewModels);
+
+            ViewBag.ProductGroupNames = productGroupNames;
+            return View("Product");
+        }
+
+        private ICollection<string> GetProductGroupNames(ICollection<ProductGroupViewModel> productGroupViewModels)
+        {         
+            var productGroupNames = new List<string>();
+            foreach (var pgvm in productGroupViewModels)
+            {
+                productGroupNames.Add(pgvm.Name);
+            }
+            return productGroupNames;
+        }
+
+        private ICollection<string> GetPortionPricePortions(ICollection<PortionPriceModel> portionPriceModels)
+        {
+            var result = new List<string>();
+            foreach (var ppm in portionPriceModels)
+            {
+                result.Add(ppm.Portion);
+            }
+            return result;
         }
     }
 }

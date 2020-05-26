@@ -22,7 +22,7 @@
                         <h5>Name: </h5>
                     </div>
                     <div class="info-item-content">
-                        <span class="is-visible to-edit" id="display-name">@Model.Name</span>
+                        <span class="is-visible inline to-edit" id="display-name">@Model.Name</span>
                         <input type="text" class="info-input non-visible to-edit" asp-for="Name" id="edit-name" />
                     </div>
                 </div>
@@ -51,7 +51,7 @@
                         <h5>Delivery cost: </h5>
                     </div>
                     <div class="info-item-content">
-                        <span class="is-visible to-edit" id="display-deliverycost">@Model.DeliveryCost</span>
+                        <span class="is-visible inline to-edit" id="display-deliverycost">@Model.DeliveryCost r.</span>
                         <input type="number" class="info-input non-visible to-edit" asp-for="DeliveryCost" id="edit-deliverycost" />
                     </div>
                 </div>
@@ -60,7 +60,7 @@
                         <h5>Minimal order price: </h5>
                     </div>
                     <div class="info-item-content">
-                        <span class="is-visible to-edit" id="display-minorderprice">@Model.MinimalOrderPrice</span>
+                        <span class="is-visible inline to-edit" id="display-minorderprice">@Model.MinimalOrderPrice r.</span>
                         <input type="number" class="info-input non-visible to-edit" asp-for="MinimalOrderPrice" id="edit-minorderprice" />
                     </div>
                 </div>
@@ -76,7 +76,7 @@
                         <h5>Description: </h5>
                     </div>
                     <div class="info-item-content">
-                        <span class="is-visible to-edit" id="display-description">@Model.Description</span>
+                        <span class="is-visible inline to-edit" id="display-description">@Model.Description</span>
                         <textarea class="info-input info-textarea non-visible to-edit" asp-for="Description" id="edit-description" rows="3"></textarea>
                     </div>
                 </div>
@@ -105,8 +105,8 @@
                         <h5>Delivery maximum time: </h5>
                     </div>
                     <div class="info-item-content">
-                        <span class="is-visible to-edit" id="display-deliverymaxtime">@Model.DeliveryMaxTime</span>
-                        <span class="is-visible to-edit"> min</span>
+                        <span class="is-visible inline to-edit" id="display-deliverymaxtime">@Model.DeliveryMaxTime</span>
+                        <span class="is-visible inline to-edit"> min</span>
                         <input class="info-input non-visible to-edit" asp-for="DeliveryMaxTime" type="time" id="edit-deliverymaxtime" />
                         <span class="non-visible to-edit"> min</span>
                     </div>
@@ -116,9 +116,9 @@
                         <h5>Order time: </h5>
                     </div>
                     <div class="info-item-content">
-                        <span class="is-visible to-edit" id="display-ordertimebegin">@(Model.OrderTimeBegin)</span>
-                        <span class="is-visible to-edit">-</span>
-                        <span class="is-visible to-edit" id="display-ordertimeend">@(Model.OrderTimeEnd)</span>
+                        <span class="is-visible inline to-edit" id="display-ordertimebegin">@(Model.OrderTimeBegin)</span>
+                        <span class="is-visible inline to-edit">-</span>
+                        <span class="is-visible inline to-edit" id="display-ordertimeend">@(Model.OrderTimeEnd)</span>
                         <input class="info-input non-visible to-edit" asp-for="OrderTimeBegin" type="time" id="edit-ordertimebegin" />
                         <span class="non-visible to-edit">-</span>
                         <input class="info-input non-visible to-edit" asp-for="OrderTimeEnd" type="time" id="edit-ordertimeend" />
@@ -127,9 +127,9 @@
             </div>
         </div>
         <div class="edit-div">
-            <button class="btn btn-primary to-edit is-visible" form="" onclick="setEditMode()">Edit ✏️</button>
+            <button class="btn btn-primary to-edit is-visible inline" form="" onclick="setEditModeIndex()">Edit ✏️</button>
             <button class="btn btn-primary to-edit non-visible" form="form-update-restaurant">Save 💾</button>
-            <button class="btn btn-light to-edit non-visible" form="" onclick="setSaveMode()">Decline ✖</button>
+            <button class="btn btn-light to-edit non-visible" form="" onclick="setSaveModeIndex()">Decline ✖</button>
         </div>
 
     </form>

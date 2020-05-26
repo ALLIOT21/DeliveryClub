@@ -1,14 +1,14 @@
 ﻿<!DOCTYPE html>
 
 <html>
-    <head>
-        <meta name="viewport" content="width=device-width" />
-        <meta charset="utf-8"/>
-        <title>Delivery Club</title>
-        <link rel="stylesheet" href="~/css/reset.css"/>
-        <link rel="stylesheet" href="~/css/bootstrap.css"/>
-        <link rel="stylesheet" href="~/css/site/bundle.css"/>
-    </head>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta charset="utf-8" />
+    <title>Delivery Club</title>
+    <link rel="stylesheet" href="~/css/reset.css" />
+    <link rel="stylesheet" href="~/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/site/bundle.css" />
+</head>
     <body>
         <header>
             <div class="header-div">
@@ -26,7 +26,10 @@
             @RenderBody()
         </div>
         
-        <script src="~/js/site/bootstrap.js"></script>
+        @if (IsSectionDefined("Scripts"))
+        {
+            RenderSection("Scripts");
+        }
     </body>
 
 </html>

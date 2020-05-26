@@ -4,14 +4,16 @@ using System.Text;
 
 namespace DeliveryClub.Domain.AuxiliaryModels.Admin
 {
-    public class ProductGroupModel
+    public class ProductModel
     {
         public int Id { get; set; }
 
         public string Name { get; set; }
 
+        public string Description { get; set; }
+
         public List<PortionPriceModel> PortionPrices { get; set; }
 
-        public List<ProductModel> Products { get; set; }
+        public string ProductGroupName { get; set; }
     }
 }
