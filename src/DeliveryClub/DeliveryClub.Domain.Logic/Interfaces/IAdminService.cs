@@ -20,5 +20,7 @@ namespace DeliveryClub.Domain.Logic.Interfaces
         Task UpdateProductGroup(ClaimsPrincipal currentUser, ProductGroupModel model);
 
         Task CreateProduct(ClaimsPrincipal currentUser, ProductModel model);
+
+        Task<bool> HasPortionPrices(ClaimsPrincipal currentUser, string productGroupName);
     }
 }

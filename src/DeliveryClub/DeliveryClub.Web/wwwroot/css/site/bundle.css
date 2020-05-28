@@ -267,6 +267,8 @@
 .product {
     word-wrap: break-word;
     width: 30%;
+    border : 1px solid gray;
+    padding : 1vh;
 }
 
 .product-group-title-info {

@@ -5,6 +5,7 @@ using DeliveryClub.Infrastructure.Mapping;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 
@@ -90,6 +91,7 @@ namespace DeliveryClub.Domain.Logic.Managers
                     CreatePortionPriceProductGroup(pp, productGroup);
             }
 
+            var ppToDelete = new List<PortionPriceProductGroup>(); 
             foreach (var pppg in productGroup.PortionPrices)
             {
                 bool toDelete = true;
@@ -101,15 +103,34 @@ namespace DeliveryClub.Domain.Logic.Managers
                     }
                 }
                 if (toDelete)
+                {
+                    ppToDelete.Add(pppg);
                     DeletePortionPriceProductGroup(pppg);
+                }
             }
+
+            foreach (var pp in ppToDelete)
+            {
+                productGroup.PortionPrices.Remove(pp);
+            }
+        }
+
+        public ICollection<PortionPriceProductGroup> GetPortionPriceProductGroups(int productGroupId)
+        {
+            var pppgsDTO = _dbContext.PortionPriceProductGroups.Where(pppg => pppg.ProductGroupId == productGroupId);
+            var result = new List<PortionPriceProductGroup>();
+            foreach (var pppgDTO in pppgsDTO)
+            {
+                result.Add(_mapper.Map<PortionPriceProductGroupsDTO, PortionPriceProductGroup>(pppgDTO));
+            }
+            return result;
         }
 
         public void DeletePortionPriceProductGroup(PortionPriceProductGroup pppg)
         {
             var pppgDTO = _mapper.Map<PortionPriceProductGroup, PortionPriceProductGroupsDTO>(pppg);
-            _dbContext.PortionPriceProductGroups.Remove(pppgDTO);
-            _dbContext.PortionPrices.Remove(pppgDTO.PortionPrice);
+            var pppgRemoveResult = _dbContext.PortionPriceProductGroups.Remove(pppgDTO);
+            var ppRemoveResult = _dbContext.PortionPrices.Remove(pppgDTO.PortionPrice);
         }
     }
 }

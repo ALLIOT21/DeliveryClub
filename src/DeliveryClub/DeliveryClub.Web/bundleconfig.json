@@ -20,7 +20,8 @@
       "wwwroot/js/admin/MenuEditProductGroup.js",
       "wwwroot/js/admin/Tabs.js",
       "wwwroot/js/admin/ProductCreate.js",
-      "wwwroot/js/admin/PortionPriceSwitch.js"
+      "wwwroot/js/admin/PortionPriceSwitch.js",
+      "wwwroot/js/admin/ProductGroupHasPortionPrices.js"
     ],
     "minify": {
       "enabled": true,

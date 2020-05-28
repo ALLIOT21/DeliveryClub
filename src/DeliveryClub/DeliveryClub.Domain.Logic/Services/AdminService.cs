@@ -134,9 +134,9 @@ namespace DeliveryClub.Domain.Logic.Services
             {
                 var resultPPPG = _dbContext.PortionPriceProductGroups.Remove(pp);
                 var resultPP = _dbContext.PortionPrices.Remove(pp.PortionPrice);
-            }
-            _dbContext.ProductGroups.Remove(productGroupDTO);
+            }            
 
+            _dbContext.ProductGroups.Remove(productGroupDTO);
             _dbContext.SaveChanges();
         }
 
@@ -243,6 +243,20 @@ namespace DeliveryClub.Domain.Logic.Services
                 result.Add(productModel);
             }
             return result;
+        }
+
+        public async Task<bool> HasPortionPrices(ClaimsPrincipal currentUser, string productGroupName)
+        {
+            var user = await _userManager.GetCurrentIdentityUser(currentUser);
+            var admin = _adminManager.GetAdmin(user.Id);
+
+            var productGroup = _productGroupManager.GetProductGroup(admin.RestaurantId, productGroupName);
+            var portionPricesProductGroup = _portionPriceProductGroupManager.GetPortionPriceProductGroups(productGroup.Id);
+
+            if (portionPricesProductGroup.Count > 0)            
+                return true;            
+            else
+                return false;
         }
     }
 }
