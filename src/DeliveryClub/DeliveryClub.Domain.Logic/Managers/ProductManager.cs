@@ -36,6 +36,7 @@ namespace DeliveryClub.Domain.Logic.Managers
             {
                 Name = model.Name,
                 Description = model.Description,
+                ImagePath = model.Image,
                 ProductGroupId = productGroupId
             };
             var newProductDTO = _dbContext.Products.Add(_mapper.Map<Product, ProductDTO>(newProduct));            

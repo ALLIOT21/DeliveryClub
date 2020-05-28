@@ -22,12 +22,22 @@
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group portion-prices">
-                
+
             </div>
             <div class="form-group">
                 <label asp-for="ProductGroupName" class="control-label">Product Group</label>
                 <select asp-for="ProductGroupName" onchange="HasPortionPrices(this)" asp-items="@new SelectList(ViewBag.ProductGroupNames)" class="form-control"></select>
                 <span asp-validation-for="ProductGroupName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Image" class="col-form-label"></label>
+                <div class="custom-file">
+                    <input asp-for="Image" type="file" accept="image/*" onchange="onChangeImgInput()" id="product_image-input" class="custom-file-input"/>
+                    <label class="text-truncate custom-file-label"></label>
+                </div>
+            </div>
+            <div class="form-group">
+                <img src="~/resources/img/site/productLogo.png" id="product_image-img" alt="" class="img-thumbnail">
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
@@ -39,6 +49,5 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
-<script src="~/js/site/bundle.js">
-</script>
+<script src="~/js/site/bundle.js"></script>
 <script src="~/js/site/jquery-3.5.1.min.js"></script>

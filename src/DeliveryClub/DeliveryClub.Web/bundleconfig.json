@@ -9,7 +9,8 @@
       "wwwroot/css/site/header/login-div.css",
       "wwwroot/css/site/content/superuser/superuser.css",
       "wwwroot/css/site/content/admin/adminInfo.css",
-      "wwwroot/css/site/content/admin/adminMenu.css"
+      "wwwroot/css/site/content/admin/adminMenu.css",
+      "wwwroot/css/site/content/admin/adminProduct.css"
     ]
   },
   {
@@ -21,7 +22,8 @@
       "wwwroot/js/admin/Tabs.js",
       "wwwroot/js/admin/ProductCreate.js",
       "wwwroot/js/admin/PortionPriceSwitch.js",
-      "wwwroot/js/admin/ProductGroupHasPortionPrices.js"
+      "wwwroot/js/admin/ProductGroupHasPortionPrices.js",
+      "wwwroot/js/admin/productUploadImage.js"
     ],
     "minify": {
       "enabled": true,

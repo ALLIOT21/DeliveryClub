@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,5 +17,7 @@ namespace DeliveryClub.Web.ViewModels.Admin
         public List<PortionPriceViewModel> PortionPrices { get; set; }
 
         public string ProductGroupName { get; set; }
+
+        public IFormFile Image { get; set; }
     }
 }

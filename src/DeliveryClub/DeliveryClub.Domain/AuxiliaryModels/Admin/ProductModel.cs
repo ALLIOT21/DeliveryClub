@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -15,5 +16,7 @@ namespace DeliveryClub.Domain.AuxiliaryModels.Admin
         public List<PortionPriceModel> PortionPrices { get; set; }
 
         public string ProductGroupName { get; set; }
+
+        public string Image { get; set; }
     }
 }

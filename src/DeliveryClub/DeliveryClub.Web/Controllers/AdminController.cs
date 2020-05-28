@@ -2,8 +2,11 @@
 using DeliveryClub.Domain.Logic.Interfaces;
 using DeliveryClub.Infrastructure.Mapping;
 using DeliveryClub.Web.ViewModels.Admin;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -12,11 +15,14 @@ namespace DeliveryClub.Web.Controllers
     public class AdminController : Controller
     {
         private readonly IAdminService _adminService;
+        private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly Mapper _mapper;
 
-        public AdminController(IAdminService adminService)
+        public AdminController(IAdminService adminService,
+                               IWebHostEnvironment hostingEnvironment)
         {
             _adminService = adminService;
+            _hostingEnvironment = hostingEnvironment;
             _mapper = new Mapper(Assembly.GetExecutingAssembly());
         }
 
@@ -73,6 +79,15 @@ namespace DeliveryClub.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateProduct(ProductViewModel model)
         {
+            string uniqueFileName = null;
+            if (model.Image != null)
+            {
+                string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "resources/img/");
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + model.Image.FileName;
+                string filePath = Path.Combine(uploadFolder, uniqueFileName);
+                await model.Image.CopyToAsync(new FileStream(filePath, FileMode.Create));
+            }
+
             await _adminService.CreateProduct(HttpContext.User, _mapper.Map<ProductViewModel, ProductModel>(model));
             return RedirectToAction(nameof(CreateProduct));
         }

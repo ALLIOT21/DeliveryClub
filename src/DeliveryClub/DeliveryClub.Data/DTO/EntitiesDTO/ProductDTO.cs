@@ -10,6 +10,8 @@ namespace DeliveryClub.Data.DTO.EntitiesDTO
 
         public string Description { get; set; }
 
+        public string ImagePath { get; set; }
+
         public HashSet<PortionPriceProductsDTO> PortionPrices { get; set; }
 
         public int ProductGroupId { get; set; }

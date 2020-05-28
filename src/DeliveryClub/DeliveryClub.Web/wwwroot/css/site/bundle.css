@@ -329,3 +329,6 @@ input-edit-product_group-price {
 .product + .product {
     margin-left : 2vw;
 }
+.text-ellipsis {
+    text-overflow: ellipsis;
+}

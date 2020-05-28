@@ -10,6 +10,8 @@ namespace DeliveryClub.Domain.Models.Entities
 
         public string Description { get; set; }
 
+        public string ImagePath { get; set; }
+
         public HashSet<PortionPriceProduct> PortionPrices { get; set; }
 
         public int ProductGroupId { get; set; }
