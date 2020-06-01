@@ -461,6 +461,13 @@ function addPortionPrices() {
     addPortionPriceDiv(portionPriceDivButtons);
 }
 
+function deletePortionPrices() {
+    var portionPricesDiv = getPortionPricesDiv_Product();
+    while (portionPricesDiv.firstChild) {
+        portionPricesDiv.removeChild(portionPricesDiv.firstChild)
+    }
+}
+
 function createPortionPricePair_Product() {
     var portionPricesDiv = getPortionPricesDiv_Product();
     insertPortionPriceDivBeforeDiv(createPortionPriceDiv(portionPricesDiv), portionPricesDiv, getPortionPriceButtonsDiv(portionPricesDiv));
@@ -498,14 +505,19 @@ function switchPrice() {
 function HasPortionPrices(sel) {
     let ajaxResult;
     jQuery.ajax({
-        url: `/api/Admin/HasPortionPrices?productGroupName=${sel.value}`,
+        url: `/api/productgroups/${sel.value}/portionpriced`,
         type: "GET",
         dataType: "json",
         success: function (data) {
-            console.log(data)
+            if (data) {
+                deletePortionPrices();
+            }
+            else {
+                deletePortionPrices();
+                addPortionPrices();
+            }
         }
         })
-    console.log(ajaxResult);
     return ajaxResult;
 }
 

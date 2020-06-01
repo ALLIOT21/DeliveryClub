@@ -20,6 +20,13 @@ function addPortionPrices() {
     addPortionPriceDiv(portionPriceDivButtons);
 }
 
+function deletePortionPrices() {
+    var portionPricesDiv = getPortionPricesDiv_Product();
+    while (portionPricesDiv.firstChild) {
+        portionPricesDiv.removeChild(portionPricesDiv.firstChild)
+    }
+}
+
 function createPortionPricePair_Product() {
     var portionPricesDiv = getPortionPricesDiv_Product();
     insertPortionPriceDivBeforeDiv(createPortionPriceDiv(portionPricesDiv), portionPricesDiv, getPortionPriceButtonsDiv(portionPricesDiv));

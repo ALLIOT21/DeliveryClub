@@ -18,6 +18,10 @@ namespace DeliveryClub.Web.ViewModels.Admin
 
         public string ProductGroupName { get; set; }
 
+        public string ImageName { get; set; }
+
+        public string ImageFolderPath { get; set; }
+
         public IFormFile Image { get; set; }
     }
 }

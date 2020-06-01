@@ -11,17 +11,18 @@ using Microsoft.AspNetCore.Mvc;
 namespace DeliveryClub.Web.API
 {
     [Route("api/[controller]")]
-    public class AdminController : Controller
+    public class ProductGroupsController : Controller
     {
         private readonly IAdminService _adminService;
 
-        public AdminController(IAdminService adminService)
+        public ProductGroupsController(IAdminService adminService)
         {
             _adminService = adminService;
         }
 
         [HttpGet]
-        public async Task<bool> HasPortionPrices(string productGroupName)
+        [Route("{productGroupName}/[action]")]
+        public async Task<bool> PortionPriced(string productGroupName)
         {
             var hasPortionPrices = await _adminService.HasPortionPrices(HttpContext.User, productGroupName);
             return hasPortionPrices;

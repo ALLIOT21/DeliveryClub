@@ -3,6 +3,7 @@ using DeliveryClub.Domain.Logic.Interfaces;
 using DeliveryClub.Infrastructure.Mapping;
 using DeliveryClub.Web.ViewModels.Admin;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -79,15 +80,7 @@ namespace DeliveryClub.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateProduct(ProductViewModel model)
         {
-            string uniqueFileName = null;
-            if (model.Image != null)
-            {
-                string uploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "resources/img/");
-                uniqueFileName = Guid.NewGuid().ToString() + "_" + model.Image.FileName;
-                string filePath = Path.Combine(uploadFolder, uniqueFileName);
-                await model.Image.CopyToAsync(new FileStream(filePath, FileMode.Create));
-            }
-
+            model.ImageFolderPath = Path.Combine(_hostingEnvironment.WebRootPath, "resources\\img\\");
             await _adminService.CreateProduct(HttpContext.User, _mapper.Map<ProductViewModel, ProductModel>(model));
             return RedirectToAction(nameof(CreateProduct));
         }
@@ -127,5 +120,7 @@ namespace DeliveryClub.Web.Controllers
             }
             return result;
         }
-    }
+
+        
+}
 }

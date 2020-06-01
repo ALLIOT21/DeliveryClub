@@ -16,7 +16,11 @@ namespace DeliveryClub.Domain.AuxiliaryModels.Admin
         public List<PortionPriceModel> PortionPrices { get; set; }
 
         public string ProductGroupName { get; set; }
+        
+        public string ImageName { get; set; }
 
-        public string Image { get; set; }
+        public string ImageFolderPath { get; set; }
+
+        public IFormFile Image { get; set; }
     }
 }

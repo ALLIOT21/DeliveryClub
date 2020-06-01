@@ -4,9 +4,12 @@ using DeliveryClub.Domain.AuxiliaryModels.Admin;
 using DeliveryClub.Domain.Models.Entities;
 using DeliveryClub.Infrastructure.Mapping;
 using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace DeliveryClub.Domain.Logic.Managers
 {
@@ -30,15 +33,24 @@ namespace DeliveryClub.Domain.Logic.Managers
             _portionPriceProductManager = portionPriceProductManager;
         }        
 
-        public Product CreateProduct(ProductModel model, int productGroupId)
+        public async Task<Product> CreateProduct(ProductModel model, int productGroupId)
         {
+            string uniqueFileName = null;
+            if (model.Image != null)
+            {
+                uniqueFileName = CreateUniqueFileName(model.Image.FileName);
+                string filePath = CreateFilePath(uniqueFileName, model.ImageFolderPath);
+                await model.Image.CopyToAsync(new FileStream(filePath, FileMode.Create));
+            }
+
             var newProduct = new Product
             {
                 Name = model.Name,
                 Description = model.Description,
-                ImagePath = model.Image,
+                ImageName = uniqueFileName,
                 ProductGroupId = productGroupId
             };
+            
             var newProductDTO = _dbContext.Products.Add(_mapper.Map<Product, ProductDTO>(newProduct));            
             _dbContext.SaveChanges();
 
@@ -66,6 +78,16 @@ namespace DeliveryClub.Domain.Logic.Managers
             }
 
             return products;
+        }
+
+        private string CreateUniqueFileName(string fileName)
+        {
+            return Guid.NewGuid().ToString() + "_" + fileName;
+        }
+
+        private string CreateFilePath(string fileName, string fileFolder)
+        {            
+            return Path.Combine(fileFolder, fileName);
         }
     }
 }

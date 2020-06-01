@@ -159,7 +159,7 @@ namespace DeliveryClub.Domain.Logic.Services
             var restaurant = _restaurantManager.GetRestaurant(admin.RestaurantId);            
 
             var productGroup = _productGroupManager.GetProductGroup(restaurant.Id, model.ProductGroupName);
-            var product = _productManager.CreateProduct(model, productGroup.Id);            
+            await _productManager.CreateProduct(model, productGroup.Id);            
         }
 
         private RestaurantInfoModel CreateRestaurantInfoModel(Restaurant restaurant)
@@ -237,7 +237,8 @@ namespace DeliveryClub.Domain.Logic.Services
                 {
                     Name = p.Name,
                     Description = p.Description,
-                    Id = p.Id,
+                    Id = p.Id,  
+                    ImageName = p.ImageName,
                     PortionPrices = CreatePortionPriceModels(p.PortionPrices).ToList()
                 };
                 result.Add(productModel);
