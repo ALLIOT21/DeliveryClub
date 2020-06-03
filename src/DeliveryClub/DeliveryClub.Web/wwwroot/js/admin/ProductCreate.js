@@ -23,7 +23,7 @@ function addPortionPrices() {
 function deletePortionPrices() {
     var portionPricesDiv = getPortionPricesDiv_Product();
     while (portionPricesDiv.firstChild) {
-        portionPricesDiv.removeChild(portionPricesDiv.firstChild)
+        portionPricesDiv.removeChild(portionPricesDiv7.firstChild)
     }
 }
 

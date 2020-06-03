@@ -119,8 +119,6 @@ namespace DeliveryClub.Web.Controllers
                 result.Add(ppm.Portion);
             }
             return result;
-        }
-
-        
-}
+        }        
+    }
 }

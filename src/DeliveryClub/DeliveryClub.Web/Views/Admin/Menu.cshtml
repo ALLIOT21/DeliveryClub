@@ -45,7 +45,7 @@
                                         <span class="is-visible to-edit span-edit-product_group-portion">@pp.Portion</span>
                                         <span class="is-visible to-edit">—</span>                        
                                         <span class="is-visible to-edit span-edit-product_group-price">@pp.Price</span>
-                                        <span class="is-visible to-edit"> r.</span>                                
+                                        <span class="is-visible to-edit"> BYN</span>                                
                                     </div>
                                     <input type="hidden" name="PortionPrices[@i].Id" value="@pp.Id">
                                     i++;
@@ -83,49 +83,61 @@
                         if (p.ImageName != null)
                         {
                             var imagePath = "~/resources/img/" + p.ImageName;
-                            <div>
-                                <img class="img-thumbnail" src="@imagePath" asp-append-version="true">
+                            <div class="product-image">
+                                <img class="product-img img-thumbnail" src="@imagePath" asp-append-version="true">
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="product-image">
+                                <img class="product-img img-thumbnail" src="~/resources/img/site/productNotFound.png" asp-append-version="true">
                             </div>
                         }
                     }
                     <div class="product-name">
                         <h5>@p.Name</h5>
                     </div>
-                    <div class="product-description">
-                        <span>@p.Description</span>
+                    <div class="product-description text-truncate">
+                        <span class="" title="@p.Description">@p.Description</span>
                     </div>
-                    <div class="product-portion">
-                        @if (p.PortionPrices != null)
-                            if (p.PortionPrices.Count > 0)
-                            {
-                                <select id="@("productgroup-" + productGroupIndex + "_product-" + productIndex + "_select")" class="portion-select" onchange="switchPrice()">
-                                    @{
-                                        int portionIndex = 0;
-                                        foreach (var pp in p.PortionPrices)
-                                        {
-                                            <option id="@("productgroup-" + productGroupIndex + "_product-" + productIndex + "_portion-" + portionIndex)" value="@pp.Portion">@pp.Portion</option>
-                                            portionIndex++;
+                    <div class="product-portion-price">
+                        <div class="product-portion">
+                            @if (p.PortionPrices != null)
+                                if (p.PortionPrices.Count > 0)
+                                {
+                                    <select id="@("productgroup-" + productGroupIndex + "_product-" + productIndex + "_select")" class="portion-select" onchange="switchPrice()">
+                                        @{
+                                            int portionIndex = 0;
+                                            foreach (var pp in p.PortionPrices)
+                                            {
+                                                <option id="@("productgroup-" + productGroupIndex + "_product-" + productIndex + "_portion-" + portionIndex)" value="@pp.Portion">@pp.Portion</option>
+                                                portionIndex++;
+                                            }
                                         }
+                                    </select>
+                                }
+                        </div>
+                        <div class="product-price">
+                            @{
+                                int priceIndex = 0;
+                                foreach (var pp in p.PortionPrices)
+                                {
+                                    if (priceIndex > 0)
+                                    {
+                                        <h5 class="price non-visible" id="@("productgroup-" + productGroupIndex + "_product-" + productIndex + "_price-" + priceIndex)" value="@pp.Price">@pp.Price BYN</h5>
                                     }
-                                </select>
+                                    else
+                                    {
+                                        <h5 class="price is-visible" id="@("productgroup-" + productGroupIndex + "_product-" + productIndex + "_price-" + priceIndex)" value="@pp.Price">@pp.Price BYN</h5>
+                                    }
+                                    priceIndex++;
+                                }
                             }
+                        </div>
                     </div>
-                    <div class="price">
-                        @{
-                            int priceIndex = 0;
-                            foreach (var pp in p.PortionPrices)
-                            {
-                                if (priceIndex > 0)
-                                {
-                                    <h5 class="price non-visible" id="@("productgroup-" + productGroupIndex + "_product-" + productIndex + "_price-" + priceIndex)" value="@pp.Price">@pp.Price</h5>
-                                }
-                                else
-                                {
-                                    <h5 class="price is-visible" id="@("productgroup-" + productGroupIndex + "_product-" + productIndex + "_price-" + priceIndex)" value="@pp.Price">@pp.Price</h5>
-                                }
-                                priceIndex++;
-                            }
-                        }
+                    <div class="product-buttons">
+                        <button class="btn btn-primary product-button">Edit ✏️</button>
+                        <button class="btn btn-primary product-button">Delete 🗑️</button>
                     </div>
                 </div>
                         productIndex++;
