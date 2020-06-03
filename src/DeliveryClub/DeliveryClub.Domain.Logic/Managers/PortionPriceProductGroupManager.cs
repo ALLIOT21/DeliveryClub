@@ -129,8 +129,8 @@ namespace DeliveryClub.Domain.Logic.Managers
         public void DeletePortionPriceProductGroup(PortionPriceProductGroup pppg)
         {
             var pppgDTO = _mapper.Map<PortionPriceProductGroup, PortionPriceProductGroupsDTO>(pppg);
-            var pppgRemoveResult = _dbContext.PortionPriceProductGroups.Remove(pppgDTO);
-            var ppRemoveResult = _dbContext.PortionPrices.Remove(pppgDTO.PortionPrice);
+            _dbContext.PortionPriceProductGroups.Remove(pppgDTO);
+            _dbContext.PortionPrices.Remove(pppgDTO.PortionPrice);
         }
     }
 }

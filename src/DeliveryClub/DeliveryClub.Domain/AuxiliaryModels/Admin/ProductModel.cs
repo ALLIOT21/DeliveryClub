@@ -19,8 +19,6 @@ namespace DeliveryClub.Domain.AuxiliaryModels.Admin
         
         public string ImageName { get; set; }
 
-        public string ImageFolderPath { get; set; }
-
         public IFormFile Image { get; set; }
     }
 }

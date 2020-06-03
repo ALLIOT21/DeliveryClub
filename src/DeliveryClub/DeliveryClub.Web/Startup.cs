@@ -24,6 +24,8 @@ namespace DeliveryClub.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
             services.AddDomainServices(Configuration);
 
             services.AddDefaultIdentity<IdentityUser>(options => {
@@ -45,7 +47,6 @@ namespace DeliveryClub.Web
             services.AddOpenApiDocument();
             services.AddControllersWithViews();
             services.AddAutoMapper(typeof(Startup).Assembly);
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.Configure<SuperUser>(Configuration.GetSection("SuperUser"));
         }

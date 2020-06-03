@@ -88,5 +88,12 @@ namespace DeliveryClub.Domain.Logic.Managers
             }
             return result;
         }
+
+        public void DeletePortionPriceProduct(PortionPriceProduct ppp)
+        {
+            var pppDTO = _mapper.Map<PortionPriceProduct, PortionPriceProductsDTO>(ppp);
+            _dbContext.PortionPriceProducts.Remove(pppDTO);
+            _dbContext.PortionPrices.Remove(pppDTO.PortionPrice);
+        }
     }
 }

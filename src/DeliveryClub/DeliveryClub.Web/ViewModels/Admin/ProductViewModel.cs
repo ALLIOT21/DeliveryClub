@@ -20,8 +20,6 @@ namespace DeliveryClub.Web.ViewModels.Admin
 
         public string ImageName { get; set; }
 
-        public string ImageFolderPath { get; set; }
-
         public IFormFile Image { get; set; }
     }
 }

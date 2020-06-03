@@ -7,20 +7,22 @@ namespace DeliveryClub.Domain.Logic.Interfaces
 {
     public interface IAdminService
     {
-        Task<RestaurantInfoModel> GetRestaurantInfo(ClaimsPrincipal currentUser);
+        Task<RestaurantInfoModel> GetRestaurantInfo();
 
-        Task<RestaurantInfoModel> UpdateRestaurantInfo(ClaimsPrincipal currentUser, RestaurantInfoModel restaurantInfoModel);
+        Task<RestaurantInfoModel> UpdateRestaurantInfo(RestaurantInfoModel restaurantInfoModel);
 
-        Task<ProductGroupModel> CreateProductGroup(ClaimsPrincipal currentUser, ProductGroupModel model);
+        Task<ProductGroupModel> CreateProductGroup(ProductGroupModel model);
 
-        Task<ICollection<ProductGroupModel>> GetProductGroups(ClaimsPrincipal currentUser);
+        Task<ICollection<ProductGroupModel>> GetProductGroups();
 
-        Task DeleteProductGroup(ClaimsPrincipal currentUser, int id);
+        Task DeleteProductGroup(int id);
 
-        Task UpdateProductGroup(ClaimsPrincipal currentUser, ProductGroupModel model);
+        Task UpdateProductGroup(ProductGroupModel model);
 
-        Task CreateProduct(ClaimsPrincipal currentUser, ProductModel model);
+        Task CreateProduct(ProductModel model);
 
-        Task<bool> HasPortionPrices(ClaimsPrincipal currentUser, string productGroupName);
+        Task DeleteProduct(int id);
+
+        Task<bool> HasPortionPrices(string productGroupName);
     }
 }

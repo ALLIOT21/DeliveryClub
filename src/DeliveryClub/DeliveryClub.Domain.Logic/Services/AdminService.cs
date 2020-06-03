@@ -6,6 +6,8 @@ using DeliveryClub.Domain.Logic.Interfaces;
 using DeliveryClub.Domain.Logic.Managers;
 using DeliveryClub.Domain.Models.Entities;
 using DeliveryClub.Infrastructure.Mapping;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,18 +22,15 @@ namespace DeliveryClub.Domain.Logic.Services
         private readonly UserManager<IdentityUser> _userManager;
         private readonly ApplicationDbContext _dbContext;
         private readonly Mapper _mapper;
-
+        private readonly IHttpContextAccessor _httpContextAccessor;        
         private readonly AdminManager _adminManager;
         private readonly PaymentMethodManager _paymentMethodManager;
         private readonly PortionPriceManager _portionPriceManager;
         private readonly PortionPriceProductGroupManager _portionPriceProductGroupManager;
-        private readonly PortionPriceProductManager _portionPriceProductManager;
         private readonly ProductGroupManager _productGroupManager;
         private readonly ProductManager _productManager;
-        private readonly RestaurantAdditionalInfoManager _restaurantAdditionalInfoManager;
         private readonly RestaurantManager _restaurantManager;
         private readonly SpecializationManager _specializationManager;
-
 
         public AdminService(ApplicationDbContext dbContext,
                             UserManager<IdentityUser> userManager,
@@ -42,9 +41,9 @@ namespace DeliveryClub.Domain.Logic.Services
                             PortionPriceProductManager portionPriceProductManager,
                             ProductGroupManager productGroupManager,
                             ProductManager productManager,
-                            RestaurantAdditionalInfoManager restaurantAdditionalInfoManager,
                             RestaurantManager restaurantManager,
-                            SpecializationManager specializationManager)
+                            SpecializationManager specializationManager,
+                            IHttpContextAccessor httpContextAccessor)
         {
             _dbContext = dbContext;
             _userManager = userManager;
@@ -53,26 +52,25 @@ namespace DeliveryClub.Domain.Logic.Services
             _paymentMethodManager = paymentMethodManager;
             _portionPriceManager = portionPriceManager;
             _portionPriceProductGroupManager = portionPriceProductGroupManager;
-            _portionPriceProductManager = portionPriceProductManager;
             _productGroupManager = productGroupManager;
             _productManager = productManager;
-            _restaurantAdditionalInfoManager = restaurantAdditionalInfoManager;
             _restaurantManager = restaurantManager;
             _specializationManager = specializationManager;
+            _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<RestaurantInfoModel> GetRestaurantInfo(ClaimsPrincipal currentUser)
+        public async Task<RestaurantInfoModel> GetRestaurantInfo()
         {
-            var user = await _userManager.GetCurrentIdentityUser(currentUser);
+            var user = await _userManager.GetCurrentIdentityUser(_httpContextAccessor.HttpContext.User);
             var admin = _adminManager.GetAdmin(user.Id);
             var restaurant = _restaurantManager.GetRestaurant(admin.RestaurantId);
             var restaurantInfo = CreateRestaurantInfoModel(restaurant);
             return restaurantInfo;
         }
 
-        public async Task<RestaurantInfoModel> UpdateRestaurantInfo(ClaimsPrincipal currentUser, RestaurantInfoModel restaurantInfoModel)
+        public async Task<RestaurantInfoModel> UpdateRestaurantInfo(RestaurantInfoModel restaurantInfoModel)
         {
-            var user = await _userManager.GetCurrentIdentityUser(currentUser);
+            var user = await _userManager.GetCurrentIdentityUser(_httpContextAccessor.HttpContext.User);
             var admin = _adminManager.GetAdmin(user.Id);
             var restaurant = _restaurantManager.GetRestaurant(admin.RestaurantId);
             var updatedRestaurant = await _restaurantManager.UpdateRestaurant(restaurant, restaurantInfoModel);
@@ -80,9 +78,9 @@ namespace DeliveryClub.Domain.Logic.Services
             return result;
         }
 
-        public async Task<ProductGroupModel> CreateProductGroup(ClaimsPrincipal currentUser, ProductGroupModel model)
+        public async Task<ProductGroupModel> CreateProductGroup(ProductGroupModel model)
         {
-            var currentIdentityUser = await _userManager.GetCurrentIdentityUser(currentUser);
+            var currentIdentityUser = await _userManager.GetCurrentIdentityUser(_httpContextAccessor.HttpContext.User);
             var admin = _adminManager.GetAdmin(currentIdentityUser.Id);
             var restaurant = _restaurantManager.GetRestaurant(admin.RestaurantId);
 
@@ -112,9 +110,9 @@ namespace DeliveryClub.Domain.Logic.Services
             return newProductGroupModel;
         }
 
-        public async Task<ICollection<ProductGroupModel>> GetProductGroups(ClaimsPrincipal currentUser)
+        public async Task<ICollection<ProductGroupModel>> GetProductGroups()
         {
-            var currentIdentityUser = await _userManager.GetCurrentIdentityUser(currentUser);
+            var currentIdentityUser = await _userManager.GetCurrentIdentityUser(_httpContextAccessor.HttpContext.User);
             var admin = _adminManager.GetAdmin(currentIdentityUser.Id);
             var restaurant = _restaurantManager.GetRestaurant(admin.RestaurantId);
             var productGroups = _productGroupManager.GetProductGroupsFull(restaurant);
@@ -123,9 +121,9 @@ namespace DeliveryClub.Domain.Logic.Services
             return result;
         }
 
-        public async Task DeleteProductGroup(ClaimsPrincipal currentUser, int id)
+        public async Task DeleteProductGroup(int id)
         {
-            var currentIdentityUser = await _userManager.GetCurrentIdentityUser(currentUser);
+            var currentIdentityUser = await _userManager.GetCurrentIdentityUser(_httpContextAccessor.HttpContext.User);
             var admin = _adminManager.GetAdmin(currentIdentityUser.Id);
             var restaurant = _restaurantManager.GetRestaurant(admin.RestaurantId);
 
@@ -140,7 +138,7 @@ namespace DeliveryClub.Domain.Logic.Services
             _dbContext.SaveChanges();
         }
 
-        public async Task UpdateProductGroup(ClaimsPrincipal currentUser, ProductGroupModel model)
+        public async Task UpdateProductGroup(ProductGroupModel model)
         {
             var productGroupDTO = _productGroupManager.GetProductGroupDTOById(model.Id);
             var productGroup = _mapper.Map<ProductGroupDTO, ProductGroup>(productGroupDTO);
@@ -152,14 +150,33 @@ namespace DeliveryClub.Domain.Logic.Services
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task CreateProduct(ClaimsPrincipal currentUser, ProductModel model)
+        public async Task CreateProduct(ProductModel model)
         {
-            var currentIdentityUser = await _userManager.GetCurrentIdentityUser(currentUser);
+            var currentIdentityUser = await _userManager.GetCurrentIdentityUser(_httpContextAccessor.HttpContext.User);
             var admin = _adminManager.GetAdmin(currentIdentityUser.Id);
             var restaurant = _restaurantManager.GetRestaurant(admin.RestaurantId);            
 
             var productGroup = _productGroupManager.GetProductGroup(restaurant.Id, model.ProductGroupName);
             await _productManager.CreateProduct(model, productGroup.Id);            
+        }
+
+        public async Task<bool> HasPortionPrices(string productGroupName)
+        {
+            var user = await _userManager.GetCurrentIdentityUser(_httpContextAccessor.HttpContext.User);
+            var admin = _adminManager.GetAdmin(user.Id);
+
+            var productGroup = _productGroupManager.GetProductGroup(admin.RestaurantId, productGroupName);
+            var portionPricesProductGroup = _portionPriceProductGroupManager.GetPortionPriceProductGroups(productGroup.Id);
+
+            if (portionPricesProductGroup.Count > 0)
+                return true;
+            else
+                return false;
+        }
+
+        public async Task DeleteProduct(int id)
+        {
+            await _productManager.DeleteProduct(id);
         }
 
         private RestaurantInfoModel CreateRestaurantInfoModel(Restaurant restaurant)
@@ -244,20 +261,6 @@ namespace DeliveryClub.Domain.Logic.Services
                 result.Add(productModel);
             }
             return result;
-        }
-
-        public async Task<bool> HasPortionPrices(ClaimsPrincipal currentUser, string productGroupName)
-        {
-            var user = await _userManager.GetCurrentIdentityUser(currentUser);
-            var admin = _adminManager.GetAdmin(user.Id);
-
-            var productGroup = _productGroupManager.GetProductGroup(admin.RestaurantId, productGroupName);
-            var portionPricesProductGroup = _portionPriceProductGroupManager.GetPortionPriceProductGroups(productGroup.Id);
-
-            if (portionPricesProductGroup.Count > 0)            
-                return true;            
-            else
-                return false;
-        }
+        }       
     }
 }

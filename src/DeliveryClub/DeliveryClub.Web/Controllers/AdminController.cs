@@ -16,27 +16,24 @@ namespace DeliveryClub.Web.Controllers
     public class AdminController : Controller
     {
         private readonly IAdminService _adminService;
-        private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly Mapper _mapper;
 
-        public AdminController(IAdminService adminService,
-                               IWebHostEnvironment hostingEnvironment)
+        public AdminController(IAdminService adminService)
         {
             _adminService = adminService;
-            _hostingEnvironment = hostingEnvironment;
             _mapper = new Mapper(Assembly.GetExecutingAssembly());
         }
 
         public async Task<IActionResult> Index()
         {
-            var restaurantInfoModel = await _adminService.GetRestaurantInfo(HttpContext.User);
+            var restaurantInfoModel = await _adminService.GetRestaurantInfo();
             var restaurantInfoViewModel = _mapper.Map<RestaurantInfoModel, RestaurantInfoViewModel>(restaurantInfoModel);
             return View(restaurantInfoViewModel);
         }
 
         public async Task<IActionResult> Menu(ProductGroupViewModel model)
         {
-            var productGroups = await _adminService.GetProductGroups(HttpContext.User);
+            var productGroups = await _adminService.GetProductGroups();
             var productGroupsView = new List<ProductGroupViewModel>();
            
             foreach (var pg in productGroups)
@@ -51,7 +48,7 @@ namespace DeliveryClub.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var newProductGroup = await _adminService.CreateProductGroup(HttpContext.User, _mapper.Map<ProductGroupViewModel, ProductGroupModel>(model));
+                var newProductGroup = await _adminService.CreateProductGroup(_mapper.Map<ProductGroupViewModel, ProductGroupModel>(model));
                 var productGroupView = _mapper.Map<ProductGroupModel, ProductGroupViewModel>(newProductGroup);
             }
             return RedirectToAction(nameof(Menu));
@@ -60,35 +57,34 @@ namespace DeliveryClub.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateRestaurant(RestaurantInfoViewModel model)
         {
-            var updatedRestaurantInfo = await _adminService.UpdateRestaurantInfo(HttpContext.User, _mapper.Map<RestaurantInfoViewModel, RestaurantInfoModel>(model));
+            var updatedRestaurantInfo = await _adminService.UpdateRestaurantInfo(_mapper.Map<RestaurantInfoViewModel, RestaurantInfoModel>(model));
             return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
         public async Task<IActionResult> DeleteProductGroup(int id)
         {
-            await _adminService.DeleteProductGroup(HttpContext.User, id);
+            await _adminService.DeleteProductGroup(id);
             return RedirectToAction(nameof(Menu));
         }
 
         public async Task<IActionResult> UpdateProductGroup(ProductGroupViewModel model)
         {
-            await _adminService.UpdateProductGroup(HttpContext.User, _mapper.Map<ProductGroupViewModel, ProductGroupModel>(model));
+            await _adminService.UpdateProductGroup(_mapper.Map<ProductGroupViewModel, ProductGroupModel>(model));
             return RedirectToAction(nameof(Menu));
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateProduct(ProductViewModel model)
         {
-            model.ImageFolderPath = Path.Combine(_hostingEnvironment.WebRootPath, "resources\\img\\");
-            await _adminService.CreateProduct(HttpContext.User, _mapper.Map<ProductViewModel, ProductModel>(model));
+            await _adminService.CreateProduct(_mapper.Map<ProductViewModel, ProductModel>(model));
             return RedirectToAction(nameof(CreateProduct));
         }
 
         [HttpGet]
         public async Task<IActionResult> CreateProduct()
         {
-            var productGroupModels = await _adminService.GetProductGroups(HttpContext.User);
+            var productGroupModels = await _adminService.GetProductGroups();
             var productGroupViewModels = new List<ProductGroupViewModel>();
             foreach (var pgm in productGroupModels)
             {
@@ -99,6 +95,13 @@ namespace DeliveryClub.Web.Controllers
 
             ViewBag.ProductGroupNames = productGroupNames;
             return View("Product");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult >DeleteProduct(int id)
+        {
+            await _adminService.DeleteProduct(id);
+            return RedirectToAction(nameof(Menu));
         }
 
         private ICollection<string> GetProductGroupNames(ICollection<ProductGroupViewModel> productGroupViewModels)

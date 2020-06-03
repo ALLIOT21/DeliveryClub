@@ -24,7 +24,7 @@ namespace DeliveryClub.Web.API
         [Route("{productGroupName}/[action]")]
         public async Task<bool> PortionPriced(string productGroupName)
         {
-            var hasPortionPrices = await _adminService.HasPortionPrices(HttpContext.User, productGroupName);
+            var hasPortionPrices = await _adminService.HasPortionPrices(productGroupName);
             return hasPortionPrices;
         }
     }

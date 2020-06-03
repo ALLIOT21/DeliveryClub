@@ -137,7 +137,10 @@
                     </div>
                     <div class="product-buttons">
                         <button class="btn btn-primary product-button">Edit ✏️</button>
-                        <button class="btn btn-primary product-button">Delete 🗑️</button>
+                        <form method="post" action="DeleteProduct">
+                            <input name="Id" type="hidden" value="@p.Id"/>
+                            <button class="btn btn-primary product-button">Delete 🗑️</button>
+                        </form>                        
                     </div>
                 </div>
                         productIndex++;
