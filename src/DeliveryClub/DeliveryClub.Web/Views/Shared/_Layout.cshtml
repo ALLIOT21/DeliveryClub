@@ -9,27 +9,29 @@
     <link rel="stylesheet" href="~/css/bootstrap.css" />
     <link rel="stylesheet" href="~/css/site/bundle.css" />
 </head>
-    <body>
-        <header>
-            <div class="header-div">
-                <div class="home-div">
-                    <h1 class="home-div_logo-h1__size_m"><a class="home-div_logo-a__size_m" asp-action="Index">Delivery Club</a></h1>
-                </div>
-                <div class="center-div">
-                </div>
-                <div class="login-div">
-                    <partial name="_LoginPartial"/>
-                </div>
-            </div>                 
-        </header>
-        <div class="content">            
-            @RenderBody()
+<body>
+    <header>
+        <div class="header-div">
+            <div class="home-div">
+                <h1 class="home-div_logo-h1__size_m"><a class="home-div_logo-a__size_m" asp-action="Index">Delivery Club</a></h1>
+            </div>
+            <div class="center-div">
+            </div>
+            <div class="login-div">
+                <partial name="_LoginPartial" />
+            </div>
         </div>
-        
-        @if (IsSectionDefined("Scripts"))
-        {
-            RenderSection("Scripts");
-        }
-    </body>
+    </header>
+    <div class="content">
+        @RenderBody()
+    </div>
+
+    @if (IsSectionDefined("Scripts"))
+    {
+        RenderSection("Scripts");
+    }
+    <script src="~/js/site/bundle.js"></script>
+    <script src="~/js/site/jquery-3.5.1.min.js"></script>
+</body>
 
 </html>
