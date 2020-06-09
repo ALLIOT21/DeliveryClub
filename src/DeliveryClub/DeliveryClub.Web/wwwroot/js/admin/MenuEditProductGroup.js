@@ -86,7 +86,7 @@ function SetPortionPricesToEdit() {
     for (let i = 0; i < portionPriceList.length; i++) {
         var portion = portionPriceList[i].getElementsByClassName("span-edit-product_group-portion")[0];
         var price = portionPriceList[i].getElementsByClassName("span-edit-product_group-price")[0];
-        var portionPriceDiv = createPortionPriceDiv(divPortionPrices, i, portion.innerHTML, price.innerHTML);
+        var portionPriceDiv = createPortionPriceDiv(divPortionPrices, portion.innerHTML, price.innerHTML, i);
         
         portionPricesToEdit.push(portionPriceDiv);       
     }

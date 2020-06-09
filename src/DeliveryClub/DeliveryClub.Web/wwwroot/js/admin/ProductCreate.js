@@ -1,6 +1,12 @@
-﻿function addPortionPriceDiv(portionPriceDivButtons) {
+﻿function addPortionPriceDiv(portionPriceDivButtons, portion = "", price = 0) {
     var portionPricesDiv = getPortionPricesDiv_Product();
-    var portionPriceDiv = createPortionPriceDiv(portionPricesDiv);
+    var portionPriceDiv;
+    if ((portion != "") && (price != 0)) {
+        portionPriceDiv = createPortionPriceDiv(portionPricesDiv, portion, price);
+    }
+    else {
+        portionPriceDiv = createPortionPriceDiv(portionPricesDiv);
+    }
     insertPortionPriceDivBeforeDiv(portionPriceDiv, portionPricesDiv, portionPriceDivButtons);
 }
 
@@ -17,6 +23,7 @@ function getPortionPricesDiv_Product() {
 function addPortionPrices() {
     var portionPriceDivButtons = createPortionPriceButtonsDiv(createPortionPricePair_Product, deletePortionPricePair_Product);
     addPortionPriceButtonsDiv(portionPriceDivButtons);
+
     addPortionPriceDiv(portionPriceDivButtons);
 }
 

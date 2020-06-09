@@ -118,7 +118,7 @@ function createMenuGroupFormDiv() {
     divCreateProductGroup.appendChild(formCreateProductGroup);    
 }
 
-function createPortionPriceDiv(currentDiv, index = -1, portion = "", price = 0) {
+function createPortionPriceDiv(currentDiv, portion = "", price = 0, index = -1) {
     
     var divPortionPrice = createDivWithClass("div-portion-price");
 
@@ -409,7 +409,7 @@ function SetPortionPricesToEdit() {
     for (let i = 0; i < portionPriceList.length; i++) {
         var portion = portionPriceList[i].getElementsByClassName("span-edit-product_group-portion")[0];
         var price = portionPriceList[i].getElementsByClassName("span-edit-product_group-price")[0];
-        var portionPriceDiv = createPortionPriceDiv(divPortionPrices, i, portion.innerHTML, price.innerHTML);
+        var portionPriceDiv = createPortionPriceDiv(divPortionPrices, portion.innerHTML, price.innerHTML, i);
         
         portionPricesToEdit.push(portionPriceDiv);       
     }
@@ -439,9 +439,15 @@ function ChangeTabs() {
     pillMenu.classList.toggle("show");
     pillMenu.classList.toggle("active");
 }
-function addPortionPriceDiv(portionPriceDivButtons) {
+function addPortionPriceDiv(portionPriceDivButtons, portion = "", price = 0) {
     var portionPricesDiv = getPortionPricesDiv_Product();
-    var portionPriceDiv = createPortionPriceDiv(portionPricesDiv);
+    var portionPriceDiv;
+    if ((portion != "") && (price != 0)) {
+        portionPriceDiv = createPortionPriceDiv(portionPricesDiv, portion, price);
+    }
+    else {
+        portionPriceDiv = createPortionPriceDiv(portionPricesDiv);
+    }
     insertPortionPriceDivBeforeDiv(portionPriceDiv, portionPricesDiv, portionPriceDivButtons);
 }
 
@@ -458,6 +464,7 @@ function getPortionPricesDiv_Product() {
 function addPortionPrices() {
     var portionPriceDivButtons = createPortionPriceButtonsDiv(createPortionPricePair_Product, deletePortionPricePair_Product);
     addPortionPriceButtonsDiv(portionPriceDivButtons);
+
     addPortionPriceDiv(portionPriceDivButtons);
 }
 

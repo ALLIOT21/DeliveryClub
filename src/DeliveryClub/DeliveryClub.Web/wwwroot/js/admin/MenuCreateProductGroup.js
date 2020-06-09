@@ -31,7 +31,7 @@
     divCreateProductGroup.appendChild(formCreateProductGroup);    
 }
 
-function createPortionPriceDiv(currentDiv, index = -1, portion = "", price = 0) {
+function createPortionPriceDiv(currentDiv, portion = "", price = 0, index = -1) {
     
     var divPortionPrice = createDivWithClass("div-portion-price");
 

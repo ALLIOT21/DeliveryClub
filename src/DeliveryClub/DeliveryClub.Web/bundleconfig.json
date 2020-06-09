@@ -16,13 +16,13 @@
   {
     "outputFileName": "wwwroot/js/site/bundle.js",
     "inputFiles": [
-      "wwwroot/js/admin/Info.js",
-      "wwwroot/js/admin/MenuCreateProductGroup.js",
-      "wwwroot/js/admin/MenuEditProductGroup.js",
-      "wwwroot/js/admin/Tabs.js",
-      "wwwroot/js/admin/ProductCreate.js",
-      "wwwroot/js/admin/PortionPriceSwitch.js",
-      "wwwroot/js/admin/ProductGroupHasPortionPrices.js",
+      "wwwroot/js/admin/info.js",
+      "wwwroot/js/admin/menuCreateProductGroup.js",
+      "wwwroot/js/admin/menuEditProductGroup.js",
+      "wwwroot/js/admin/tabs.js",
+      "wwwroot/js/admin/productCreate.js",
+      "wwwroot/js/admin/portionPriceSwitch.js",
+      "wwwroot/js/admin/productGroupHasPortionPrices.js",
       "wwwroot/js/admin/productUploadImage.js"
     ],
     "minify": {

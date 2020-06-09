@@ -1,13 +1,10 @@
 ﻿using DeliveryClub.Domain.AuxiliaryModels.Admin;
 using DeliveryClub.Domain.Logic.Interfaces;
 using DeliveryClub.Infrastructure.Mapping;
+using DeliveryClub.Infrastructure.Validation;
 using DeliveryClub.Web.ViewModels.Admin;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -77,28 +74,46 @@ namespace DeliveryClub.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateProduct(ProductViewModel model)
         {
-            await _adminService.CreateProduct(_mapper.Map<ProductViewModel, ProductModel>(model));
-            return RedirectToAction(nameof(CreateProduct));
+            var imageValidator = new ImageValidator();
+            if (imageValidator.Validate(model.Image))
+            {
+                await _adminService.CreateProduct(_mapper.Map<ProductViewModel, ProductModel>(model));
+                return RedirectToAction(nameof(CreateProduct));
+            }
+            ModelState.AddModelError(string.Empty, "File is not an image.");
+
+            return RedirectToAction(nameof(CreateProduct), model);
         }
 
         [HttpGet]
         public async Task<IActionResult> CreateProduct()
         {
             var productGroupModels = await _adminService.GetProductGroups();
-            var productGroupViewModels = new List<ProductGroupViewModel>();
-            foreach (var pgm in productGroupModels)
-            {
-                productGroupViewModels.Add(_mapper.Map<ProductGroupModel, ProductGroupViewModel>(pgm));
-            }
-
+            var productGroupViewModels = CreateProductGroupViewModels(productGroupModels);
             var productGroupNames = GetProductGroupNames(productGroupViewModels);
 
             ViewBag.ProductGroupNames = productGroupNames;
-            return View("Product");
+            return View();
         }
 
+        [HttpGet]
+        public async Task<IActionResult> UpdateProduct(int id)
+        {
+            var productModel = _adminService.GetProduct(id);
+            var productViewModel = _mapper.Map<ProductModel, ProductViewModel>(productModel);
+
+            var productGroupModels = await _adminService.GetProductGroups();
+            var productGroupViewModels = CreateProductGroupViewModels(productGroupModels);
+            var productGroupNames = GetProductGroupNames(productGroupViewModels);
+
+            ViewBag.ProductGroupNames = productGroupNames;
+
+            return View(productViewModel);
+        }
+
+
         [HttpPost]
-        public async Task<IActionResult >DeleteProduct(int id)
+        public async Task<IActionResult> DeleteProduct(int id)
         {
             await _adminService.DeleteProduct(id);
             return RedirectToAction(nameof(Menu));
@@ -123,5 +138,15 @@ namespace DeliveryClub.Web.Controllers
             }
             return result;
         }        
+
+        private ICollection<ProductGroupViewModel> CreateProductGroupViewModels(ICollection<ProductGroupModel> productGroupModels)
+        {
+            var productGroupViewModels = new List<ProductGroupViewModel>();
+            foreach (var pgm in productGroupModels)
+            {
+                productGroupViewModels.Add(_mapper.Map<ProductGroupModel, ProductGroupViewModel>(pgm));
+            }
+            return productGroupViewModels;
+        }
     }
 }

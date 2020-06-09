@@ -9,6 +9,7 @@ using DeliveryClub.Infrastructure.Mapping;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -160,6 +161,32 @@ namespace DeliveryClub.Domain.Logic.Services
             await _productManager.CreateProduct(model, productGroup.Id);            
         }
 
+        public ProductModel GetProduct(int id)
+        {
+            var product = _productManager.GetProduct(id);
+
+            return CreateProductModel(product);
+        }
+
+        private ProductModel CreateProductModel(Product product)
+        {
+            var productModel = new ProductModel
+            {
+                Name = product.Name,
+                Description = product.Description,
+                Id = product.Id,
+                ImageName = product.ImageName,
+                ProductGroupName = product.ProductGroup.Name,
+                PortionPrices = CreatePortionPriceModels(product.PortionPrices).ToList()
+            };
+            return productModel;
+        }
+
+        public async Task DeleteProduct(int id)
+        {
+            await _productManager.DeleteProduct(id);
+        }
+
         public async Task<bool> HasPortionPrices(string productGroupName)
         {
             var user = await _userManager.GetCurrentIdentityUser(_httpContextAccessor.HttpContext.User);
@@ -172,11 +199,6 @@ namespace DeliveryClub.Domain.Logic.Services
                 return true;
             else
                 return false;
-        }
-
-        public async Task DeleteProduct(int id)
-        {
-            await _productManager.DeleteProduct(id);
         }
 
         private RestaurantInfoModel CreateRestaurantInfoModel(Restaurant restaurant)

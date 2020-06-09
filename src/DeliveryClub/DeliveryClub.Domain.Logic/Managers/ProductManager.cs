@@ -86,6 +86,8 @@ namespace DeliveryClub.Domain.Logic.Managers
         {
             var productDTO = _dbContext.Products.Find(id);
 
+            productDTO.ProductGroup = _dbContext.ProductGroups.Find(productDTO.ProductGroupId);
+
             var product = _mapper.Map<ProductDTO, Product>(productDTO);
 
             var portionPricesProduct = _portionPriceProductManager.GetPortionPriceProducts(product.Id).ToHashSet();
