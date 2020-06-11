@@ -1,7 +1,7 @@
 ﻿using DeliveryClub.Domain.Models.Enumerations;
 using System.Collections.Generic;
 
-namespace DeliveryClub.Web.ViewModels.Admin
+namespace DeliveryClub.Web.ViewModels.Admin.Info
 {
     public class RestaurantInfoViewModel
     {

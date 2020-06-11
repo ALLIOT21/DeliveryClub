@@ -91,6 +91,5 @@ namespace DeliveryClub.Web.Controllers
                 modelState.AddModelError(string.Empty, error.Description);
             }
         }
-
     }
 }

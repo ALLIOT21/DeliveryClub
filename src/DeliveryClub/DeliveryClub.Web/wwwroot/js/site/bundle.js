@@ -424,7 +424,7 @@ function deletePortionPriceDivs(currentDiv) {
     }
 }
 
-function ChangeTabs() {
+function ChangeTabs1() {
     var pillsInfoTab = document.getElementById("pills-info-tab");
     var pillsMenuTab = document.getElementById("pills-menu-tab");
     var pillInfo = document.getElementById("pills-info");

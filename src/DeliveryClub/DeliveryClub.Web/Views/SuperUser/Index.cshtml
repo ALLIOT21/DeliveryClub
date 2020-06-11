@@ -5,8 +5,8 @@
 
 <div class="superuser-div">
     <h2>Administrators</h2>
-    <a class="superuser-div_create-a__size_m superuser-div_create-a__no-highlight" id="createSpecialUser-a" asp-action="CreateAdmin" asp-controller="SuperUser">Create</a>
-    <table class="table superuser-div_admins-table__fixed">
+    <a class="usercrud-div_create-a__size_m usercrud-div_create-a__no-highlight" id="createSpecialUser-a" asp-action="CreateAdmin" asp-controller="SuperUser">Create</a>
+    <table class="table usercrud-div_user-table__fixed">
         <thead class="thead-dark">
             <tr>
                 <th>
@@ -31,14 +31,14 @@
                     @admin.RestaurantName
                 </td>
                 <td>
-                    <div class="admin-table_option-column">
+                    <div class="user-table_option-column">
                         <form method="get" asp-action="UpdateAdmin">
                             <input type="hidden" name="id" value=@admin.Id />
-                            <a class="admin-table_option-a__no-highlight" onclick="this.parentNode.submit()">✏️</a>
+                            <a class="user-table_option-a__no-highlight" onclick="this.parentNode.submit()">✏️</a>
                         </form>
                         <form method="post" asp-action="DeleteAdmin">
                             <input type="hidden" name="id" value=@admin.Id />
-                            <a class="admin-table_option-a__no-highlight" onclick="this.parentNode.submit()">🗑️</a>
+                            <a class="user-table_option-a__no-highlight" onclick="this.parentNode.submit()">🗑️</a>
                         </form>
                     </div>
                 </td>

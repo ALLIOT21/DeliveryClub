@@ -3,7 +3,7 @@ using DeliveryClub.Data.DTO.ActorsDTO;
 using DeliveryClub.Data.DTO.EntitiesDTO;
 using DeliveryClub.Domain.AuxiliaryModels.SuperUser;
 using DeliveryClub.Domain.Logic.Interfaces;
-using DeliveryClub.Domain.Models;
+using DeliveryClub.Domain.Logic.Managers;
 using DeliveryClub.Domain.Models.Actors;
 using DeliveryClub.Domain.Models.Entities;
 using DeliveryClub.Infrastructure.Mapping;
@@ -20,13 +20,16 @@ namespace DeliveryClub.Domain.Logic.Services
         private readonly ApplicationDbContext _dbContext;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly Mapper _mapper;
+        private readonly IdentityUserManager _identityUserManager;
 
         public SuperUserService(ApplicationDbContext dbContext,
-                                UserManager<IdentityUser> userManager)
+                                UserManager<IdentityUser> userManager,
+                                IdentityUserManager identityUserManager)
         {
             _dbContext = dbContext;
             _userManager = userManager;
             _mapper = new Mapper(Assembly.GetExecutingAssembly());
+            _identityUserManager = identityUserManager;
         }
 
         public IEnumerable<GetAdminModel> GetAdmins()
@@ -72,7 +75,7 @@ namespace DeliveryClub.Domain.Logic.Services
 
         public async Task<IdentityResult> CreateAdminAndRestaurant(CreateAdminModel model)
         {
-            var result = await CreateIdentityUser(model);
+            var result = await _identityUserManager.CreateIdentityUser(model.Email, model.Password);
             if (result.Item2.Succeeded)
             {
                 var restaurant = CreateRestaurant();
@@ -85,7 +88,7 @@ namespace DeliveryClub.Domain.Logic.Services
         public async Task<IdentityResult> UpdateAdmin(UpdateAdminModel model)
         {
             var iuser = _dbContext.Users.Where(u => u.Email == model.OldEmail).FirstOrDefault();
-            var passwordValidationResult = ValidatePassword(_userManager, iuser, model.Password);
+            var passwordValidationResult = _identityUserManager.ValidatePassword(_userManager, iuser, model.Password);
             if (passwordValidationResult.Succeeded)
             {
                 iuser.Email = model.NewEmail;
@@ -114,22 +117,6 @@ namespace DeliveryClub.Domain.Logic.Services
             await _dbContext.SaveChangesAsync();
         }
 
-        private async Task<(IdentityUser, IdentityResult)> CreateIdentityUser(CreateAdminModel model)
-        {
-            var iuser = new IdentityUser { UserName = model.Email, Email = model.Email };
-            var passwordValidationResult = ValidatePassword(_userManager, iuser, model.Password);
-            if (passwordValidationResult.Succeeded)
-            {
-                var createResult = await _userManager.CreateAsync(iuser, model.Password);
-                if (createResult.Succeeded)
-                {
-                    await _userManager.AddToRoleAsync(iuser, Role.Admin);
-                }
-                return (iuser, createResult);
-            }
-            return (iuser, passwordValidationResult);
-        }
-
         private async Task<Admin> CreateAdmin(string iuserId, int restaurantId)
         {
             var admin = new Admin()
@@ -148,13 +135,6 @@ namespace DeliveryClub.Domain.Logic.Services
             await _dbContext.SaveChangesAsync();
             await CreateRestaurantAdditionalInfo(createRestResult.Entity.Id);
             return _mapper.Map<RestaurantDTO, Restaurant>(_dbContext.Restaurants.Find(createRestResult.Entity.Id));
-        }        
-
-        private IdentityResult ValidatePassword(UserManager<IdentityUser> userManager, IdentityUser user, string password)
-        {
-            var passwordValidator = new PasswordValidator<IdentityUser>();
-            var passwordValidationResult = passwordValidator.ValidateAsync(userManager, user, password);
-            return passwordValidationResult.Result;
         }        
 
         private async Task<RestaurantAdditionalInfo> CreateRestaurantAdditionalInfo(int restaurantId)

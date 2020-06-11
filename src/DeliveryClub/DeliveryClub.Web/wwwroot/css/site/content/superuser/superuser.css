@@ -1,26 +1,27 @@
-﻿.superuser-div_create-a__size_m {
-    display : block;
-    font-size : 24px;
-    width : 4vw;
-    margin-top : 2vh;
-    margin-bottom : 2vh;
+﻿.usercrud-div_create-a__size_m {
+    display: block;
+    font-size: 24px;
+    width: 4vw;
+    margin-top: 2vh;
+    margin-bottom: 2vh;
 }
 
-.superuser-div_create-a__no-highlight:hover {
-    text-decoration : none;
+.usercrud-div_create-a__no-highlight:hover {
+    text-decoration: none;
 }
 
-.superuser-div_admins-table__fixed {
-    table-layout : fixed;
+
+.usercrud-div_user-table__fixed {
+    table-layout: fixed;
 }
 
-.admin-table_option-a__no-highlight:hover {
+.user-table_option-a__no-highlight:hover {
     text-decoration: none;
     cursor: pointer;
 }
 
-.admin-table_option-column {
+.user-table_option-column {
     display: flex;
-    flex-direction : row;
-    flex-wrap : wrap;
+    flex-direction: row;
+    flex-wrap: wrap;
 }

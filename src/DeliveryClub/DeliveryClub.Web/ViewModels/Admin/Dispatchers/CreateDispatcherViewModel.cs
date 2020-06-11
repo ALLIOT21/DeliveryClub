@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DeliveryClub.Web.ViewModels
+namespace DeliveryClub.Web.ViewModels.Admin.Dispatchers
 {
     public class CreateDispatcherViewModel
     {

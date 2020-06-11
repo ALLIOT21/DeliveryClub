@@ -3,6 +3,10 @@ using DeliveryClub.Domain.AuxiliaryModels.SuperUser;
 using DeliveryClub.Web.ViewModels.SuperUser;
 using DeliveryClub.Web.ViewModels.Admin;
 using DeliveryClub.Domain.AuxiliaryModels.Admin;
+using DeliveryClub.Web.ViewModels;
+using DeliveryClub.Web.ViewModels.Admin.Dispatchers;
+using DeliveryClub.Web.ViewModels.Admin.Menu;
+using DeliveryClub.Web.ViewModels.Admin.Info;
 
 namespace DeliveryClub.Web.Mapping
 {
@@ -35,6 +39,15 @@ namespace DeliveryClub.Web.Mapping
                 .ReverseMap();
 
             CreateMap<ProductViewModel, ProductModel>()
+                .ReverseMap();
+
+            CreateMap<CreateDispatcherViewModel, CreateDispatcherModel>()
+                .ReverseMap();
+
+            CreateMap<GetDispatcherViewModel, GetDispatcherModel>()
+                .ReverseMap();
+
+            CreateMap<UpdateDispatcherViewModel, UpdateDispatcherModel>()
                 .ReverseMap();
         }
     }

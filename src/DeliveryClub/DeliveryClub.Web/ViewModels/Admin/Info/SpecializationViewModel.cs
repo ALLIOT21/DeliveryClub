@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DeliveryClub.Web.ViewModels.Admin
+namespace DeliveryClub.Web.ViewModels.Admin.Info
 {
-    public class PaymentMethodViewModel
+    public class SpecializationViewModel
     {
-        public PaymentMethod PaymentMethod { get; set; }
+        public Specialization Specialization { get; set; }
 
         public bool IsSelected { get; set; }
     }

@@ -39,6 +39,9 @@ namespace DeliveryClub.Domain.Logic.Mapping
 
             CreateMap<PortionPriceProduct, PortionPriceProductsDTO>()
                 .ReverseMap();
+
+            CreateMap<Dispatcher, DispatcherDTO>()
+                .ReverseMap();
         }
     }
 }

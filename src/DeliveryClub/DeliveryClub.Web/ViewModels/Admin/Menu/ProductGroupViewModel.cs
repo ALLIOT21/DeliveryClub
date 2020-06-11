@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace DeliveryClub.Web.ViewModels.Admin
+namespace DeliveryClub.Web.ViewModels.Admin.Menu
 {
     public class ProductGroupViewModel
     {

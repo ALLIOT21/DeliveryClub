@@ -16,6 +16,8 @@ namespace DeliveryClub.Domain.Logic
             services.AddScoped<ISuperUserService, SuperUserService>();
             services.AddScoped<IAdminService, AdminService>();
             services.AddScoped<AdminManager>();
+            services.AddScoped<DispatcherManager>();
+            services.AddScoped<IdentityUserManager>();
             services.AddScoped<PaymentMethodManager>();
             services.AddScoped<PortionPriceManager>();
             services.AddScoped<PortionPriceProductGroupManager>();
@@ -24,7 +26,7 @@ namespace DeliveryClub.Domain.Logic
             services.AddScoped<ProductManager>();
             services.AddScoped<RestaurantAdditionalInfoManager>();
             services.AddScoped<RestaurantManager>();
-            services.AddScoped<SpecializationManager>();
+            services.AddScoped<SpecializationManager>();            
             return services;
         }
     }

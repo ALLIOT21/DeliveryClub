@@ -1,19 +1,16 @@
 ﻿using DeliveryClub.Data.Context;
-using DeliveryClub.Data.DTO.EntitiesDTO;
 using DeliveryClub.Domain.AuxiliaryModels.Admin;
 using DeliveryClub.Domain.Logic.Extensions;
 using DeliveryClub.Domain.Logic.Interfaces;
 using DeliveryClub.Domain.Logic.Managers;
+using DeliveryClub.Domain.Models.Actors;
 using DeliveryClub.Domain.Models.Entities;
 using DeliveryClub.Infrastructure.Mapping;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace DeliveryClub.Domain.Logic.Services
@@ -33,9 +30,14 @@ namespace DeliveryClub.Domain.Logic.Services
         private readonly RestaurantManager _restaurantManager;
         private readonly SpecializationManager _specializationManager;
 
+        private readonly DispatcherManager _dispatcherManager;
+        private readonly IdentityUserManager _identityUserManager;
+
         public AdminService(ApplicationDbContext dbContext,
                             UserManager<IdentityUser> userManager,
                             AdminManager adminManager,
+                            DispatcherManager dispatcherManager,
+                            IdentityUserManager identityUserManager,
                             PaymentMethodManager paymentMethodManager,
                             PortionPriceManager portionPriceManager,
                             PortionPriceProductGroupManager portionPriceProductGroupManager,
@@ -50,6 +52,8 @@ namespace DeliveryClub.Domain.Logic.Services
             _userManager = userManager;
             _mapper = new Mapper(Assembly.GetExecutingAssembly());
             _adminManager = adminManager;
+            _dispatcherManager = dispatcherManager;
+            _identityUserManager = identityUserManager;
             _paymentMethodManager = paymentMethodManager;
             _portionPriceManager = portionPriceManager;
             _portionPriceProductGroupManager = portionPriceProductGroupManager;
@@ -62,18 +66,14 @@ namespace DeliveryClub.Domain.Logic.Services
 
         public async Task<RestaurantInfoModel> GetRestaurantInfo()
         {
-            var user = await _userManager.GetCurrentIdentityUser(_httpContextAccessor.HttpContext.User);
-            var admin = _adminManager.GetAdmin(user.Id);
-            var restaurant = _restaurantManager.GetRestaurant(admin.RestaurantId);
+            var restaurant = await GetCurrentRestaurant();
             var restaurantInfo = CreateRestaurantInfoModel(restaurant);
             return restaurantInfo;
         }
 
         public async Task<RestaurantInfoModel> UpdateRestaurantInfo(RestaurantInfoModel restaurantInfoModel)
         {
-            var user = await _userManager.GetCurrentIdentityUser(_httpContextAccessor.HttpContext.User);
-            var admin = _adminManager.GetAdmin(user.Id);
-            var restaurant = _restaurantManager.GetRestaurant(admin.RestaurantId);
+            var restaurant = await GetCurrentRestaurant();
             var updatedRestaurant = await _restaurantManager.UpdateRestaurant(restaurant, restaurantInfoModel);
             var result = CreateRestaurantInfoModel(updatedRestaurant);
             return result;
@@ -81,9 +81,7 @@ namespace DeliveryClub.Domain.Logic.Services
 
         public async Task<ProductGroupModel> CreateProductGroup(ProductGroupModel model)
         {
-            var currentIdentityUser = await _userManager.GetCurrentIdentityUser(_httpContextAccessor.HttpContext.User);
-            var admin = _adminManager.GetAdmin(currentIdentityUser.Id);
-            var restaurant = _restaurantManager.GetRestaurant(admin.RestaurantId);
+            var restaurant = await GetCurrentRestaurant();
 
             var newProductGroup = _productGroupManager.CreateProductGroup(model, restaurant);
 
@@ -113,9 +111,7 @@ namespace DeliveryClub.Domain.Logic.Services
 
         public async Task<ICollection<ProductGroupModel>> GetProductGroups()
         {
-            var currentIdentityUser = await _userManager.GetCurrentIdentityUser(_httpContextAccessor.HttpContext.User);
-            var admin = _adminManager.GetAdmin(currentIdentityUser.Id);
-            var restaurant = _restaurantManager.GetRestaurant(admin.RestaurantId);
+            var restaurant = await GetCurrentRestaurant();
             var productGroups = _productGroupManager.GetProductGroupsFull(restaurant);
             var result = CreateProductGroupModels(productGroups);
 
@@ -123,20 +119,16 @@ namespace DeliveryClub.Domain.Logic.Services
         }
 
         public async Task DeleteProductGroup(int id)
-        {
-            var currentIdentityUser = await _userManager.GetCurrentIdentityUser(_httpContextAccessor.HttpContext.User);
-            var admin = _adminManager.GetAdmin(currentIdentityUser.Id);
-            var restaurant = _restaurantManager.GetRestaurant(admin.RestaurantId);
-
+        {            
             var productGroupDTO = _productGroupManager.GetProductGroupDTOById(id);
             foreach (var pp in productGroupDTO.PortionPrices)
             {
-                var resultPPPG = _dbContext.PortionPriceProductGroups.Remove(pp);
-                var resultPP = _dbContext.PortionPrices.Remove(pp.PortionPrice);
+                _dbContext.PortionPriceProductGroups.Remove(pp);
+                _dbContext.PortionPrices.Remove(pp.PortionPrice);
             }            
 
             _dbContext.ProductGroups.Remove(productGroupDTO);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task UpdateProductGroup(ProductGroupModel model)
@@ -146,12 +138,10 @@ namespace DeliveryClub.Domain.Logic.Services
 
         public async Task CreateProduct(ProductModel model)
         {
-            var currentIdentityUser = await _userManager.GetCurrentIdentityUser(_httpContextAccessor.HttpContext.User);
-            var admin = _adminManager.GetAdmin(currentIdentityUser.Id);
-            var restaurant = _restaurantManager.GetRestaurant(admin.RestaurantId);            
+            var restaurantId = await GetCurrentRestaurantId();           
 
-            var productGroup = _productGroupManager.GetProductGroup(restaurant.Id, model.ProductGroupName);
-            var product = await _productManager.CreateProduct(model, productGroup.Id);
+            var productGroup = _productGroupManager.GetProductGroup(restaurantId, model.ProductGroupName);
+            await _productManager.CreateProduct(model, productGroup.Id);
         }
 
         public ProductModel GetProduct(int id)
@@ -194,10 +184,9 @@ namespace DeliveryClub.Domain.Logic.Services
 
         public async Task<bool> HasPortionPrices(string productGroupName)
         {
-            var user = await _userManager.GetCurrentIdentityUser(_httpContextAccessor.HttpContext.User);
-            var admin = _adminManager.GetAdmin(user.Id);
+            var restaurantId = await GetCurrentRestaurantId();
 
-            var productGroup = _productGroupManager.GetProductGroup(admin.RestaurantId, productGroupName);
+            var productGroup = _productGroupManager.GetProductGroup(restaurantId, productGroupName);
             var portionPricesProductGroup = _portionPriceProductGroupManager.GetPortionPriceProductGroups(productGroup.Id);
 
             if (portionPricesProductGroup.Count > 0)
@@ -288,6 +277,57 @@ namespace DeliveryClub.Domain.Logic.Services
                 result.Add(productModel);
             }
             return result;
-        }       
+        }
+
+        private ICollection<GetDispatcherModel> CreateGetDispatcherModels(ICollection<Dispatcher> dispatchers)
+        {
+            var getDispatcherModels = new List<GetDispatcherModel>();
+            foreach (var d in dispatchers)
+            {
+                var gdm = new GetDispatcherModel()
+                {
+                    Email = d.User.Email,
+                    Id = d.Id,
+                };
+                getDispatcherModels.Add(gdm);
+            }
+            return getDispatcherModels;            
+        }
+
+        public async Task<IdentityResult> CreateDispatcher(CreateDispatcherModel model)
+        {
+            var restaurantId = await GetCurrentRestaurantId();
+
+            var result = await _identityUserManager.CreateIdentityUser(model.Email, model.Password);
+            if (result.Item2.Succeeded)
+            {
+                await _dispatcherManager.CreateDispatcher(result.Item1.Id, restaurantId);
+                await _dbContext.SaveChangesAsync();
+            }
+            return result.Item2;
+        }
+
+        public async Task<ICollection<GetDispatcherModel>> GetDispatchers()
+        {
+            var restaurantId = await GetCurrentRestaurantId();
+
+            var dispatchers = _dispatcherManager.GetDispatchers(restaurantId);
+
+            return CreateGetDispatcherModels(dispatchers);
+        }
+
+        private async Task<int> GetCurrentRestaurantId()
+        {
+            var currentIdentityUser = await _userManager.GetCurrentIdentityUser(_httpContextAccessor.HttpContext.User);
+            var admin = _adminManager.GetAdmin(currentIdentityUser.Id);
+            return admin.RestaurantId;
+        }
+
+        private async Task<Restaurant> GetCurrentRestaurant()
+        {
+            var currentIdentityUser = await _userManager.GetCurrentIdentityUser(_httpContextAccessor.HttpContext.User);
+            var admin = _adminManager.GetAdmin(currentIdentityUser.Id);
+            return _restaurantManager.GetRestaurant(admin.RestaurantId);            
+        }
     }
 }

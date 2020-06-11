@@ -1,4 +1,5 @@
 ﻿using DeliveryClub.Domain.AuxiliaryModels.Admin;
+using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -28,5 +29,9 @@ namespace DeliveryClub.Domain.Logic.Interfaces
         Task DeleteProduct(int id);
 
         Task<bool> HasPortionPrices(string productGroupName);
+
+        Task<ICollection<GetDispatcherModel>> GetDispatchers();
+
+        Task<IdentityResult> CreateDispatcher(CreateDispatcherModel model);
     }
 }

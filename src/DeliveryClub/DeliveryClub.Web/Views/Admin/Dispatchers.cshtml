@@ -1,0 +1,57 @@
+﻿@model IEnumerable<DeliveryClub.Web.ViewModels.Admin.Dispatchers.GetDispatcherViewModel>
+@{
+    ViewData["Title"] = "Index";
+}
+
+    <ul class="nav nav-pills nav-fill" id="pills-tab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link" href="/Admin" id="pills-info-tab" data-toggle="pill" role="tab" aria-controls="pills-home" onclick="ChangeTabs()">Info</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/Admin/Menu" id="pills-menu-tab" data-toggle="pill" role="tab" aria-controls="pills-menu" onclick="ChangeTabs()">Menu</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" href="/Admin/Dispatchers" id="pills-menu-tab" data-toggle="pill" role="tab" aria-controls="pills-menu" onclick="ChangeTabs()">Dispatchers</a>
+        </li>
+    </ul>
+
+<div class="superuser-div">
+    <h2>Dispatchers</h2>
+    <a class="usercrud-div_create-a__size_m usercrud-div_create-a__no-highlight" id="createSpecialUser-a" asp-action="CreateDispatcher">Create</a>
+    <table class="table usercrud-div_user-table__fixed">
+        <thead class="thead-dark">
+            <tr>
+                <th>
+                    Login
+                </th>
+                <th>
+                    Options
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var dispatcher in Model)
+            {
+                <tr>
+                    <td>
+                        @dispatcher.Email
+                    </td>                    
+                    <td>
+                        <div class="user-table_option-column">
+                            <form method="get" asp-action="UpdateDispatcher">
+                                <input type="hidden" name="id" value=@dispatcher.Id />
+                                <a class="admin-table_option-a__no-highlight" onclick="this.parentNode.submit()">✏️</a>
+                            </form>
+                            <form method="post" asp-action="DeleteDispatcher">
+                                <input type="hidden" name="id" value=@dispatcher.Id />
+                                <a class="user-table_option-a__no-highlight" onclick="this.parentNode.submit()">🗑️</a>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script src="~/js/tabs.js"></script>

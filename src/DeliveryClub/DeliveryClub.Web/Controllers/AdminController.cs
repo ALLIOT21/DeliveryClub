@@ -2,8 +2,12 @@
 using DeliveryClub.Domain.Logic.Interfaces;
 using DeliveryClub.Infrastructure.Mapping;
 using DeliveryClub.Infrastructure.Validation;
-using DeliveryClub.Web.ViewModels.Admin;
+using DeliveryClub.Web.ViewModels.Admin.Dispatchers;
+using DeliveryClub.Web.ViewModels.Admin.Info;
+using DeliveryClub.Web.ViewModels.Admin.Menu;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -29,7 +33,7 @@ namespace DeliveryClub.Web.Controllers
             return View(restaurantInfoViewModel);
         }
 
-        public async Task<IActionResult> Menu(ProductGroupViewModel model)
+        public async Task<IActionResult> Menu()
         {
             var productGroups = await _adminService.GetProductGroups();
             var productGroupsView = new List<ProductGroupViewModel>();
@@ -39,6 +43,39 @@ namespace DeliveryClub.Web.Controllers
                 productGroupsView.Add(_mapper.Map<ProductGroupModel, ProductGroupViewModel>(pg));
             }
             return View(productGroupsView);
+        }
+
+        public async Task<IActionResult> Dispatchers()
+        {
+            var gdms = await _adminService.GetDispatchers();
+            var gdvms = new List<GetDispatcherViewModel>();
+            foreach (var gdm in gdms)
+            {
+                gdvms.Add(_mapper.Map<GetDispatcherModel, GetDispatcherViewModel>(gdm));
+            }                      
+
+            return View(gdvms);
+        }
+
+        [HttpGet]
+        public IActionResult CreateDispatcher()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateDispatcher(CreateDispatcherViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var createResult = await _adminService.CreateDispatcher(_mapper.Map<CreateDispatcherViewModel, CreateDispatcherModel>(model));
+                if (createResult.Succeeded)
+                {
+                    return RedirectToAction(nameof(CreateDispatcher));
+                }
+                AddModelErrors(ModelState, createResult);
+            }
+            return View(model);
         }
 
         [HttpPost]
@@ -160,7 +197,7 @@ namespace DeliveryClub.Web.Controllers
                 result.Add(ppm.Portion);
             }
             return result;
-        }        
+        }
 
         private ICollection<ProductGroupViewModel> CreateProductGroupViewModels(ICollection<ProductGroupModel> productGroupModels)
         {
@@ -170,6 +207,14 @@ namespace DeliveryClub.Web.Controllers
                 productGroupViewModels.Add(_mapper.Map<ProductGroupModel, ProductGroupViewModel>(pgm));
             }
             return productGroupViewModels;
+        }
+
+        private void AddModelErrors(ModelStateDictionary modelState, IdentityResult result)
+        {
+            foreach (var error in result.Errors)
+            {
+                modelState.AddModelError(string.Empty, error.Description);
+            }
         }
     }
 }
