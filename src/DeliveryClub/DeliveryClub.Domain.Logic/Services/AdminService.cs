@@ -141,7 +141,7 @@ namespace DeliveryClub.Domain.Logic.Services
 
         public async Task UpdateProductGroup(ProductGroupModel model)
         {
-            
+            await _productGroupManager.UpdateProductGroup(model);            
         }
 
         public async Task CreateProduct(ProductModel model)

@@ -114,14 +114,20 @@ namespace DeliveryClub.Domain.Logic.Managers
             var admin = _adminManager.GetAdmin(currentIdentityUser.Id);
             var restaurant = _restaurantManager.GetRestaurant(admin.RestaurantId);
 
-            var productGroupDTO = GetProductGroupDTOById(id);
+            var products = _dbContext.Products.Where(p => p.ProductGroupId == id);
+
+            foreach (var product in products)
+            {
+                await _productManager.DeleteProduct(product.Id);
+            }
+
+            var productGroupDTO = GetProductGroupDTOById(id);                       
             foreach (var pp in productGroupDTO.PortionPrices)
             {
                 var resultPPPG = _dbContext.PortionPriceProductGroups.Remove(pp);
                 var resultPP = _dbContext.PortionPrices.Remove(pp.PortionPrice);
             }
             _dbContext.ProductGroups.Remove(productGroupDTO);
-
             _dbContext.SaveChanges();
         }
 

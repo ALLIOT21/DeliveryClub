@@ -76,14 +76,24 @@ namespace DeliveryClub.Web.Controllers
         public async Task<IActionResult> CreateProduct(ProductViewModel model)
         {
             var imageValidator = new ImageValidator();
-            if (imageValidator.Validate(model.Image))
+            if (model.Image != null)
+            {
+                if (imageValidator.Validate(model.Image))
+                {
+                    await _adminService.CreateProduct(_mapper.Map<ProductViewModel, ProductModel>(model));
+                    return RedirectToAction(nameof(CreateProduct));
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "File is not an image.");
+                    return RedirectToAction(nameof(CreateProduct), model);
+                }
+            }
+            else
             {
                 await _adminService.CreateProduct(_mapper.Map<ProductViewModel, ProductModel>(model));
                 return RedirectToAction(nameof(CreateProduct));
-            }
-            ModelState.AddModelError(string.Empty, "File is not an image.");
-
-            return RedirectToAction(nameof(CreateProduct), model);
+            }            
         }
 
         [HttpGet]
