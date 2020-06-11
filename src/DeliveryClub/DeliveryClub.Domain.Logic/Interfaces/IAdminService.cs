@@ -23,6 +23,8 @@ namespace DeliveryClub.Domain.Logic.Interfaces
 
         ProductModel GetProduct(int id);
 
+        Task<ProductModel> UpdateProduct(ProductModel productModel);
+
         Task DeleteProduct(int id);
 
         Task<bool> HasPortionPrices(string productGroupName);

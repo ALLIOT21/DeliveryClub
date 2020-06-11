@@ -85,6 +85,18 @@ namespace DeliveryClub.Domain.Logic.Managers
             return productGroups;
         }
 
+        public async Task UpdateProductGroup(ProductGroupModel model)
+        {
+            var productGroupDTO = GetProductGroupDTOById(model.Id);
+            var productGroup = _mapper.Map<ProductGroupDTO, ProductGroup>(productGroupDTO);
+
+            productGroup.Name = model.Name;
+            var portionPrices = _portionPriceManager.CreatePortionPrices(model.PortionPrices);
+            _portionPriceProductGroupManager.UpdatePortionPricesProductGroup(portionPrices, productGroup);
+            _dbContext.ProductGroups.Update(_mapper.Map<ProductGroup, ProductGroupDTO>(productGroup));
+            await _dbContext.SaveChangesAsync();
+        }
+
         public ProductGroupDTO GetProductGroupDTOById(int id)
         {
             var result = _dbContext.ProductGroups.Where(pg => pg.Id == id)

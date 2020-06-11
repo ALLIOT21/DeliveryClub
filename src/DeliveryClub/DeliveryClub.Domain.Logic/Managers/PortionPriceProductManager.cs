@@ -24,7 +24,7 @@ namespace DeliveryClub.Domain.Logic.Managers
             _mapper = new Mapper(Assembly.GetExecutingAssembly());
         }
 
-        public ICollection<PortionPriceProduct> CreatePortionPricesProduct(IEnumerable<PortionPrice> portionPrices, Product product)
+        public ICollection<PortionPriceProduct> CreatePortionPricesProduct(ICollection<PortionPrice> portionPrices, Product product)
         {
             var portionPricesProduct = new List<PortionPriceProduct>();
             foreach (var pp in portionPrices)
@@ -75,6 +75,48 @@ namespace DeliveryClub.Domain.Logic.Managers
             var result = _mapper.Map<PortionPriceProductsDTO, PortionPriceProduct>(portionPriceProductDTO);
 
             return result;
+        }
+
+        public void UpdatePortionPriceProduct(ICollection<PortionPrice> portionPrices, Product product)
+        {
+            foreach (var pp in portionPrices)
+            {
+                bool newPpp = true;
+                foreach (var ppp in product.PortionPrices)
+                {
+                    if (pp.Id == ppp.PortionPrice.Id)
+                    {
+                        ppp.PortionPrice.Portion = pp.Portion;
+                        ppp.PortionPrice.Price = pp.Price;
+                        newPpp = false;
+                    }
+}
+                if (newPpp)
+                    CreatePortionPriceProduct(pp, product);
+            }
+
+            var ppToDelete = new List<PortionPriceProduct>(); 
+            foreach (var pppg in product.PortionPrices)
+            {
+                bool toDelete = true;
+                foreach (var pp in portionPrices)
+                {
+                    if (pppg.PortionPrice.Id == pp.Id)
+                    {
+                        toDelete = false;
+                    }
+                }
+                if (toDelete)
+                {
+                    ppToDelete.Add(pppg);
+                    DeletePortionPriceProduct(pppg);
+                }
+            }
+
+            foreach (var pp in ppToDelete)
+            {
+                product.PortionPrices.Remove(pp);
+            }
         }
 
         public ICollection<PortionPriceProduct> GetPortionPriceProducts(int productId)

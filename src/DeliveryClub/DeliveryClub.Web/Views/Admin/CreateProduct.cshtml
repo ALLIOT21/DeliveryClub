@@ -9,30 +9,32 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form enctype="multipart/form-data" asp-action="CreateProduct" method="post">
+        <form enctype="multipart/form-data" asp-action="CreateProduct" method="post" id="form-product">
             <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="form-group">
+            <div class="form-group product-name">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group product-description">
                 <label asp-for="Description" class="control-label"></label>
                 <input asp-for="Description" class="form-control" />
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
-            <div class="form-group portion-prices">
-
-            </div>
-            <div class="form-group">
+            <div class="form-group product-product_group_name">
                 <label asp-for="ProductGroupName" class="control-label">Product Group</label>
-                <select asp-for="ProductGroupName" onchange="HasPortionPrices(this)" asp-items="@new SelectList(ViewBag.ProductGroupNames)" class="form-control"></select>
+                <select asp-for="ProductGroupName" onload="HasPortionPrices(this)" onchange="HasPortionPrices(this)" asp-items="@new SelectList(ViewBag.ProductGroupNames)" class="form-control"></select>
                 <span asp-validation-for="ProductGroupName" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div>
+                @{               
+                    <input type="hidden" name="ProductGroupPortionPriced" value="false">                    
+                }
+            </div>
+            <div class="form-group product-uploading-image">
                 <label asp-for="Image" class="col-form-label"></label>
                 <div class="custom-file">
-                    <input asp-for="Image" type="file" accept="image/*" onchange="onChangeImgInput()" id="product_image-input" class="custom-file-input"/>
+                    <input asp-for="Image" type="file" accept="image/*" onchange="onChangeImgInput()" id="product_image-input" class="custom-file-input" />
                     <label class="text-truncate custom-file-label"></label>
                 </div>
             </div>

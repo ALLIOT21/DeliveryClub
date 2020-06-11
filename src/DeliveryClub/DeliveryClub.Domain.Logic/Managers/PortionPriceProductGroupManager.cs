@@ -24,7 +24,7 @@ namespace DeliveryClub.Domain.Logic.Managers
             _userManager = userManager;
             _mapper = new Mapper(Assembly.GetExecutingAssembly());
         }
-        public ICollection<PortionPriceProductGroup> CreatePortionPricesProductGroup(IEnumerable<PortionPrice> portionPrices, ProductGroup productGroup)
+        public ICollection<PortionPriceProductGroup> CreatePortionPricesProductGroup(ICollection<PortionPrice> portionPrices, ProductGroup productGroup)
         {
             var portionPricesProductGroup = new List<PortionPriceProductGroup>();
             foreach (var pp in portionPrices)
@@ -73,7 +73,7 @@ namespace DeliveryClub.Domain.Logic.Managers
             return result;
         }
 
-        public void UpdatePortionPricesProductGroup(IEnumerable<PortionPrice> portionPrices, ProductGroup productGroup)
+        public void UpdatePortionPricesProductGroup(ICollection<PortionPrice> portionPrices, ProductGroup productGroup)
         {
             foreach (var pp in portionPrices)
             {

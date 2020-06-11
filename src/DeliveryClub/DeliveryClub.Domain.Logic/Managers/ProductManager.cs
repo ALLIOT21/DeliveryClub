@@ -3,6 +3,7 @@ using DeliveryClub.Data.DTO.EntitiesDTO;
 using DeliveryClub.Domain.AuxiliaryModels.Admin;
 using DeliveryClub.Domain.Models.Entities;
 using DeliveryClub.Infrastructure.Mapping;
+using DeliveryClub.Infrastructure.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -36,20 +37,18 @@ namespace DeliveryClub.Domain.Logic.Managers
 
         public async Task<Product> CreateProduct(ProductModel model, int productGroupId)
         {
-            string uniqueFileName = null;
-            var folderPath = Path.Combine(_hostingEnvironment.WebRootPath, "resources\\img\\");
+            string fileName = null;
             if (model.Image != null)
             {
-                uniqueFileName = CreateUniqueFileName(model.Image.FileName);
-                string filePath = CreateFilePath(uniqueFileName, folderPath);
-                await model.Image.CopyToAsync(new FileStream(filePath, FileMode.Create));
+                var imgServ = new ImageService(_hostingEnvironment.WebRootPath);
+                fileName = await imgServ.CreateImage(model.Image);
             }
 
             var newProduct = new Product
             {
                 Name = model.Name,
                 Description = model.Description,
-                ImageName = uniqueFileName,
+                ImageName = fileName,
                 ProductGroupId = productGroupId
             };
             
@@ -97,32 +96,41 @@ namespace DeliveryClub.Domain.Logic.Managers
             return product;
         }
 
+        public async Task<Product> UpdateProduct(ProductModel newModel, int productGroupId)
+        {
+            var product = GetProduct(newModel.Id);
+            
+            string imageName;
+            var imgServ = new ImageService(_hostingEnvironment.WebRootPath);
+            if (product.ImageName != newModel.ImageName)
+            {
+                imgServ.DeleteImage(product.ImageName);
+            }
+            imageName = await imgServ.CreateImage(newModel.Image);
+
+            product.Id = newModel.Id;
+            product.Name = newModel.Name;
+            product.Description = newModel.Description;
+            product.ImageName = imageName;
+            product.ProductGroupId = productGroupId;  
+
+            var portionPrices = _portionPriceManager.CreatePortionPrices(newModel.PortionPrices);
+            _portionPriceProductManager.UpdatePortionPriceProduct(portionPrices, product);
+            _dbContext.Products.Update(_mapper.Map<Product, ProductDTO>(product));
+            await _dbContext.SaveChangesAsync();
+            return product;
+        }
+
         public async Task DeleteProduct(int id)
         {
             var product = GetProduct(id);
             foreach (var ppp in product.PortionPrices)
             {
                 _portionPriceProductManager.DeletePortionPriceProduct(ppp);
-            }
-            if (product.ImageName != null)
-            {
-                var folderPath = Path.Combine(_hostingEnvironment.WebRootPath, "resources\\img\\");
-                var imagePath = Path.Combine(folderPath, product.ImageName);
-                File.Delete(imagePath);
-            }           
+            }                     
 
             _dbContext.Products.Remove(_mapper.Map<Product, ProductDTO>(product));
             await _dbContext.SaveChangesAsync();
-        }
-
-        private string CreateUniqueFileName(string fileName)
-        {
-            return Guid.NewGuid().ToString() + "_" + fileName;
-        }
-
-        private string CreateFilePath(string fileName, string fileFolder)
-        {            
-            return Path.Combine(fileFolder, fileName);
-        }
+        }        
     }
 }

@@ -6,18 +6,19 @@ function HasPortionPrices(sel) {
         dataType: "json",
         success: function (data) {
             if (data) {
-                deletePortionPrices();
+                hidePortionPrices();
             }
             else {
-                deletePortionPrices();
-                addPortionPrices();
+                if (documentHasPortionPrices()) 
+                    showPortionPrices();                
+                else
+                    addPortionPrices();
             }
         }
         })
     return ajaxResult;
 }
 
-function getProductGroupName()
-{
+function getProductGroupName(){
     return document.getElementById("product-group");
 }

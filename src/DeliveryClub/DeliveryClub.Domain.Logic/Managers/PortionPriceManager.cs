@@ -24,7 +24,7 @@ namespace DeliveryClub.Domain.Logic.Managers
             _mapper = new Mapper(Assembly.GetExecutingAssembly());
         }
 
-        public ICollection<PortionPrice> CreatePortionPrices(IEnumerable<PortionPriceModel> portionPriceModels)
+        public ICollection<PortionPrice> CreatePortionPrices(ICollection<PortionPriceModel> portionPriceModels)
         {
             if (portionPriceModels != null)
             {

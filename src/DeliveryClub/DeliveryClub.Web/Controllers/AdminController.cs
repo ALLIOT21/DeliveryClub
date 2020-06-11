@@ -4,6 +4,7 @@ using DeliveryClub.Infrastructure.Mapping;
 using DeliveryClub.Infrastructure.Validation;
 using DeliveryClub.Web.ViewModels.Admin;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -111,6 +112,18 @@ namespace DeliveryClub.Web.Controllers
             return View(productViewModel);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> UpdateProduct(ProductViewModel productViewModel)
+        {
+            if (Convert.ToBoolean(productViewModel.ProductGroupPortionPriced))
+            {
+                productViewModel.PortionPrices = null;
+            }
+
+            var updatedProduct = await _adminService.UpdateProduct(_mapper.Map<ProductViewModel, ProductModel>(productViewModel));
+
+            return RedirectToAction(nameof(UpdateProduct), new { id = updatedProduct.Id });
+        }
 
         [HttpPost]
         public async Task<IActionResult> DeleteProduct(int id)

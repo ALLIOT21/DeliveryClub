@@ -183,6 +183,10 @@ input-edit-product_group-price {
     text-align: center;
 }
 
+.product-edit-image {
+    text-align: center;
+}
+
 .product-description {
     word-break: break-word;
 }

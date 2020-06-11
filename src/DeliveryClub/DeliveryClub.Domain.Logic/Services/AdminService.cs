@@ -141,14 +141,7 @@ namespace DeliveryClub.Domain.Logic.Services
 
         public async Task UpdateProductGroup(ProductGroupModel model)
         {
-            var productGroupDTO = _productGroupManager.GetProductGroupDTOById(model.Id);
-            var productGroup = _mapper.Map<ProductGroupDTO, ProductGroup>(productGroupDTO);
-
-            productGroup.Name = model.Name;
-            var portionPrices = _portionPriceManager.CreatePortionPrices(model.PortionPrices);
-            _portionPriceProductGroupManager.UpdatePortionPricesProductGroup(portionPrices, productGroup);
-            _dbContext.ProductGroups.Update(_mapper.Map<ProductGroup, ProductGroupDTO>(productGroup));
-            await _dbContext.SaveChangesAsync();
+            
         }
 
         public async Task CreateProduct(ProductModel model)
@@ -158,7 +151,7 @@ namespace DeliveryClub.Domain.Logic.Services
             var restaurant = _restaurantManager.GetRestaurant(admin.RestaurantId);            
 
             var productGroup = _productGroupManager.GetProductGroup(restaurant.Id, model.ProductGroupName);
-            await _productManager.CreateProduct(model, productGroup.Id);            
+            var product = await _productManager.CreateProduct(model, productGroup.Id);
         }
 
         public ProductModel GetProduct(int id)
@@ -166,6 +159,18 @@ namespace DeliveryClub.Domain.Logic.Services
             var product = _productManager.GetProduct(id);
 
             return CreateProductModel(product);
+        }
+
+        public async Task<ProductModel> UpdateProduct(ProductModel model)
+        {
+            var currentIdentityUser = await _userManager.GetCurrentIdentityUser(_httpContextAccessor.HttpContext.User);
+            var admin = _adminManager.GetAdmin(currentIdentityUser.Id);
+            var restaurant = _restaurantManager.GetRestaurant(admin.RestaurantId);
+
+            var productGroup = _productGroupManager.GetProductGroup(restaurant.Id, model.ProductGroupName);
+            var updatedProduct = await _productManager.UpdateProduct(model, productGroup.Id);
+
+            return CreateProductModel(updatedProduct);
         }
 
         private ProductModel CreateProductModel(Product product)
