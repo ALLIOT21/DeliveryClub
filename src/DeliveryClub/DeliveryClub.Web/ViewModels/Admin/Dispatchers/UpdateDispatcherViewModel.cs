@@ -8,6 +8,8 @@ namespace DeliveryClub.Web.ViewModels.Admin.Dispatchers
 {
     public class UpdateDispatcherViewModel
     {        
+        public int Id { get; set; }
+
         public string OldEmail { get; set; }
 
         [Required]

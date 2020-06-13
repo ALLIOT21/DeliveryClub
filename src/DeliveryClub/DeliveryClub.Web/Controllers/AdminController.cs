@@ -78,6 +78,36 @@ namespace DeliveryClub.Web.Controllers
             return View(model);
         }
 
+        [HttpGet]
+        public IActionResult UpdateDispatcher(int id)
+        {
+            var d = _adminService.GetDispatcher(id);
+
+            return View(_mapper.Map<UpdateDispatcherModel, UpdateDispatcherViewModel>(d));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateDispatcher(UpdateDispatcherViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var iresult = await _adminService.UpdateDispatcher(_mapper.Map<UpdateDispatcherViewModel, UpdateDispatcherModel>(model));
+                if (iresult.Succeeded)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+                AddModelErrors(ModelState, iresult);
+            }
+            return View(model);
+        }
+        
+        [HttpPost]
+        public async Task<IActionResult> DeleteDispatcher(int id)
+        {
+            await _adminService.DeleteDispatcher(id);
+            return RedirectToAction(nameof(Dispatchers));
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateProductGroup(ProductGroupViewModel model)
         {
