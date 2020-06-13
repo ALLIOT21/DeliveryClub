@@ -8,6 +8,7 @@ using DeliveryClub.Web.ViewModels.Admin.Menu;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -37,7 +38,7 @@ namespace DeliveryClub.Web.Controllers
         {
             var productGroups = await _adminService.GetProductGroups();
             var productGroupsView = new List<ProductGroupViewModel>();
-           
+
             foreach (var pg in productGroups)
             {
                 productGroupsView.Add(_mapper.Map<ProductGroupModel, ProductGroupViewModel>(pg));
@@ -52,7 +53,7 @@ namespace DeliveryClub.Web.Controllers
             foreach (var gdm in gdms)
             {
                 gdvms.Add(_mapper.Map<GetDispatcherModel, GetDispatcherViewModel>(gdm));
-            }                      
+            }
 
             return View(gdvms);
         }
@@ -100,7 +101,7 @@ namespace DeliveryClub.Web.Controllers
             }
             return View(model);
         }
-        
+
         [HttpPost]
         public async Task<IActionResult> DeleteDispatcher(int id)
         {
@@ -142,30 +143,38 @@ namespace DeliveryClub.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateProduct(ProductViewModel model)
         {
-            var imageValidator = new ImageValidator();
-            if (model.Image != null)
+            if (ModelState.IsValid)
             {
-                if (imageValidator.Validate(model.Image))
+                if (model.Image != null)
+                {
+                    var imageValidator = new ImageValidator();
+                    if (imageValidator.Validate(model.Image))
+                    {
+                        await _adminService.CreateProduct(_mapper.Map<ProductViewModel, ProductModel>(model));
+                        return RedirectToAction(nameof(CreateProduct));
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("Image", "File is not an image.");
+                    }
+                }
+                else
                 {
                     await _adminService.CreateProduct(_mapper.Map<ProductViewModel, ProductModel>(model));
                     return RedirectToAction(nameof(CreateProduct));
                 }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "File is not an image.");
-                    return RedirectToAction(nameof(CreateProduct), model);
-                }
             }
-            else
-            {
-                await _adminService.CreateProduct(_mapper.Map<ProductViewModel, ProductModel>(model));
-                return RedirectToAction(nameof(CreateProduct));
-            }            
-        }
+            var productGroupModels = await _adminService.GetProductGroups();
+            var productGroupViewModels = CreateProductGroupViewModels(productGroupModels);
+            var productGroupNames = GetProductGroupNames(productGroupViewModels);
+
+            ViewBag.ProductGroupNames = productGroupNames;
+            return View(model);
+        }    
 
         [HttpGet]
         public async Task<IActionResult> CreateProduct()
-        {
+        {            
             var productGroupModels = await _adminService.GetProductGroups();
             var productGroupViewModels = CreateProductGroupViewModels(productGroupModels);
             var productGroupNames = GetProductGroupNames(productGroupViewModels);

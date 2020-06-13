@@ -561,8 +561,14 @@ function getProductGroupName(){
     return document.getElementById("product-group");
 }
 function onChangeImgInput() {
-    getFileName(event.target);
-    changeImage(event.target);    
+    if (isFileBig(event.target)) {
+        hideFileSizeError();
+        getFileName(event.target);
+        changeImage(event.target);
+    }
+    else {
+        showFileSizeError();
+    }
 }
 
 function getFileName(fileInput) {
@@ -584,4 +590,26 @@ function changeImage(input) {
 
         reader.readAsDataURL(input.files[0]);
     }    
+}
+
+function isFileBig(input) {
+    if (input.files[0].size < 2097152) {
+        return true;
+    }
+    return false;
+}
+
+function hideFileSizeError() {
+    var errorLabel = document.getElementById("file-size-error");
+    if (!errorLabel.classList.contains("non-visible")) {
+        errorLabel.classList.add("non-visible");
+    }
+}
+
+function showFileSizeError() {
+    var errorLabel = document.getElementById("file-size-error");
+    if (errorLabel.classList.contains("non-visible")) {
+        errorLabel.classList.remove("non-visible");
+    }
+    
 }

@@ -9,7 +9,10 @@
 
 .center-div {
     flex-grow: 10;
+    text-align: center;
 }
+
+
 
 .header-div {
     display : flex;

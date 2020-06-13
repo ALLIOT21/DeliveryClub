@@ -10,7 +10,6 @@
 <div class="row">
     <div class="col-md-4">
         <form enctype="multipart/form-data" asp-action="CreateProduct" method="post" id="form-product">
-            <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group product-name">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
@@ -21,14 +20,51 @@
                 <input asp-for="Description" class="form-control" />
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
+            @if (Model != null)
+            {
+                @if (Model.PortionPrices != null)
+                {
+                    int i = 0;
+                    <div class="form-group portion-prices">
+                        @foreach (var pp in Model.PortionPrices)
+                        {
+                            <div class="div-portion-price">
+                                <input type="hidden" name="PortionPrices[@i].Id" value="@pp.Id">
+                                <div class="div-portion">
+                                    <div class="div-portion-price-label">
+                                        <label>Portion: </label>
+                                    </div>
+                                    <div class="div-portion-price-input">
+                                        <input name="PortionPrices[@i].Portion" class="form-control" value="@pp.Portion">
+                                    </div>
+                                </div>
+                                <div class="div-price">
+                                    <div class="div-portion-price-label">
+                                        <label>Price: </label>
+                                    </div>
+                                    <div class="div-portion-price-input">
+                                        <input name="PortionPrices[@i].Price" class="form-control" type="number" step="any" value="@pp.Price">
+                                    </div>
+                                </div>
+                            </div>
+                            i++;
+                        }
+                        <span asp-validation-for="PortionPrices"></span>
+                        <div class="div-buttons-portion_price" id="div-buttons-portion_price">
+                            <button class="btn btn-secondary button-portion_price button-portion_price-create" onclick="createPortionPricePair_Product()" form="">Create a portion-price pair</button>
+                            <button class="btn btn-secondary button-portion_price button-potrion_price-delete" onclick="deletePortionPricePair_Product()" form="">Delete a portion-price pair</button>
+                        </div>
+                    </div>
+                 }
+             }
             <div class="form-group product-product_group_name">
                 <label asp-for="ProductGroupName" class="control-label">Product Group</label>
                 <select asp-for="ProductGroupName" onload="HasPortionPrices(this)" onchange="HasPortionPrices(this)" asp-items="@new SelectList(ViewBag.ProductGroupNames)" class="form-control"></select>
                 <span asp-validation-for="ProductGroupName" class="text-danger"></span>
             </div>
             <div>
-                @{               
-                    <input type="hidden" name="ProductGroupPortionPriced" value="false">                    
+                @{
+                    <input type="hidden" name="ProductGroupPortionPriced" value="false">
                 }
             </div>
             <div class="form-group product-uploading-image">
@@ -36,6 +72,8 @@
                 <div class="custom-file">
                     <input asp-for="Image" type="file" accept="image/*" onchange="onChangeImgInput()" id="product_image-input" class="custom-file-input" />
                     <label class="text-truncate custom-file-label"></label>
+                    <label class="text-danger non-visible" id="file-size-error">File is too big.</label>
+                    <span asp-validation-for="Image" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group">
@@ -49,5 +87,5 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Menu">Back to Menu</a>
 </div>

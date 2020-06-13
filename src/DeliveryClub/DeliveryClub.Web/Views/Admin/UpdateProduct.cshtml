@@ -11,7 +11,6 @@
 <div class="row">
     <div class="col-md-4">
         <form method="post" enctype="multipart/form-data" asp-action="UpdateProduct" id="form-product">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" value="@Model.Id">
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
@@ -23,7 +22,7 @@
                 <input asp-for="Description" class="form-control" value="@Model.Description" />
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
-            @if (Model.PortionPrices.Count > 0)
+            @if (Model.PortionPrices != null)
              {
                 int i = 0;
                 <div class="form-group portion-prices">                    
@@ -78,7 +77,8 @@
                 <div class="custom-file">
                     <input asp-for="Image" type="file" accept="image/*" onchange="onChangeImgInput()" id="product_image-input" class="custom-file-input" />
                     <label class="text-truncate custom-file-label">@Model.ImageName</label>
-                </div>
+                    <label class="text-danger non-visible" id="file-size-error">File is too big.</label>
+                </div>                
             </div>
             <div>
             @{
@@ -111,6 +111,6 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Menu">Back to Menu</a>
 </div>
 

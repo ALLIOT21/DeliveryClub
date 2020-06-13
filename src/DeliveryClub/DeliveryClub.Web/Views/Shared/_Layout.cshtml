@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using DeliveryClub.Infrastructure.Extensions
+<!DOCTYPE html>
 
 <html>
 <head>
@@ -21,6 +22,7 @@
                 <partial name="_LoginPartial" />
             </div>
         </div>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     </header>
     <div class="content">
         @RenderBody()
@@ -32,6 +34,7 @@
     }
     <script src="~/js/site/bundle.js"></script>
     <script src="~/js/site/jquery-3.5.1.min.js"></script>
+    <script src="~/js/site/dropzone.js"></script>
 </body>
 
 </html>
