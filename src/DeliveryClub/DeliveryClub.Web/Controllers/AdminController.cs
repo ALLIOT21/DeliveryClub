@@ -1,6 +1,9 @@
 ﻿using DeliveryClub.Domain.AuxiliaryModels.Admin;
 using DeliveryClub.Domain.Logic.Interfaces;
+using DeliveryClub.Infrastructure;
+using DeliveryClub.Infrastructure.Extensions;
 using DeliveryClub.Infrastructure.Mapping;
+using DeliveryClub.Infrastructure.Notifications;
 using DeliveryClub.Infrastructure.Validation;
 using DeliveryClub.Web.ViewModels.Admin.Dispatchers;
 using DeliveryClub.Web.ViewModels.Admin.Info;
@@ -8,7 +11,6 @@ using DeliveryClub.Web.ViewModels.Admin.Menu;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -31,6 +33,9 @@ namespace DeliveryClub.Web.Controllers
         {
             var restaurantInfoModel = await _adminService.GetRestaurantInfo();
             var restaurantInfoViewModel = _mapper.Map<RestaurantInfoModel, RestaurantInfoViewModel>(restaurantInfoModel);
+
+            this.AddNotificationToViewBag(TempData.GetNotificationMessage());
+
             return View(restaurantInfoViewModel);
         }
 
@@ -43,6 +48,9 @@ namespace DeliveryClub.Web.Controllers
             {
                 productGroupsView.Add(_mapper.Map<ProductGroupModel, ProductGroupViewModel>(pg));
             }
+
+            this.AddNotificationToViewBag(TempData.GetNotificationMessage());
+
             return View(productGroupsView);
         }
 
@@ -55,12 +63,16 @@ namespace DeliveryClub.Web.Controllers
                 gdvms.Add(_mapper.Map<GetDispatcherModel, GetDispatcherViewModel>(gdm));
             }
 
+            this.AddNotificationToViewBag(TempData.GetNotificationMessage());
+
             return View(gdvms);
         }
 
         [HttpGet]
         public IActionResult CreateDispatcher()
         {
+            this.AddNotificationToViewBag(TempData.GetNotificationMessage());
+
             return View();
         }
 
@@ -72,9 +84,19 @@ namespace DeliveryClub.Web.Controllers
                 var createResult = await _adminService.CreateDispatcher(_mapper.Map<CreateDispatcherViewModel, CreateDispatcherModel>(model));
                 if (createResult.Succeeded)
                 {
+                    TempData.AddNotificationMessage(new Notification
+                    {
+                        Type = NotificationType.Success,
+                        Message = "Dispatcher succesfully created!"
+                    });
                     return RedirectToAction(nameof(CreateDispatcher));
                 }
                 AddModelErrors(ModelState, createResult);
+                this.AddNotificationToViewBag(new Notification
+                {
+                    Message = "Dispatcher has not been created!",
+                    Type = NotificationType.Error
+                });
             }
             return View(model);
         }
@@ -83,6 +105,7 @@ namespace DeliveryClub.Web.Controllers
         public IActionResult UpdateDispatcher(int id)
         {
             var d = _adminService.GetDispatcher(id);
+            this.AddNotificationToViewBag(TempData.GetNotificationMessage());
 
             return View(_mapper.Map<UpdateDispatcherModel, UpdateDispatcherViewModel>(d));
         }
@@ -95,9 +118,19 @@ namespace DeliveryClub.Web.Controllers
                 var iresult = await _adminService.UpdateDispatcher(_mapper.Map<UpdateDispatcherViewModel, UpdateDispatcherModel>(model));
                 if (iresult.Succeeded)
                 {
-                    return RedirectToAction(nameof(Index));
+                    TempData.AddNotificationMessage(new Notification
+                    {
+                        Type = NotificationType.Success,
+                        Message = "Dispatcher succesfully updated!"
+                    });
+                    return RedirectToAction(nameof(Dispatchers));
                 }
                 AddModelErrors(ModelState, iresult);
+                this.AddNotificationToViewBag(new Notification
+                {
+                    Message = "Dispatcher is not updated",
+                    Type = NotificationType.Error
+                });
             }
             return View(model);
         }
@@ -106,6 +139,13 @@ namespace DeliveryClub.Web.Controllers
         public async Task<IActionResult> DeleteDispatcher(int id)
         {
             await _adminService.DeleteDispatcher(id);
+
+            TempData.AddNotificationMessage(new Notification
+            {
+                Type = NotificationType.Success,
+                Message = "Dispatcher succesfully deleted!"
+            });
+
             return RedirectToAction(nameof(Dispatchers));
         }
 
@@ -116,7 +156,21 @@ namespace DeliveryClub.Web.Controllers
             {
                 var newProductGroup = await _adminService.CreateProductGroup(_mapper.Map<ProductGroupViewModel, ProductGroupModel>(model));
                 var productGroupView = _mapper.Map<ProductGroupModel, ProductGroupViewModel>(newProductGroup);
+                TempData.AddNotificationMessage(new Notification
+                {
+                    Message = "Product group successfully created!",
+                    Type = NotificationType.Success
+                });
+            }     
+            else
+            {
+                TempData.AddNotificationMessage(new Notification
+                {
+                    Type = NotificationType.Error,
+                    Message = "Product group is not created!"
+                });
             }
+            
             return RedirectToAction(nameof(Menu));
         }
 
@@ -124,6 +178,12 @@ namespace DeliveryClub.Web.Controllers
         public async Task<IActionResult> UpdateRestaurant(RestaurantInfoViewModel model)
         {
             var updatedRestaurantInfo = await _adminService.UpdateRestaurantInfo(_mapper.Map<RestaurantInfoViewModel, RestaurantInfoModel>(model));
+            TempData.AddNotificationMessage(new Notification
+            {
+                Type = NotificationType.Success,
+                Message = "Restaurant info successfully updated!"
+            });
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -131,12 +191,26 @@ namespace DeliveryClub.Web.Controllers
         public async Task<IActionResult> DeleteProductGroup(int id)
         {
             await _adminService.DeleteProductGroup(id);
+
+            TempData.AddNotificationMessage(new Notification
+            {
+                Type = NotificationType.Success,
+                Message = "Product successfully deleted!"
+            });
+
             return RedirectToAction(nameof(Menu));
         }
-
+        [HttpPost]
         public async Task<IActionResult> UpdateProductGroup(ProductGroupViewModel model)
         {
             await _adminService.UpdateProductGroup(_mapper.Map<ProductGroupViewModel, ProductGroupModel>(model));
+
+            TempData.AddNotificationMessage(new Notification
+            {
+                Type = NotificationType.Success,
+                Message = "Product group successfully updated"
+            });
+
             return RedirectToAction(nameof(Menu));
         }
 
@@ -151,6 +225,12 @@ namespace DeliveryClub.Web.Controllers
                     if (imageValidator.Validate(model.Image))
                     {
                         await _adminService.CreateProduct(_mapper.Map<ProductViewModel, ProductModel>(model));
+
+                        TempData.AddNotificationMessage(new Notification
+                        {
+                            Type = NotificationType.Success,
+                            Message = "Product successfully created!"
+                        });
                         return RedirectToAction(nameof(CreateProduct));
                     }
                     else
@@ -161,6 +241,13 @@ namespace DeliveryClub.Web.Controllers
                 else
                 {
                     await _adminService.CreateProduct(_mapper.Map<ProductViewModel, ProductModel>(model));
+
+                    TempData.AddNotificationMessage(new Notification
+                    {
+                        Type = NotificationType.Success,
+                        Message = "Product successfully created!"
+                    });
+
                     return RedirectToAction(nameof(CreateProduct));
                 }
             }
@@ -169,6 +256,13 @@ namespace DeliveryClub.Web.Controllers
             var productGroupNames = GetProductGroupNames(productGroupViewModels);
 
             ViewBag.ProductGroupNames = productGroupNames;
+
+            this.AddNotificationToViewBag(new Notification
+            {
+                Message = "Product is not created!",
+                Type = NotificationType.Error
+            });
+
             return View(model);
         }    
 
@@ -180,6 +274,8 @@ namespace DeliveryClub.Web.Controllers
             var productGroupNames = GetProductGroupNames(productGroupViewModels);
 
             ViewBag.ProductGroupNames = productGroupNames;
+            this.AddNotificationToViewBag(TempData.GetNotificationMessage());
+
             return View();
         }
 
@@ -195,6 +291,8 @@ namespace DeliveryClub.Web.Controllers
 
             ViewBag.ProductGroupNames = productGroupNames;
 
+            this.AddNotificationToViewBag(TempData.GetNotificationMessage());
+
             return View(productViewModel);
         }
 
@@ -207,6 +305,12 @@ namespace DeliveryClub.Web.Controllers
             }
 
             var updatedProduct = await _adminService.UpdateProduct(_mapper.Map<ProductViewModel, ProductModel>(productViewModel));
+            
+            TempData.AddNotificationMessage(new Notification
+            {
+                Type = NotificationType.Success,
+                Message = "Product successfully updated!"
+            });
 
             return RedirectToAction(nameof(UpdateProduct), new { id = updatedProduct.Id });
         }
@@ -215,6 +319,13 @@ namespace DeliveryClub.Web.Controllers
         public async Task<IActionResult> DeleteProduct(int id)
         {
             await _adminService.DeleteProduct(id);
+
+            this.AddNotificationToViewBag(new Notification
+            {
+                Type = NotificationType.Success,
+                Message = "Product successfully deleted!"
+            });
+
             return RedirectToAction(nameof(Menu));
         }
 
@@ -254,6 +365,6 @@ namespace DeliveryClub.Web.Controllers
             {
                 modelState.AddModelError(string.Empty, error.Description);
             }
-        }
+        }        
     }
 }
