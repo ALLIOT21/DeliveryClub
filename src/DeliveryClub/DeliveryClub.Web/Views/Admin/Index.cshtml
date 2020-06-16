@@ -1,4 +1,4 @@
-﻿@using DeliveryClub.Domain.Models.Enumerations
+﻿@using DeliveryClub.Infrastructure.Constants
 @model DeliveryClub.Web.ViewModels.Admin.Info.RestaurantInfoViewModel
 
     <ul class="nav nav-pills nav-fill" id="pills-tab" role="tablist">
@@ -14,7 +14,7 @@
     </ul>
 
 <div class="tab-pane fade show active" id="pills-info" role="tabpanel">
-    <form method="post" asp-action="UpdateRestaurant" id="form-update-restaurant">
+    <form method="post" enctype="multipart/form-data" asp-action="UpdateRestaurant" id="form-update-restaurant">
         <div class="primary_info">
             <div class="info-label">
                 <h2>Primary info</h2>
@@ -54,18 +54,43 @@
                         <h5>Delivery cost: </h5>
                     </div>
                     <div class="info-item-content">
-                        <span class="is-visible inline to-edit" id="display-deliverycost">@Model.DeliveryCost r.</span>
+                        <span class="is-visible inline to-edit" id="display-deliverycost">@Model.DeliveryCost</span>
                         <input type="number" class="info-input non-visible to-edit" asp-for="DeliveryCost" id="edit-deliverycost" />
+                        <span>BYN</span>
                     </div>
                 </div>
-                <div class="info-item last-item">
+                <div class="info-item">
                     <div class="info-item-title">
                         <h5>Minimal order price: </h5>
                     </div>
                     <div class="info-item-content">
-                        <span class="is-visible inline to-edit" id="display-minorderprice">@Model.MinimalOrderPrice r.</span>
+                        <span class="is-visible inline to-edit" id="display-minorderprice">@Model.MinimalOrderPrice</span>
                         <input type="number" class="info-input non-visible to-edit" asp-for="MinimalOrderPrice" id="edit-minorderprice" />
+                        <span>BYN</span>
                     </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-item-title">
+                        <h5>Cover image: </h5>
+                    </div>
+                    <div class="info-item-content">
+                        <div class="custom-file">
+                            <input asp-for="CoverImage" type="file" accept="image/*" onchange="onChangeImgInput()" id="image-input" class="custom-file-input" disabled/>
+                            <label class="text-truncate custom-file-label" id="image-label">@Model.CoverImageName</label>
+                        </div>
+                    </div>
+                    <label class="text-danger non-visible" id="file-size-error">File is too big.</label>
+                </div>
+                <div class="info-item last-item">
+                    @if (Model.CoverImageName != null)
+                    {
+                        var imagePath = PathConstants.ImageFolder + Model.CoverImageName;
+                        <img width="350" height="200" src="@imagePath" id="image" alt="" class="img-thumbnail" />
+                    }
+                    else
+                    {
+                        <img width="350" height="200" src="~/resources/img/no-cover.png" id="image" class="img-thumbnail"/> 
+                    }
                 </div>
             </div>
         </div>

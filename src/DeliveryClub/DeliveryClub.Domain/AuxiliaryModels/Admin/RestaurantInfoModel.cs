@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -15,6 +16,10 @@ namespace DeliveryClub.Domain.AuxiliaryModels.Admin
         public double MinimalOrderPrice { get; set; }
 
         public string Description { get; set; }
+
+        public IFormFile CoverImage { get; set; }
+
+        public string CoverImageName { get; set; }
 
         public List<PaymentMethodModel> PaymentMethods { get; set; }
 

@@ -20,10 +20,8 @@ function changeImage(input) {
         var reader = new FileReader();
 
         reader.onload = function (e) {
-            $('#product_image-img')
-                .attr('src', e.target.result)
-                .width(200)
-                .height(200);
+            $('#image')
+                .attr('src', e.target.result);
         };
 
         reader.readAsDataURL(input.files[0]);

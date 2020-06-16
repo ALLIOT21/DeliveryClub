@@ -23,10 +23,10 @@
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             @if (Model.PortionPrices != null)
-             {
+            {
                 int i = 0;
-                <div class="form-group portion-prices">                    
-                   @foreach (var pp in Model.PortionPrices)
+                <div class="form-group portion-prices">
+                    @foreach (var pp in Model.PortionPrices)
                     {
                         <div class="div-portion-price">
                             <input type="hidden" name="PortionPrices[@i].Id" value="@pp.Id">
@@ -54,7 +54,7 @@
                         <button class="btn btn-secondary button-portion_price button-potrion_price-delete" onclick="deletePortionPricePair_Product()" form="">Delete a portion-price pair</button>
                     </div>
                 </div>
-             }                
+            }
             <div class="form-group">
                 <label asp-for="ProductGroupName" class="control-label">Product Group</label>
                 <select asp-for="ProductGroupName" onchange="HasPortionPrices(this)" class="form-control">
@@ -78,30 +78,30 @@
                     <input asp-for="Image" type="file" accept="image/*" onchange="onChangeImgInput()" id="product_image-input" class="custom-file-input" />
                     <label class="text-truncate custom-file-label">@Model.ImageName</label>
                     <label class="text-danger non-visible" id="file-size-error">File is too big.</label>
-                </div>                
+                </div>
             </div>
-            <div>
-            @{
-                if (Model.PortionPrices.Count > 0)
+            <div class="form-group">
+                @if (Model.ImageName != null)
                 {
-                    <input type="hidden" name="ProductGroupPortionPriced" value="false">
+                    var imagePath = PathConstants.ImageFolder + Model.ImageName;
+                    <img src="@imagePath" id="image" alt="" class="img-thumbnail" />
                 }
                 else
                 {
-                    <input type="hidden" name="ProductGroupPortionPriced" value="true">
+                    <img src="~/resources/img/site/productLogo.png" id="product_image-img" alt="" class="img-thumbnail" />
                 }
-            }
             </div>
-            <div class="form-group">
-            @if (Model.ImageName != null)
-            {
-                var imagePath = PathConstants.ImageFolder + Model.ImageName;
-                <img src="@imagePath" id="product_image-img" alt="" class="img-thumbnail" />
-            }
-            else
-            {
-                <img src="~/resources/img/site/productLogo.png" id="product_image-img" alt="" class="img-thumbnail" />
-            }
+            <div>
+                @{
+                    if (Model.PortionPrices.Count > 0)
+                    {
+                        <input type="hidden" name="ProductGroupPortionPriced" value="false">
+                    }
+                    else
+                    {
+                        <input type="hidden" name="ProductGroupPortionPriced" value="true">
+                    }
+                }
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

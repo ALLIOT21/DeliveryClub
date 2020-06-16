@@ -26,15 +26,6 @@ namespace DeliveryClub.Infrastructure.Services
             }
             return uniqueFileName;
         }
-        private string CreateUniqueFileName(string fileName)
-        {
-            return Guid.NewGuid().ToString() + "_" + fileName;
-        }
-
-        private string CreateFilePath(string fileName, string fileFolder)
-        {
-            return Path.Combine(fileFolder, fileName);
-        }        
 
         public void DeleteImage(string imageName)
         {
@@ -45,6 +36,15 @@ namespace DeliveryClub.Infrastructure.Services
                 File.Delete(imagePath);
             }
         }
-        
-}
+
+        private string CreateUniqueFileName(string fileName)
+        {
+            return Guid.NewGuid().ToString() + "_" + fileName;
+        }
+
+        private string CreateFilePath(string fileName, string fileFolder)
+        {
+            return Path.Combine(fileFolder, fileName);
+        }
+    }
 }

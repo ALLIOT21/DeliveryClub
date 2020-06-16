@@ -21,6 +21,7 @@ namespace DeliveryClub.Domain.Logic.Mapping
             restaurantInfo.DeliveryCost = restaurant.DeliveryCost;
             restaurantInfo.MinimalOrderPrice = restaurant.MinimalOrderPrice;
             restaurantInfo.Description = restaurant.RestaurantAdditionalInfo.Description;
+            restaurantInfo.CoverImageName = restaurant.CoverImageName;
             restaurantInfo.PaymentMethods = CreatePaymentMethodList(restaurant.RestaurantAdditionalInfo.PaymentMethods);
             restaurantInfo.DeliveryMaxTime = stringTimeSpanConverter.TimeSpanToString(restaurant.RestaurantAdditionalInfo.DeliveryMaxTime);
             restaurantInfo.OrderTimeBegin = stringTimeSpanConverter.TimeSpanToString(restaurant.RestaurantAdditionalInfo.OrderTimeBegin);

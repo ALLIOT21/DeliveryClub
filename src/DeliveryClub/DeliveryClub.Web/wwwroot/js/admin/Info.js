@@ -7,6 +7,9 @@ function setEditModeIndex() {
     const checkboxDisabledList = document.getElementsByClassName("checkbox-disabled");
     setDisabledAttributeToList(checkboxDisabledList, false);
 
+    enableImageInput();
+    saveImageSrc();
+
     saveCheckboxValues(getSpecializationList());
     saveCheckboxValues(getPaymentList());
 
@@ -19,6 +22,9 @@ function setSaveModeIndex() {
 
     const checkboxDisabledList = document.getElementsByClassName("checkbox-disabled");
     setDisabledAttributeToList(checkboxDisabledList, true);
+
+    disableImageInput();
+    returnImageSrc();
 
     setCheckboxValues(getSpecializationList());
     setCheckboxValues(getPaymentList());
@@ -65,6 +71,24 @@ function setCheckboxValues(list) {
         else
             l.checked = false;
     }
+}
+
+function saveImageSrc() {
+    sessionStorage.setItem("image", document.getElementById("image").getAttribute("src"))
+}
+
+function returnImageSrc() {
+    document.getElementById("image").setAttribute("src", sessionStorage.getItem("image")) 
+}
+
+function enableImageInput() {
+    document.getElementById("image-input").removeAttribute("disabled");
+}
+
+function disableImageInput() {
+    document.getElementById("image-input").removeAttribute("src");
+    document.getElementById("image-label").innerHTML = "";
+    document.getElementById("image-input").setAttribute("disabled", "disabled");
 }
 
 function getSpecializationList() {
