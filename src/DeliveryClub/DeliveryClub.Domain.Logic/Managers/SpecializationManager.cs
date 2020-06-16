@@ -15,16 +15,11 @@ namespace DeliveryClub.Domain.Logic.Managers
 {
     public class SpecializationManager
     {
-        private readonly UserManager<IdentityUser> _userManager;
         private readonly ApplicationDbContext _dbContext;
-        private readonly Mapper _mapper;
         
-        public SpecializationManager(ApplicationDbContext dbContext,
-                            UserManager<IdentityUser> userManager)
+        public SpecializationManager(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
-            _userManager = userManager;
-            _mapper = new Mapper(Assembly.GetExecutingAssembly());
         }
 
         public HashSet<Specialization> GetSpecializations(Restaurant restaurant)
@@ -51,39 +46,6 @@ namespace DeliveryClub.Domain.Logic.Managers
             {
                 await CreateSpecialization(restaurant, ns);
             }
-        }
-
-        public List<SpecializationModel> CreateSpecializationList(HashSet<Specialization> specializations)
-        {
-            var result = new List<SpecializationModel>();
-            if (specializations != null)
-            {
-                foreach (var sp in Enum.GetValues(typeof(Specialization)))
-                {
-                    if (specializations.Contains((Specialization)sp))
-                    {
-                        result.Add(new SpecializationModel { Specialization = (Specialization)sp, IsSelected = true });
-                    }
-                    else
-                    {
-                        result.Add(new SpecializationModel { Specialization = (Specialization)sp, IsSelected = false });
-                    }
-                }
-            }
-            return result;
-        }
-
-        public HashSet<Specialization> CreateSpecializationHashSet(List<SpecializationModel> specializations)
-        {
-            var result = new HashSet<Specialization>();
-            foreach (var sp in specializations)
-            {
-                if (sp.IsSelected)
-                {
-                    result.Add(sp.Specialization);
-                }
-            }
-            return result;
         }
 
         public async Task<int> CreateSpecialization(Restaurant restaurant, Specialization specialization)

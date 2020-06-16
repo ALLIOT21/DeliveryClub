@@ -1,30 +1,54 @@
-﻿using DeliveryClub.Domain.Logic.Interfaces;
+﻿using DeliveryClub.Domain.AuxiliaryModels.Guest;
+using DeliveryClub.Domain.Logic.Interfaces;
+using DeliveryClub.Infrastructure.Mapping;
+using DeliveryClub.Web.ViewModels.Guest;
 using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace DeliveryClub.Web.Controllers
 {
     public class GuestController : Controller
     {
-        private readonly IGuestService _service;
+        private readonly IGuestService _guestService;
+        private readonly Mapper _mapper;
+        private const int PAGE_SIZE = 3;
 
-        public GuestController(IGuestService service)
+        public GuestController(IGuestService guestService)
         {
-            _service = service;            
+            _guestService = guestService;
+            _mapper = new Mapper(Assembly.GetExecutingAssembly());
         }
 
-
-        // GET: /<controller>/
-        public IActionResult Index()
+        public IActionResult Index(int page = 1)
         {
-            var currentUserRole = _service.GetUserRole();
+            var currentUserRole = _guestService.GetUserRole();
             if (currentUserRole != null)
             {
                 return RedirectToAction("Index", currentUserRole);
             }
             else
-                return View();
+            {              
+                ICollection<RestaurantPartialViewModel> rpvms = new List<RestaurantPartialViewModel>();
+                foreach (var rpm in _guestService.GetRestaurantsPartially())
+                {
+                    rpvms.Add(_mapper.Map<RestaurantPartialModel, RestaurantPartialViewModel>(rpm));
+                }
+
+                var count = rpvms.Count;
+                var items = rpvms.Skip((page - 1) * PAGE_SIZE).Take(PAGE_SIZE).ToList();
+
+                PageViewModel pageViewModel = new PageViewModel(count, page, PAGE_SIZE);
+                IndexViewModel viewModel = new IndexViewModel
+                {
+                    PageViewModel = pageViewModel,
+                    RestaurantPartialViewModels = items
+                };
+                
+                return View(viewModel);
+            }
         }
+
     }
 }

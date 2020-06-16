@@ -1,5 +1,55 @@
-﻿@{
+﻿@model DeliveryClub.Web.ViewModels.Guest.IndexViewModel
+@{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<div>
+    <h1>Restaurants</h1>
+    <nav aria-label="Page navigation example">       
+        <ul class="pagination justify-content-end">
+            <li class="page-item @(@Model.PageViewModel.PageNumber > 1 ? "" : "disabled")">
+                <a class="page-link" asp-action="Index"
+                   asp-route-page="1">
+                    To Begin
+                </a>
+            </li>            
+            <li class="page-item @(@Model.PageViewModel.HasPreviousPage ? "" : "disabled")">
+                <a class="page-link"
+                   asp-action="Index"
+                   asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
+                   aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                    <span class="sr-only">Previous</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" asp-action="Index"
+                    asp-route-page="@(Model.PageViewModel.PageNumber)">
+                    @(Model.PageViewModel.PageNumber)
+                </a>
+            </li>
+            <li class="page-item @(@Model.PageViewModel.HasNextPage ? "" : "disabled")">
+                <a class="page-link" 
+                   asp-action="Index"
+                   asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
+                   aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </li>
+            <li class="page-item @(@Model.PageViewModel.PageNumber < Model.PageViewModel.TotalPages ? "" : "disabled")">
+                <a class="page-link" asp-action="Index"
+                   asp-route-page="@Model.PageViewModel.TotalPages">
+                    To End (pages: @Model.PageViewModel.TotalPages)
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+@{
+    foreach (var r in Model.RestaurantPartialViewModels)
+    {
+        <p>@r.Name</p>
+    }
+}
 

@@ -1,6 +1,7 @@
 ﻿using DeliveryClub.Data.Context;
 using DeliveryClub.Data.DTO.EntitiesDTO;
 using DeliveryClub.Domain.AuxiliaryModels.Admin;
+using DeliveryClub.Domain.Logic.Mapping;
 using DeliveryClub.Domain.Models.Entities;
 using DeliveryClub.Infrastructure.Mapping;
 using Microsoft.AspNetCore.Identity;
@@ -19,15 +20,18 @@ namespace DeliveryClub.Domain.Logic.Managers
         private readonly ApplicationDbContext _dbContext;
         private readonly Mapper _mapper;
         private readonly PaymentMethodManager _paymentMethodManager;
+        private readonly AuxiliaryMapper _auxiliaryMapper;
 
         public RestaurantAdditionalInfoManager(ApplicationDbContext dbContext,
                             UserManager<IdentityUser> userManager,
-                            PaymentMethodManager paymentMethodManager)
+                            PaymentMethodManager paymentMethodManager,
+                            AuxiliaryMapper auxiliaryMapper)
         {
             _dbContext = dbContext;
             _userManager = userManager;
             _mapper = new Mapper(Assembly.GetExecutingAssembly());
             _paymentMethodManager = paymentMethodManager;
+            _auxiliaryMapper = auxiliaryMapper;
         }
 
         public RestaurantAdditionalInfo GetRestaurantAdditionalInfo(int id)
@@ -48,7 +52,7 @@ namespace DeliveryClub.Domain.Logic.Managers
             restaurantAdditionalInfo.OrderTimeBegin = stringTimeSpanConverter.StringToTimeSpan(restaurantInfoModel.OrderTimeBegin);
             restaurantAdditionalInfo.OrderTimeEnd = stringTimeSpanConverter.StringToTimeSpan(restaurantInfoModel.OrderTimeEnd);
             var updateResult = _dbContext.RestaurantAdditionalInfos.Update(_mapper.Map<RestaurantAdditionalInfo, RestaurantAdditionalInfoDTO>(restaurantAdditionalInfo));
-            await _paymentMethodManager.UpdatePaymentMethods(restaurantAdditionalInfo, _paymentMethodManager.CreatePaymentMethodHashSet(restaurantInfoModel.PaymentMethods));
+            await _paymentMethodManager.UpdatePaymentMethods(restaurantAdditionalInfo, _auxiliaryMapper.CreatePaymentMethodHashSet(restaurantInfoModel.PaymentMethods));
             return _mapper.Map<RestaurantAdditionalInfoDTO, RestaurantAdditionalInfo>(updateResult.Entity);
         }
     }

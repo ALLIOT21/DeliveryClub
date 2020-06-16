@@ -95,7 +95,7 @@ namespace DeliveryClub.Web.Controllers
                 this.AddNotificationToViewBag(new Notification
                 {
                     Message = "Dispatcher has not been created!",
-                    Type = NotificationType.Error
+                    Type = NotificationType.Warning
                 });
             }
             return View(model);
@@ -129,7 +129,7 @@ namespace DeliveryClub.Web.Controllers
                 this.AddNotificationToViewBag(new Notification
                 {
                     Message = "Dispatcher is not updated",
-                    Type = NotificationType.Error
+                    Type = NotificationType.Warning
                 });
             }
             return View(model);
@@ -166,7 +166,7 @@ namespace DeliveryClub.Web.Controllers
             {
                 TempData.AddNotificationMessage(new Notification
                 {
-                    Type = NotificationType.Error,
+                    Type = NotificationType.Warning,
                     Message = "Product group is not created!"
                 });
             }
@@ -260,7 +260,7 @@ namespace DeliveryClub.Web.Controllers
             this.AddNotificationToViewBag(new Notification
             {
                 Message = "Product is not created!",
-                Type = NotificationType.Error
+                Type = NotificationType.Warning
             });
 
             return View(model);

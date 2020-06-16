@@ -7,6 +7,8 @@ using DeliveryClub.Web.ViewModels;
 using DeliveryClub.Web.ViewModels.Admin.Dispatchers;
 using DeliveryClub.Web.ViewModels.Admin.Menu;
 using DeliveryClub.Web.ViewModels.Admin.Info;
+using DeliveryClub.Web.ViewModels.Guest;
+using DeliveryClub.Domain.AuxiliaryModels.Guest;
 
 namespace DeliveryClub.Web.Mapping
 {
@@ -48,6 +50,9 @@ namespace DeliveryClub.Web.Mapping
                 .ReverseMap();
 
             CreateMap<UpdateDispatcherViewModel, UpdateDispatcherModel>()
+                .ReverseMap();
+
+            CreateMap<RestaurantPartialViewModel, RestaurantPartialModel>()
                 .ReverseMap();
         }
     }

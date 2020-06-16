@@ -1,8 +1,6 @@
-﻿using DeliveryClub.Domain.AuxiliaryModels;
-using DeliveryClub.Domain.AuxiliaryModels.SuperUser;
+﻿using DeliveryClub.Domain.AuxiliaryModels.SuperUser;
 using DeliveryClub.Domain.Logic.Interfaces;
 using DeliveryClub.Infrastructure.Mapping;
-using DeliveryClub.Web.ViewModels;
 using DeliveryClub.Web.ViewModels.SuperUser;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

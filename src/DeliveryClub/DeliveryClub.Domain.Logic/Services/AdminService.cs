@@ -3,6 +3,7 @@ using DeliveryClub.Domain.AuxiliaryModels.Admin;
 using DeliveryClub.Domain.Logic.Extensions;
 using DeliveryClub.Domain.Logic.Interfaces;
 using DeliveryClub.Domain.Logic.Managers;
+using DeliveryClub.Domain.Logic.Mapping;
 using DeliveryClub.Domain.Models.Actors;
 using DeliveryClub.Domain.Models.Entities;
 using DeliveryClub.Infrastructure.Mapping;
@@ -19,17 +20,13 @@ namespace DeliveryClub.Domain.Logic.Services
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly ApplicationDbContext _dbContext;
-        private readonly Mapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly AdminManager _adminManager;
-        private readonly PaymentMethodManager _paymentMethodManager;
-        private readonly PortionPriceManager _portionPriceManager;
         private readonly PortionPriceProductGroupManager _portionPriceProductGroupManager;
+        private readonly AuxiliaryMapper _auxiliaryMapper;
         private readonly ProductGroupManager _productGroupManager;
         private readonly ProductManager _productManager;
         private readonly RestaurantManager _restaurantManager;
-        private readonly SpecializationManager _specializationManager;
-
         private readonly DispatcherManager _dispatcherManager;
         private readonly IdentityUserManager _identityUserManager;
 
@@ -38,36 +35,30 @@ namespace DeliveryClub.Domain.Logic.Services
                             AdminManager adminManager,
                             DispatcherManager dispatcherManager,
                             IdentityUserManager identityUserManager,
-                            PaymentMethodManager paymentMethodManager,
-                            PortionPriceManager portionPriceManager,
                             PortionPriceProductGroupManager portionPriceProductGroupManager,
-                            PortionPriceProductManager portionPriceProductManager,
+                            AuxiliaryMapper auxiliaryMapper,
                             ProductGroupManager productGroupManager,
                             ProductManager productManager,
                             RestaurantManager restaurantManager,
-                            SpecializationManager specializationManager,
                             IHttpContextAccessor httpContextAccessor)
         {
             _dbContext = dbContext;
             _userManager = userManager;
-            _mapper = new Mapper(Assembly.GetExecutingAssembly());
             _adminManager = adminManager;
             _dispatcherManager = dispatcherManager;
             _identityUserManager = identityUserManager;
-            _paymentMethodManager = paymentMethodManager;
-            _portionPriceManager = portionPriceManager;
             _portionPriceProductGroupManager = portionPriceProductGroupManager;
+            _auxiliaryMapper = auxiliaryMapper;
             _productGroupManager = productGroupManager;
             _productManager = productManager;
             _restaurantManager = restaurantManager;
-            _specializationManager = specializationManager;
             _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<RestaurantInfoModel> GetRestaurantInfo()
         {
             var restaurant = await GetCurrentRestaurant();
-            var restaurantInfo = CreateRestaurantInfoModel(restaurant);
+            var restaurantInfo = _auxiliaryMapper.CreateRestaurantInfoModel(restaurant);
             return restaurantInfo;
         }
 
@@ -75,7 +66,7 @@ namespace DeliveryClub.Domain.Logic.Services
         {
             var restaurant = await GetCurrentRestaurant();
             var updatedRestaurant = await _restaurantManager.UpdateRestaurant(restaurant, restaurantInfoModel);
-            var result = CreateRestaurantInfoModel(updatedRestaurant);
+            var result = _auxiliaryMapper.CreateRestaurantInfoModel(updatedRestaurant);
             return result;
         }
 
@@ -113,7 +104,7 @@ namespace DeliveryClub.Domain.Logic.Services
         {
             var restaurant = await GetCurrentRestaurant();
             var productGroups = _productGroupManager.GetProductGroupsFull(restaurant);
-            var result = CreateProductGroupModels(productGroups);
+            var result = _auxiliaryMapper.CreateProductGroupModels(productGroups);
 
             return result;
         }
@@ -148,7 +139,7 @@ namespace DeliveryClub.Domain.Logic.Services
         {
             var product = _productManager.GetProduct(id);
 
-            return CreateProductModel(product);
+            return _auxiliaryMapper.CreateProductModel(product);
         }
 
         public async Task<ProductModel> UpdateProduct(ProductModel model)
@@ -160,7 +151,7 @@ namespace DeliveryClub.Domain.Logic.Services
             var productGroup = _productGroupManager.GetProductGroup(restaurant.Id, model.ProductGroupName);
             var updatedProduct = await _productManager.UpdateProduct(model, productGroup.Id);
 
-            return CreateProductModel(updatedProduct);
+            return _auxiliaryMapper.CreateProductModel(updatedProduct);
         }
 
         public async Task<IdentityResult> CreateDispatcher(CreateDispatcherModel model)
@@ -182,14 +173,14 @@ namespace DeliveryClub.Domain.Logic.Services
 
             var dispatchers = _dispatcherManager.GetDispatchers(restaurantId);
 
-            return CreateGetDispatcherModels(dispatchers);
+            return _auxiliaryMapper.CreateGetDispatcherModels(dispatchers);
         }
 
         public UpdateDispatcherModel GetDispatcher(int id)
         {
             var d = _dispatcherManager.GetDispatcher(id);            
 
-            return CreateUpdateDispatcherModel(d);
+            return _auxiliaryMapper.CreateUpdateDispatcherModel(d);
         }
 
         public async Task<IdentityResult> UpdateDispatcher(UpdateDispatcherModel model)
@@ -202,21 +193,7 @@ namespace DeliveryClub.Domain.Logic.Services
         {
             await _dispatcherManager.DeleteDispatcher(id);
         }
-
-        private ProductModel CreateProductModel(Product product)
-        {
-            var productModel = new ProductModel
-            {
-                Name = product.Name,
-                Description = product.Description,
-                Id = product.Id,
-                ImageName = product.ImageName,
-                ProductGroupName = product.ProductGroup.Name,
-                PortionPrices = CreatePortionPriceModels(product.PortionPrices).ToList()
-            };
-            return productModel;
-        }
-
+        
         public async Task DeleteProduct(int id)
         {
             await _productManager.DeleteProduct(id);
@@ -233,116 +210,7 @@ namespace DeliveryClub.Domain.Logic.Services
                 return true;
             else
                 return false;
-        }
-
-        private RestaurantInfoModel CreateRestaurantInfoModel(Restaurant restaurant)
-        {
-            var restaurantInfo = new RestaurantInfoModel();
-            var stringTimeSpanConverter = new StringTimeSpanConverter();
-
-            restaurantInfo.Name = restaurant.Name;
-            restaurantInfo.Specializations = _specializationManager.CreateSpecializationList(restaurant.Specializations);
-            restaurantInfo.DeliveryCost = restaurant.DeliveryCost;
-            restaurantInfo.MinimalOrderPrice = restaurant.MinimalOrderPrice;
-            restaurantInfo.Description = restaurant.RestaurantAdditionalInfo.Description;
-            restaurantInfo.PaymentMethods = _paymentMethodManager.CreatePaymentMethodList(restaurant.RestaurantAdditionalInfo.PaymentMethods);
-            restaurantInfo.DeliveryMaxTime = stringTimeSpanConverter.TimeSpanToString(restaurant.RestaurantAdditionalInfo.DeliveryMaxTime);
-            restaurantInfo.OrderTimeBegin = stringTimeSpanConverter.TimeSpanToString(restaurant.RestaurantAdditionalInfo.OrderTimeBegin);
-            restaurantInfo.OrderTimeEnd = stringTimeSpanConverter.TimeSpanToString(restaurant.RestaurantAdditionalInfo.OrderTimeEnd);
-            return restaurantInfo;
-        }
-
-        private ICollection<ProductGroupModel> CreateProductGroupModels(ICollection<ProductGroup> productGroups)
-        {
-            var result = new List<ProductGroupModel>();
-            foreach (var pg in productGroups)
-            {
-                var productGroupModel = new ProductGroupModel
-                {
-                    Id = pg.Id,
-                    Name = pg.Name,
-                    PortionPrices = CreatePortionPriceModels(pg.PortionPrices).ToList(),
-                    Products = CreateProductModels(pg.Products).ToList()
-                };
-                result.Add(productGroupModel);
-            }
-            return result;
-        }
-
-        private ICollection<PortionPriceModel> CreatePortionPriceModels(ICollection<PortionPriceProductGroup> portionPrices)
-        {
-            var result = new List<PortionPriceModel>();
-            foreach (var pp in portionPrices)
-            {
-                var ppm = new PortionPriceModel
-                {
-                    Id = pp.PortionPrice.Id,
-                    Portion = pp.PortionPrice.Portion,
-                    Price = pp.PortionPrice.Price,
-                };
-                result.Add(ppm);
-            }
-            return result;
-        }
-
-        private ICollection<PortionPriceModel> CreatePortionPriceModels(ICollection<PortionPriceProduct> portionPrices)
-        {
-            var result = new List<PortionPriceModel>();
-            foreach (var pp in portionPrices)
-            {
-                var ppm = new PortionPriceModel
-                {
-                    Id = pp.PortionPrice.Id,
-                    Portion = pp.PortionPrice.Portion,
-                    Price = pp.PortionPrice.Price,
-                };
-                result.Add(ppm);
-            }
-            return result;
-        }
-
-        private ICollection<ProductModel> CreateProductModels(ICollection<Product> products)
-        {
-            var result = new List<ProductModel>();
-            foreach (var p in products)
-            {
-                var productModel = new ProductModel
-                {
-                    Name = p.Name,
-                    Description = p.Description,
-                    Id = p.Id,
-                    ImageName = p.ImageName,
-                    PortionPrices = CreatePortionPriceModels(p.PortionPrices).ToList()
-                };
-                result.Add(productModel);
-            }
-            return result;
-        }
-
-        private ICollection<GetDispatcherModel> CreateGetDispatcherModels(ICollection<Dispatcher> dispatchers)
-        {
-            var getDispatcherModels = new List<GetDispatcherModel>();
-            foreach (var d in dispatchers)
-            {
-                var gdm = new GetDispatcherModel()
-                {
-                    Email = d.User.Email,
-                    Id = d.Id,
-                };
-                getDispatcherModels.Add(gdm);
-            }
-            return getDispatcherModels;
-        }
-        
-        private UpdateDispatcherModel CreateUpdateDispatcherModel(Dispatcher dispatcher)
-        {
-            var udm = new UpdateDispatcherModel
-            {
-                Id = dispatcher.Id,
-                OldEmail = dispatcher.User.Email,
-            };
-            return udm;
-        }
+        }      
 
         private async Task<int> GetCurrentRestaurantId()
         {

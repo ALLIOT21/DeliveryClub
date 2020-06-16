@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using DeliveryClub.Domain.Logic.Interfaces;
 using DeliveryClub.Domain.Logic.Services;
 using DeliveryClub.Domain.Logic.Managers;
+using DeliveryClub.Domain.Logic.Mapping;
 
 namespace DeliveryClub.Domain.Logic
 {
@@ -26,7 +27,8 @@ namespace DeliveryClub.Domain.Logic
             services.AddScoped<ProductManager>();
             services.AddScoped<RestaurantAdditionalInfoManager>();
             services.AddScoped<RestaurantManager>();
-            services.AddScoped<SpecializationManager>();            
+            services.AddScoped<SpecializationManager>();
+            services.AddScoped<AuxiliaryMapper>();
             return services;
         }
     }
