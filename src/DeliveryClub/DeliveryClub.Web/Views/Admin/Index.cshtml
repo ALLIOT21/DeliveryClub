@@ -84,8 +84,7 @@
                 <div class="info-item last-item">
                     @if (Model.CoverImageName != null)
                     {
-                        var imagePath = PathConstants.ImageFolder + Model.CoverImageName;
-                        <img width="350" height="200" src="@imagePath" id="image" alt="" class="img-thumbnail" />
+                        <img width="350" height="200" src="@(PathConstants.ImageFolder + Model.CoverImageName)" id="image" alt="" class="img-thumbnail" />
                     }
                     else
                     {
