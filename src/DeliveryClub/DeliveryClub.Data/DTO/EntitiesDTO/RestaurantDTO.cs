@@ -12,6 +12,8 @@ namespace DeliveryClub.Data.DTO.EntitiesDTO
 
         public double? DeliveryCost { get; set; }
 
+        public string CoverImageName { get; set; }
+
         public virtual HashSet<SpecializationDTO> Specializations { get; set; }
 
         public RestaurantAdditionalInfoDTO Info { get; set; }

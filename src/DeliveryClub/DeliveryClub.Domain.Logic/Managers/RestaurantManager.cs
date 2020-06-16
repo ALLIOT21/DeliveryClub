@@ -4,6 +4,8 @@ using DeliveryClub.Domain.AuxiliaryModels.Admin;
 using DeliveryClub.Domain.Logic.Mapping;
 using DeliveryClub.Domain.Models.Entities;
 using DeliveryClub.Infrastructure.Mapping;
+using DeliveryClub.Infrastructure.Services;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,17 +21,20 @@ namespace DeliveryClub.Domain.Logic.Managers
         private readonly RestaurantAdditionalInfoManager _restaurantAdditionalInfoManager;
         private readonly SpecializationManager _specializationManager;
         private readonly AuxiliaryMapper _auxiliaryMapper;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
         public RestaurantManager(ApplicationDbContext dbContext,
                             RestaurantAdditionalInfoManager restaurantAdditionalInfoManager,
                             SpecializationManager specializationManager,
-                            AuxiliaryMapper auxiliaryMapper)
+                            AuxiliaryMapper auxiliaryMapper,
+                            IWebHostEnvironment webHostEnvironment)
         {
             _dbContext = dbContext;
             _mapper = new Mapper(Assembly.GetExecutingAssembly());
             _restaurantAdditionalInfoManager = restaurantAdditionalInfoManager;
             _specializationManager = specializationManager;
             _auxiliaryMapper = auxiliaryMapper;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public Restaurant GetRestaurant(int id)
@@ -54,7 +59,6 @@ namespace DeliveryClub.Domain.Logic.Managers
 
                 result.Add(r);
             }
-
             return result;
         }
 
@@ -64,6 +68,23 @@ namespace DeliveryClub.Domain.Logic.Managers
             await _specializationManager.UpdateSpecializations(restaurant, _auxiliaryMapper.CreateSpecializationHashSet(restaurantInfoModel.Specializations));
             restaurant.DeliveryCost = restaurantInfoModel.DeliveryCost;
             restaurant.MinimalOrderPrice = restaurantInfoModel.MinimalOrderPrice;
+                        
+            if (restaurantInfoModel.CoverImage != null)
+            {
+                string fileName;
+                var imgServ = new ImageService(_webHostEnvironment.WebRootPath);
+                if (restaurant.CoverImageName != null)
+                {
+                    imgServ.DeleteImage(restaurant.CoverImageName);
+                    fileName = await imgServ.CreateImage(restaurantInfoModel.CoverImage);                    
+                }
+                else
+                {
+                    fileName = await imgServ.CreateImage(restaurantInfoModel.CoverImage);
+                }
+                restaurant.CoverImageName = fileName;
+            }
+
             var updateInfoResult = await _restaurantAdditionalInfoManager.UpdateRestaurantAdditionalInfo(restaurant.RestaurantAdditionalInfo, restaurantInfoModel);
             restaurant.RestaurantAdditionalInfo = updateInfoResult;
             var updateResultDTO = _dbContext.Restaurants.Update(_mapper.Map<Restaurant, RestaurantDTO>(restaurant));
