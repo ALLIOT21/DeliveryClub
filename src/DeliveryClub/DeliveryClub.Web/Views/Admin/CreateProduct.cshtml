@@ -59,7 +59,7 @@
              }
             <div class="form-group product-product_group_name">
                 <label asp-for="ProductGroupName" class="control-label">Product Group</label>
-                <select asp-for="ProductGroupName" onload="HasPortionPrices(this)" onchange="HasPortionPrices(this)" asp-items="@new SelectList(ViewBag.ProductGroupNames)" class="form-control"></select>
+                <select asp-for="ProductGroupName" id="product-group-name" onchange="HasPortionPrices(this)" asp-items="@new SelectList(ViewBag.ProductGroupNames)" class="form-control"></select>
                 <span asp-validation-for="ProductGroupName" class="text-danger"></span>
             </div>
             <div>
@@ -85,7 +85,6 @@
         </form>
     </div>
 </div>
-
 <div>
     <a asp-action="Menu">Back to Menu</a>
 </div>

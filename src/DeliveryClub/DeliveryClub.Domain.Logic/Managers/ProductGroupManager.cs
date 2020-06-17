@@ -1,45 +1,33 @@
 ﻿using DeliveryClub.Data.Context;
 using DeliveryClub.Data.DTO.EntitiesDTO;
 using DeliveryClub.Domain.AuxiliaryModels.Admin;
-using DeliveryClub.Domain.Logic.Extensions;
 using DeliveryClub.Domain.Models.Entities;
 using DeliveryClub.Infrastructure.Mapping;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace DeliveryClub.Domain.Logic.Managers
 {
     public class ProductGroupManager
     {
-        private readonly UserManager<IdentityUser> _userManager;
         private readonly ApplicationDbContext _dbContext;
         private readonly Mapper _mapper;
         private readonly PortionPriceManager _portionPriceManager;
         private readonly PortionPriceProductGroupManager _portionPriceProductGroupManager;
-        private readonly AdminManager _adminManager;
-        private readonly RestaurantManager _restaurantManager;
         private readonly ProductManager _productManager;
 
         public ProductGroupManager(ApplicationDbContext dbContext,
-                            UserManager<IdentityUser> userManager,
                             PortionPriceManager portionPriceManager,
                             PortionPriceProductGroupManager portionPriceProductGroupManager,
-                            AdminManager adminManager,
-                            RestaurantManager restaurantManager,
                             ProductManager productManager)
         {
             _dbContext = dbContext;
-            _userManager = userManager;
             _mapper = new Mapper(Assembly.GetExecutingAssembly());
             _portionPriceManager = portionPriceManager;
             _portionPriceProductGroupManager = portionPriceProductGroupManager;
-            _adminManager = adminManager;
-            _restaurantManager = restaurantManager;
             _productManager = productManager;
         }
         public ProductGroup CreateProductGroup(ProductGroupModel model, Restaurant restaurant)
@@ -108,17 +96,13 @@ namespace DeliveryClub.Domain.Logic.Managers
             return result;
         }
 
-        public async Task DeleteProductGroup(ClaimsPrincipal currentUser, int id)
-        {
-            var currentIdentityUser = await _userManager.GetCurrentIdentityUser(currentUser);
-            var admin = _adminManager.GetAdmin(currentIdentityUser.Id);
-            var restaurant = _restaurantManager.GetRestaurant(admin.RestaurantId);
-
+        public async Task DeleteProductGroup(int id)
+        {           
             var products = _dbContext.Products.Where(p => p.ProductGroupId == id);
 
             foreach (var product in products)
             {
-                await _productManager.DeleteProduct(product.Id);
+                _productManager.DeleteProductWithoutSaving(product.Id);
             }
 
             var productGroupDTO = GetProductGroupDTOById(id);                       
@@ -127,8 +111,11 @@ namespace DeliveryClub.Domain.Logic.Managers
                 var resultPPPG = _dbContext.PortionPriceProductGroups.Remove(pp);
                 var resultPP = _dbContext.PortionPrices.Remove(pp.PortionPrice);
             }
-            _dbContext.ProductGroups.Remove(productGroupDTO);
             _dbContext.SaveChanges();
+
+            productGroupDTO = GetProductGroupDTOById(id);
+            _dbContext.ProductGroups.Remove(productGroupDTO);
+            await _dbContext.SaveChangesAsync();
         }
 
         public ProductGroup GetProductGroup(int restaurantId, string name)

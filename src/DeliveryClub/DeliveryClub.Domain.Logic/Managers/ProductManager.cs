@@ -5,10 +5,7 @@ using DeliveryClub.Domain.Models.Entities;
 using DeliveryClub.Infrastructure.Mapping;
 using DeliveryClub.Infrastructure.Services;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -16,7 +13,7 @@ using System.Threading.Tasks;
 namespace DeliveryClub.Domain.Logic.Managers
 {
     public class ProductManager
-    {        
+    {
         private readonly ApplicationDbContext _dbContext;
         private readonly Mapper _mapper;
         private readonly PortionPriceManager _portionPriceManager;
@@ -33,7 +30,7 @@ namespace DeliveryClub.Domain.Logic.Managers
             _portionPriceManager = portionPriceManager;
             _portionPriceProductManager = portionPriceProductManager;
             _hostingEnvironment = hostingEnvironment;
-        }        
+        }
 
         public async Task<Product> CreateProduct(ProductModel model, int productGroupId)
         {
@@ -51,28 +48,28 @@ namespace DeliveryClub.Domain.Logic.Managers
                 ImageName = fileName,
                 ProductGroupId = productGroupId
             };
-            
-            var newProductDTO = _dbContext.Products.Add(_mapper.Map<Product, ProductDTO>(newProduct));            
+
+            var newProductDTO = _dbContext.Products.Add(_mapper.Map<Product, ProductDTO>(newProduct));
             _dbContext.SaveChanges();
 
             var portionPrices = _portionPriceManager.CreatePortionPrices(model.PortionPrices);
             var portionPricesProduct = _portionPriceProductManager.CreatePortionPricesProduct(portionPrices, _mapper.Map<ProductDTO, Product>(newProductDTO.Entity));
-            
+
             newProduct.PortionPrices = portionPricesProduct.ToHashSet();
             return newProduct;
-        }    
-        
+        }
+
         public ICollection<Product> GetProducts(int productGroupId)
         {
-            var productsDTO = _dbContext.Products.Where(p => p.ProductGroupId == productGroupId);                          
-                                        
+            var productsDTO = _dbContext.Products.Where(p => p.ProductGroupId == productGroupId);
+
             var products = new HashSet<Product>();
             foreach (var pdto in productsDTO)
             {
                 products.Add(_mapper.Map<ProductDTO, Product>(pdto));
             }
 
-            foreach (var p in products) 
+            foreach (var p in products)
             {
                 var portionPricesProduct = _portionPriceProductManager.GetPortionPriceProducts(p.Id).ToHashSet();
                 p.PortionPrices = portionPricesProduct;
@@ -100,19 +97,26 @@ namespace DeliveryClub.Domain.Logic.Managers
         {
             var product = GetProduct(newModel.Id);
             
-            string imageName;
-            var imgServ = new ImageService(_hostingEnvironment.WebRootPath);
-            if (product.ImageName != newModel.ImageName)
+            if (newModel.Image != null)
             {
-                imgServ.DeleteImage(product.ImageName);
+                string fileName;
+                var imgServ = new ImageService(_hostingEnvironment.WebRootPath);
+                if (product.ImageName != null)
+                {
+                    imgServ.DeleteImage(product.ImageName);
+                    fileName = await imgServ.CreateImage(newModel.Image);
+                }
+                else
+                {
+                    fileName = await imgServ.CreateImage(newModel.Image);
+                }
+                product.ImageName = fileName;
             }
-            imageName = await imgServ.CreateImage(newModel.Image);
 
             product.Id = newModel.Id;
             product.Name = newModel.Name;
             product.Description = newModel.Description;
-            product.ImageName = imageName;
-            product.ProductGroupId = productGroupId;  
+            product.ProductGroupId = productGroupId;
 
             var portionPrices = _portionPriceManager.CreatePortionPrices(newModel.PortionPrices);
             _portionPriceProductManager.UpdatePortionPriceProduct(portionPrices, product);
@@ -127,10 +131,21 @@ namespace DeliveryClub.Domain.Logic.Managers
             foreach (var ppp in product.PortionPrices)
             {
                 _portionPriceProductManager.DeletePortionPriceProduct(ppp);
-            }                     
+            }
 
             _dbContext.Products.Remove(_mapper.Map<Product, ProductDTO>(product));
             await _dbContext.SaveChangesAsync();
-        }        
+        }
+
+        public void DeleteProductWithoutSaving(int id)
+        {
+            var product = GetProduct(id);
+            foreach (var ppp in product.PortionPrices)
+            {
+                _portionPriceProductManager.DeletePortionPriceProduct(ppp);
+            }
+
+            _dbContext.Products.Remove(_mapper.Map<Product, ProductDTO>(product));
+        }
     }
 }

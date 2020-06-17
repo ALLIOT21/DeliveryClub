@@ -111,15 +111,7 @@ namespace DeliveryClub.Domain.Logic.Services
 
         public async Task DeleteProductGroup(int id)
         {
-            var productGroupDTO = _productGroupManager.GetProductGroupDTOById(id);
-            foreach (var pp in productGroupDTO.PortionPrices)
-            {
-                _dbContext.PortionPriceProductGroups.Remove(pp);
-                _dbContext.PortionPrices.Remove(pp.PortionPrice);
-            }
-
-            _dbContext.ProductGroups.Remove(productGroupDTO);
-            await _dbContext.SaveChangesAsync();
+            await _productGroupManager.DeleteProductGroup(id);
         }
 
         public async Task UpdateProductGroup(ProductGroupModel model)

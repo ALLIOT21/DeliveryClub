@@ -24,8 +24,10 @@
             </div>
             @if (Model.PortionPrices != null)
             {
-                int i = 0;
-                <div class="form-group portion-prices">
+                if (Model.PortionPrices.Count > 0)
+                {
+                    int i = 0;
+                    <div class="form-group portion-prices">
                     @foreach (var pp in Model.PortionPrices)
                     {
                         <div class="div-portion-price">
@@ -49,11 +51,12 @@
                         </div>
                         i++;
                     }
-                    <div class="div-buttons-portion_price" id="div-buttons-portion_price">
-                        <button class="btn btn-secondary button-portion_price button-portion_price-create" onclick="createPortionPricePair_Product()" form="">Create a portion-price pair</button>
-                        <button class="btn btn-secondary button-portion_price button-potrion_price-delete" onclick="deletePortionPricePair_Product()" form="">Delete a portion-price pair</button>
+                        <div class="div-buttons-portion_price" id="div-buttons-portion_price">
+                            <button class="btn btn-secondary button-portion_price button-portion_price-create" onclick="createPortionPricePair_Product()" form="">Create a portion-price pair</button>
+                            <button class="btn btn-secondary button-portion_price button-potrion_price-delete" onclick="deletePortionPricePair_Product()" form="">Delete a portion-price pair</button>
+                        </div>
                     </div>
-                </div>
+                }
             }
             <div class="form-group">
                 <label asp-for="ProductGroupName" class="control-label">Product Group</label>

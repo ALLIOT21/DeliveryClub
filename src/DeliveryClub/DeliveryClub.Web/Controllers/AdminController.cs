@@ -217,6 +217,10 @@ namespace DeliveryClub.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateProduct(ProductViewModel model)
         {
+            if (Convert.ToBoolean(model.ProductGroupPortionPriced))
+            {
+                model.PortionPrices = null;
+            }
             if (ModelState.IsValid)
             {
                 if (model.Image != null)
@@ -297,22 +301,53 @@ namespace DeliveryClub.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateProduct(ProductViewModel productViewModel)
+        public async Task<IActionResult> UpdateProduct(ProductViewModel model)
         {
-            if (Convert.ToBoolean(productViewModel.ProductGroupPortionPriced))
+            if (Convert.ToBoolean(model.ProductGroupPortionPriced))
             {
-                productViewModel.PortionPrices = null;
+                model.PortionPrices = null;
             }
+            if (ModelState.IsValid)
+            {
+                if (model.Image != null)
+                {
+                    var imageValidator = new ImageValidator();
+                    if (imageValidator.Validate(model.Image))
+                    {
+                        var updatedProduct = await _adminService.UpdateProduct(_mapper.Map<ProductViewModel, ProductModel>(model));
 
-            var updatedProduct = await _adminService.UpdateProduct(_mapper.Map<ProductViewModel, ProductModel>(productViewModel));
-            
+                        TempData.AddNotificationMessage(new Notification
+                        {
+                            Type = NotificationType.Success,
+                            Message = "Product successfully updated!"
+                        });
+                        return RedirectToAction(nameof(UpdateProduct), new { id = updatedProduct.Id });
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("Image", "File is not an image.");
+                    }
+                }
+                else
+                {
+                    var updatedProduct = await _adminService.UpdateProduct(_mapper.Map<ProductViewModel, ProductModel>(model));
+
+                    TempData.AddNotificationMessage(new Notification
+                    {
+                        Type = NotificationType.Success,
+                        Message = "Product successfully updated!"
+                    });
+
+                    return RedirectToAction(nameof(UpdateProduct), new { id = updatedProduct.Id});
+                }
+            }            
             TempData.AddNotificationMessage(new Notification
             {
-                Type = NotificationType.Success,
-                Message = "Product successfully updated!"
+                Type = NotificationType.Warning,
+                Message = "Product is not created!"
             });
 
-            return RedirectToAction(nameof(UpdateProduct), new { id = updatedProduct.Id });
+            return View(model);            
         }
 
         [HttpPost]
