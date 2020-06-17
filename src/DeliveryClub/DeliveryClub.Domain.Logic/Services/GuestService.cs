@@ -48,6 +48,7 @@ namespace DeliveryClub.Domain.Logic.Services
                     Name = r.Name,
                     DeliveryCost = r.DeliveryCost,
                     MinimalOrderPrice = r.MinimalOrderPrice,
+                    CoverImageName = r.CoverImageName,
                     Specializations = _auxiliaryMapper.CreateSpecializationModelList(r.Specializations)
                 };
                 rpms.Add(rpm);

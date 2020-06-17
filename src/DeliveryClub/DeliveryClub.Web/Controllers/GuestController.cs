@@ -13,7 +13,7 @@ namespace DeliveryClub.Web.Controllers
     {
         private readonly IGuestService _guestService;
         private readonly Mapper _mapper;
-        private const int PAGE_SIZE = 3;
+        private const int PAGE_SIZE = 9;
 
         public GuestController(IGuestService guestService)
         {

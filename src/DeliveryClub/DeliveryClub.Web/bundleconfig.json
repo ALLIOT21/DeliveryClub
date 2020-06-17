@@ -7,11 +7,11 @@
       "wwwroot/css/site/header/header-div.css",
       "wwwroot/css/site/header/home-div.css",
       "wwwroot/css/site/header/login-div.css",
-      "wwwroot/css/site/header/header-div-main.css",
       "wwwroot/css/site/content/superuser/superuser.css",
       "wwwroot/css/site/content/admin/adminInfo.css",
       "wwwroot/css/site/content/admin/adminMenu.css",
-      "wwwroot/css/site/content/admin/adminProduct.css"
+      "wwwroot/css/site/content/admin/adminProduct.css",
+      "wwwroot/css/site/content/guest/guest.css"
     ]
   },
   {
@@ -25,7 +25,8 @@
       "wwwroot/js/admin/portionPriceSwitch.js",
       "wwwroot/js/admin/productGroupHasPortionPrices.js",
       "wwwroot/js/admin/productUploadImage.js",
-      "wwwroot/js/site/notification.js"
+      "wwwroot/js/site/notification.js",
+      "wwwroot/js/guest/guest.js"
     ],
     "minify": {
       "enabled": true,

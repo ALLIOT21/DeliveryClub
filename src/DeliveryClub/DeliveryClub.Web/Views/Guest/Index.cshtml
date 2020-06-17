@@ -1,18 +1,20 @@
-﻿@model DeliveryClub.Web.ViewModels.Guest.IndexViewModel
+﻿@using System.Net;
+@using DeliveryClub.Infrastructure.Constants
+@model DeliveryClub.Web.ViewModels.Guest.IndexViewModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div>
     <h1>Restaurants</h1>
-    <nav aria-label="Page navigation example">       
+    <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-end">
             <li class="page-item @(@Model.PageViewModel.PageNumber > 1 ? "" : "disabled")">
                 <a class="page-link" asp-action="Index"
                    asp-route-page="1">
                     To Begin
                 </a>
-            </li>            
+            </li>
             <li class="page-item @(@Model.PageViewModel.HasPreviousPage ? "" : "disabled")">
                 <a class="page-link"
                    asp-action="Index"
@@ -24,12 +26,12 @@
             </li>
             <li class="page-item">
                 <a class="page-link" asp-action="Index"
-                    asp-route-page="@(Model.PageViewModel.PageNumber)">
+                   asp-route-page="@(Model.PageViewModel.PageNumber)">
                     @(Model.PageViewModel.PageNumber)
                 </a>
             </li>
             <li class="page-item @(@Model.PageViewModel.HasNextPage ? "" : "disabled")">
-                <a class="page-link" 
+                <a class="page-link"
                    asp-action="Index"
                    asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
                    aria-label="Next">
@@ -46,10 +48,61 @@
         </ul>
     </nav>
 </div>
-@{
-    foreach (var r in Model.RestaurantPartialViewModels)
+
+<div class="specialization-list" >
+    @foreach (var sp in Model.RestaurantPartialViewModels.ElementAt(0).Specializations)
     {
-        <p>@r.Name</p>
-    }
+        <div class="specialization-item" onclick="toggleGrayBackground()">
+            <span onclick="toggleGrayBackgroundParent()">@WebUtility.HtmlDecode(Symbols.Specializations[sp.Specialization])</span>      
+            <br>
+            <h6 onclick="toggleGrayBackgroundParent()">@sp.Specialization.ToString()</h6>
+        </div>
+    }    
+</div>
+@{
+    <div class="card-container">
+        @foreach (var r in Model.RestaurantPartialViewModels)
+        {
+            <a class="card-a">
+                <div class="card card-extension">
+                    @if (r.CoverImageName != null)
+                    {
+                        <img class="card-img-top" height="220" src="@(PathConstants.ImageFolder + r.CoverImageName)" alt="Card image cap">
+                    }
+                    else
+                    {
+                        <img class="card-img-top" height="220" src="~/resources/img/site/no-cover.png" alt="Card image cap">
+                    }
+                    <div class="card-body">
+                        <h5 class="card-title">@r.Name</h5>
+                        <p>
+                            <span class="restaurant-info-span " title="Delivery cost">@WebUtility.HtmlDecode(Symbols.Truck) @r.DeliveryCost BYN</span>
+                            <span title="Minimal order price">@WebUtility.HtmlDecode(Symbols.MoneyBag) @r.MinimalOrderPrice BYN</span>
+                        </p>
+                        <p>
+                            @{   
+                                int isSelectedAmount = 0;
+                                if (r.Specializations != null)
+                                {
+                                    @foreach (var rsp in r.Specializations)
+                                    {
+                                        if (rsp.IsSelected)
+                                        {
+                                            <span>@WebUtility.HtmlDecode(Symbols.Specializations[rsp.Specialization])</span>
+                                            isSelectedAmount++;
+                                        }
+                                    }
+                                }
+                                if (isSelectedAmount == 0)
+                                {
+                                    <span>No specializations :(</span>
+                                }
+                            }
+                        </p>
+                    </div>
+                </div>
+            </a>
+        }
+    </div>
 }
 

@@ -14,5 +14,7 @@ namespace DeliveryClub.Web.ViewModels.Guest
         public double DeliveryCost { get; set; }
 
         public double MinimalOrderPrice { get; set; }
+
+        public string CoverImageName { get; set; }
     }
 }

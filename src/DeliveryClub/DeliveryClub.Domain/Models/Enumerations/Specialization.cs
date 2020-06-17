@@ -9,8 +9,6 @@ namespace DeliveryClub.Domain.Models.Enumerations
         Sushi, 
         Pizza, 
         FastFood,
-        Italian, 
-        Chinese,
         Fish,
         Meat,
         Chicken,
