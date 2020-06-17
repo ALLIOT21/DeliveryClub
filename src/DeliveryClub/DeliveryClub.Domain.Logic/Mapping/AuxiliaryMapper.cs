@@ -1,4 +1,5 @@
 ﻿using DeliveryClub.Domain.AuxiliaryModels.Admin;
+using DeliveryClub.Domain.AuxiliaryModels.Guest;
 using DeliveryClub.Domain.Logic.Managers;
 using DeliveryClub.Domain.Models.Actors;
 using DeliveryClub.Domain.Models.Entities;
@@ -22,7 +23,7 @@ namespace DeliveryClub.Domain.Logic.Mapping
             restaurantInfo.MinimalOrderPrice = restaurant.MinimalOrderPrice;
             restaurantInfo.Description = restaurant.RestaurantAdditionalInfo.Description;
             restaurantInfo.CoverImageName = restaurant.CoverImageName;
-            restaurantInfo.PaymentMethods = CreatePaymentMethodList(restaurant.RestaurantAdditionalInfo.PaymentMethods);
+            restaurantInfo.PaymentMethods = CreatePaymentMethodModelList(restaurant.RestaurantAdditionalInfo.PaymentMethods);
             restaurantInfo.DeliveryMaxTime = stringTimeSpanConverter.TimeSpanToString(restaurant.RestaurantAdditionalInfo.DeliveryMaxTime);
             restaurantInfo.OrderTimeBegin = stringTimeSpanConverter.TimeSpanToString(restaurant.RestaurantAdditionalInfo.OrderTimeBegin);
             restaurantInfo.OrderTimeEnd = stringTimeSpanConverter.TimeSpanToString(restaurant.RestaurantAdditionalInfo.OrderTimeEnd);
@@ -167,7 +168,7 @@ namespace DeliveryClub.Domain.Logic.Mapping
             return result;
         }
 
-        public List<PaymentMethodModel> CreatePaymentMethodList(HashSet<PaymentMethod> paymentMethods)
+        public List<PaymentMethodModel> CreatePaymentMethodModelList(HashSet<PaymentMethod> paymentMethods)
         {
             var result = new List<PaymentMethodModel>();
             foreach (var pm in Enum.GetValues(typeof(PaymentMethod)))
@@ -194,6 +195,48 @@ namespace DeliveryClub.Domain.Logic.Mapping
                 }
             }
             return result;
+        }
+
+        public ICollection<RestaurantPartialModel> CreateRestaurantPartialModels(ICollection<Restaurant> restaurants)
+        {
+            var rpms = new List<RestaurantPartialModel>();
+
+            foreach (var r in restaurants)
+            {
+                var rpm = new RestaurantPartialModel
+                {
+                    Id = r.Id,
+                    Name = r.Name,
+                    DeliveryCost = r.DeliveryCost,
+                    MinimalOrderPrice = r.MinimalOrderPrice,
+                    CoverImageName = r.CoverImageName,
+                    Specializations = CreateSpecializationModelList(r.Specializations)
+                };
+                rpms.Add(rpm);
+            }
+            return rpms;
+        }
+
+        public RestaurantFullModel CreateRestaurantFullModel(Restaurant restaurant)
+        {
+            var stringTimeSpanConverter = new StringTimeSpanConverter();
+
+            var restaurantFullModel = new RestaurantFullModel
+            {
+                Id = restaurant.Id,
+                Name = restaurant.Name,
+                DeliveryCost = restaurant.DeliveryCost,
+                MinimalOrderPrice = restaurant.MinimalOrderPrice,
+                DeliveryMaxTime = stringTimeSpanConverter.TimeSpanToString(restaurant.RestaurantAdditionalInfo.DeliveryMaxTime),
+                OrderTimeBegin = stringTimeSpanConverter.TimeSpanToString(restaurant.RestaurantAdditionalInfo.OrderTimeBegin),
+                OrderTimeEnd = stringTimeSpanConverter.TimeSpanToString(restaurant.RestaurantAdditionalInfo.OrderTimeEnd),
+                Description = restaurant.RestaurantAdditionalInfo.Description,
+                Menu = CreateProductGroupModels(restaurant.Menu),
+                Specializations = CreateSpecializationModelList(restaurant.Specializations),
+                PaymentMethods = CreatePaymentMethodModelList(restaurant.RestaurantAdditionalInfo.PaymentMethods)
+            };
+
+            return restaurantFullModel;
         }
     }
 }

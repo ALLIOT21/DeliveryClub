@@ -22,12 +22,14 @@ namespace DeliveryClub.Domain.Logic.Managers
         private readonly SpecializationManager _specializationManager;
         private readonly AuxiliaryMapper _auxiliaryMapper;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly ProductGroupManager _productGroupManager;
 
         public RestaurantManager(ApplicationDbContext dbContext,
                             RestaurantAdditionalInfoManager restaurantAdditionalInfoManager,
                             SpecializationManager specializationManager,
                             AuxiliaryMapper auxiliaryMapper,
-                            IWebHostEnvironment webHostEnvironment)
+                            IWebHostEnvironment webHostEnvironment,
+                            ProductGroupManager productGroupManager)
         {
             _dbContext = dbContext;
             _mapper = new Mapper(Assembly.GetExecutingAssembly());
@@ -35,6 +37,7 @@ namespace DeliveryClub.Domain.Logic.Managers
             _specializationManager = specializationManager;
             _auxiliaryMapper = auxiliaryMapper;
             _webHostEnvironment = webHostEnvironment;
+            _productGroupManager = productGroupManager;
         }
 
         public Restaurant GetRestaurant(int id)
@@ -44,6 +47,19 @@ namespace DeliveryClub.Domain.Logic.Managers
             restaurant.RestaurantAdditionalInfo = _restaurantAdditionalInfoManager.GetRestaurantAdditionalInfo(restaurant.Id);
             var specializations = _specializationManager.GetSpecializations(restaurant);
             restaurant.Specializations = specializations;
+
+            return restaurant;
+        }
+
+        public Restaurant GetRestaurantFull(int id)
+        {
+            var restaurantDTO = _dbContext.Restaurants.Where(r => r.Id == id).FirstOrDefault();
+            var restaurant = _mapper.Map<RestaurantDTO, Restaurant>(restaurantDTO);
+            restaurant.RestaurantAdditionalInfo = _restaurantAdditionalInfoManager.GetRestaurantAdditionalInfo(restaurant.Id);
+            var specializations = _specializationManager.GetSpecializations(restaurant);
+            restaurant.Specializations = specializations;
+
+            restaurant.Menu = _productGroupManager.GetProductGroupsFull(restaurant);
 
             return restaurant;
         }

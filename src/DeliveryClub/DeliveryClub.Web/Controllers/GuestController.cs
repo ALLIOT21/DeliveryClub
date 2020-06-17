@@ -3,6 +3,7 @@ using DeliveryClub.Domain.Logic.Interfaces;
 using DeliveryClub.Infrastructure.Mapping;
 using DeliveryClub.Web.ViewModels.Guest;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -14,7 +15,7 @@ namespace DeliveryClub.Web.Controllers
         private readonly IGuestService _guestService;
         private readonly Mapper _mapper;
         private const int PAGE_SIZE = 9;
-
+                
         public GuestController(IGuestService guestService)
         {
             _guestService = guestService;
@@ -48,6 +49,14 @@ namespace DeliveryClub.Web.Controllers
                 
                 return View(viewModel);
             }
+        }
+
+
+        [Route("[controller]/[action]/{id}")]
+        public IActionResult Restaurant(int id)
+        {
+            var restaurantModel = _guestService.GetRestaurantFull(id);
+            return View(restaurantModel);
         }
 
     }

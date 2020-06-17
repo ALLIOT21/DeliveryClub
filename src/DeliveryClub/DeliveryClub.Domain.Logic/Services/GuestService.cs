@@ -32,28 +32,14 @@ namespace DeliveryClub.Domain.Logic.Services
         {
             var restaurants = _restaurantManager.GetRestaurantsPartially();
 
-            var rpartials = CreateRestaurantPartialModels(restaurants);
+            var rpartials = _auxiliaryMapper.CreateRestaurantPartialModels(restaurants);
             return rpartials;
         }
 
-        private ICollection<RestaurantPartialModel> CreateRestaurantPartialModels(ICollection<Restaurant> restaurants)
+        public RestaurantFullModel GetRestaurantFull(int id)
         {
-            var rpms = new List<RestaurantPartialModel>();
-            
-            foreach (var r in restaurants)
-            {
-                var rpm = new RestaurantPartialModel
-                {
-                    Id = r.Id,
-                    Name = r.Name,
-                    DeliveryCost = r.DeliveryCost,
-                    MinimalOrderPrice = r.MinimalOrderPrice,
-                    CoverImageName = r.CoverImageName,
-                    Specializations = _auxiliaryMapper.CreateSpecializationModelList(r.Specializations)
-                };
-                rpms.Add(rpm);
-            }
-            return rpms;
+            var restaurantFull = _restaurantManager.GetRestaurantFull(id);
+            return _auxiliaryMapper.CreateRestaurantFullModel(restaurantFull);
         }
 
         public string GetUserRole()

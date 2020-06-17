@@ -7,6 +7,8 @@ namespace DeliveryClub.Domain.Logic.Interfaces
     {
         string GetUserRole();
 
-        ICollection<RestaurantPartialModel> GetRestaurantsPartially();        
+        ICollection<RestaurantPartialModel> GetRestaurantsPartially();
+
+        RestaurantFullModel GetRestaurantFull(int id);
     }
 }
