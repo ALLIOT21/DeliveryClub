@@ -54,6 +54,9 @@ namespace DeliveryClub.Web.Mapping
 
             CreateMap<RestaurantPartialViewModel, RestaurantPartialModel>()
                 .ReverseMap();
+
+            CreateMap<RestaurantFullViewModel, RestaurantFullModel>()
+                .ReverseMap();
         }
     }
 }

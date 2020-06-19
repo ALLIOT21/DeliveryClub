@@ -3,4 +3,5 @@
     flex-direction : row;
     height : 10vh;
     border-bottom : 1px solid rgb(200, 200, 200);
+    background-image: url(/resources/img/site/header.png);
 }

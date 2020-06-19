@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta charset="utf-8" />
+    <title>Delivery Club</title>
+    <link rel="stylesheet" href="~/css/reset.css" />
+    <link rel="stylesheet" href="~/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/site/bundle.css" />
+    <link rel="stylesheet" href="~/css/iziToast.css" />
+</head>
+<body>
+    <div class="site">
+        <div class="main">
+            <header>
+                <div class="header-div">
+                    <div class="home-div">
+                        <h1 class="home-div_logo-h1__size_m"><a class="home-div_logo-a__size_m" asp-action="Index">Delivery Club</a></h1>
+                    </div>
+                    <div class="center-div">
+                    </div>
+                    <div class="login-div">
+                        <partial name="_LoginPartial" />
+                    </div>
+                </div>
+                <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+            </header>
+            <div class="user-content">
+                @RenderBody()
+            </div>
+        </div>
+        <partial name="_CartPartial" />
+    </div>
+    @if (IsSectionDefined("Scripts"))
+    {
+        RenderSection("Scripts");
+    }
+    <script src="~/js/site/bundle.js"></script>
+    <script src="~/js/site/jquery-3.5.1.min.js"></script>
+    <script src="~/js/site/dropzone.js"></script>
+    <script src="~/js/site/iziToast.js"></script>
+    @if (ViewBag.Notification != null)
+    {
+        <script>
+            showNotification("@ViewBag.Notification.Type", "@ViewBag.Notification.Message");
+        </script>
+    }
+</body>
+</html>

@@ -77,12 +77,12 @@
                 </div>
             </div>
             <div class="product-group-content">
-                @if (pg.Products.Count > 0)
+               @if (pg.Products.Count > 0)
                 {
                     int productIndex = 0;
                     foreach (var p in pg.Products)
                     {
-                <div class="product">
+                    <div class="product">
                     @{
                         if (p.ImageName != null)
                         {
@@ -106,8 +106,9 @@
                     </div>
                     <div class="product-portion-price">
                         <div class="product-portion">
-                            @if (p.PortionPrices != null)
-                                if (p.PortionPrices.Count > 0)
+                           @if (p.PortionPrices != null)
+                            {
+                                if (p.PortionPrices.Count > 1)
                                 {
                                     <select id="@("productgroup-" + productGroupIndex + "_product-" + productIndex + "_select")" class="portion-select" onchange="switchPrice()">
                                         @{
@@ -120,6 +121,14 @@
                                         }
                                     </select>
                                 }
+                                else
+                                {
+                                    if (p.PortionPrices.Count > 1)
+                                    {
+                                        <span>@p.PortionPrices.ElementAt(0).Portion</span>
+                                    }
+                                }
+                            }
                         </div>
                         <div class="product-price">
                             @{
@@ -149,7 +158,7 @@
                             <button class="btn btn-primary product-button">Delete 🗑️</button>
                         </form>                        
                     </div>
-                </div>
+                    </div>
                         productIndex++;
                     }                        
                 }

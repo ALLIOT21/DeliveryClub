@@ -21,5 +21,7 @@ namespace DeliveryClub.Infrastructure.Constants
         public static string Truck => "&#128666;";
 
         public static string MoneyBag => "&#128176;";
+
+        public static string Timer => "&#9202;";
     }
 }

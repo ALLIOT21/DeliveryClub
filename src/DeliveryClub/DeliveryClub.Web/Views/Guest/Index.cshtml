@@ -2,13 +2,13 @@
 @using DeliveryClub.Infrastructure.Constants
 @model DeliveryClub.Web.ViewModels.Guest.IndexViewModel
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
 }
 
 <div>
-    <h1>Restaurants</h1>
+    <h1 class="user-restaurant-tag m-20">Restaurants</h1>
     <nav aria-label="Page navigation example">
-        <ul class="pagination justify-content-end">
+        <ul class="pagination justify-content-end" style="margin-right : 20px;">
             <li class="page-item @(@Model.PageViewModel.PageNumber > 1 ? "" : "disabled")">
                 <a class="page-link" asp-action="Index"
                    asp-route-page="1">
@@ -63,7 +63,7 @@
     <div class="card-container">
         @foreach (var r in Model.RestaurantPartialViewModels)
         {
-            <a class="card-a">
+            <a class="card-a m-20" asp-action="Restaurant" asp-route-id="@r.Id">
                 <div class="card card-extension">
                     @if (r.CoverImageName != null)
                     {
@@ -76,7 +76,7 @@
                     <div class="card-body">
                         <h5 class="card-title">@r.Name</h5>
                         <p>
-                            <span class="restaurant-info-span " title="Delivery cost">@WebUtility.HtmlDecode(Symbols.Truck) @r.DeliveryCost BYN</span>
+                            <span class="restaurant-info-span " title="Delivery cost">@WebUtility.HtmlDecode(Symbols.Truck) @WebUtility.HtmlDecode(Symbols.Timer) @r.DeliveryCost BYN</span>
                             <span title="Minimal order price">@WebUtility.HtmlDecode(Symbols.MoneyBag) @r.MinimalOrderPrice BYN</span>
                         </p>
                         <p>

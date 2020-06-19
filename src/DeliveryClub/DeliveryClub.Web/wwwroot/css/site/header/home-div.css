@@ -1,16 +1,25 @@
 ﻿.home-div {
     flex-grow: 1;
-    border-right: 1px solid rgb(200, 200, 200);
-    text-align : center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .home-div_logo-h1__size_m {
-    display : block;
-    width : auto;
-    
+    display: block;
+    width: auto;
+}
+
+.header-a {
+    color: antiquewhite !important;
+    font-size: 20px;
+}
+
+.home-div_logo-a__size_m {
+    color: antiquewhite !important;
 }
 
 .home-div_logo-a__size_m:hover {
     text-decoration: none;
-    cursor: pointer;
+    cursor: pointer;    
 }

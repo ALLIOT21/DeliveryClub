@@ -1,0 +1,110 @@
+﻿.user-restaurant-tag {
+    font-size: 48px;
+    display: block;
+}
+
+.user-restaurant-full_name {
+}
+
+.m-20 {
+    margin: 20px;
+}
+
+.user-restaurant-full_info__b-item {
+    display: block;
+    margin-top: 2vw;
+}
+
+.user-restaurant-full_info__specializations {
+    display: flex;
+    flex-direction: row;
+}
+
+.user-restaurant-full_info__ib-item {
+    display: inline-block;
+    margin-top: 3vh;
+    margin-right: 3vw;
+    border: 2px solid #00bdb8;
+    padding: 4px;
+    border-radius: 10px;
+}
+
+.user-restaurant-specialization-item {
+    border: 2px solid rgb(70, 194, 4);
+    border-radius: 10px;
+    height: 6vh;
+    width: 10vh;
+    text-align: center;
+    vertical-align: central;
+    margin: 1vh 0 1vh 0;
+}
+
+.user-restaurant-full_product-group {
+    
+}
+
+.user-restaurant-full_products {
+    display: flex;
+    flex-direction: row;
+}
+
+.user-restaurant-full_product {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    width: calc(1 / 5 * 100% - 15px);
+    margin: 20px;
+    padding: 10px;
+    border: 2px solid rgb(255, 204, 0);
+    border-radius: 15px;
+}
+
+.product_product-image-div {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    transform: translate(0, -120%);
+}
+
+.product_product-image__size-m {
+    width: 7.5vw;
+    height: 7vw;
+}
+
+.background-image-div {
+    display: block;
+    position: relative;
+    z-index: -1;
+    text-align: center;
+}
+
+.background-image {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+.user-restaurant-full_product-name {
+    margin-top: -45%;
+}
+
+.truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.portion-select {
+    border: 1px solid rgb(200, 200, 200);
+    border-radius: 5px;
+    padding: 3px;
+    margin-top: -1vh;
+}
+
+.user-restaurant-full_product-add {
+    text-align: right;
+}
+
+.mb-3px {
+    margin-bottom: 3px;
+}

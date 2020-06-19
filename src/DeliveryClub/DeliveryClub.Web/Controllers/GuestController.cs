@@ -51,12 +51,11 @@ namespace DeliveryClub.Web.Controllers
             }
         }
 
-
         [Route("[controller]/[action]/{id}")]
         public IActionResult Restaurant(int id)
         {
-            var restaurantModel = _guestService.GetRestaurantFull(id);
-            return View(restaurantModel);
+            var restaurantViewModel = _mapper.Map<RestaurantFullModel, RestaurantFullViewModel>(_guestService.GetRestaurantFull(id));
+            return View(restaurantViewModel);
         }
 
     }

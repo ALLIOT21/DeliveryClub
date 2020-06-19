@@ -540,11 +540,9 @@ function switchPrice() {
     var optionId = $(`#${selectId} option:selected`).attr('id');
     
     var priceId = optionId.replace("portion", "price");
-    var productDiv = findDivByElement("product");
+    var productDiv = findDivByElement("product-portion-price");
 
     var prices = productDiv.getElementsByClassName("price");
-    console.log(prices);
-    
 
     for (let i = 0; i < prices.length; i++) {
         if (prices[i].classList.contains("is-visible")) {

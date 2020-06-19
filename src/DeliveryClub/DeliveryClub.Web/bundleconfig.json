@@ -11,7 +11,8 @@
       "wwwroot/css/site/content/admin/adminInfo.css",
       "wwwroot/css/site/content/admin/adminMenu.css",
       "wwwroot/css/site/content/admin/adminProduct.css",
-      "wwwroot/css/site/content/guest/guest.css"
+      "wwwroot/css/site/content/guest/guest.css",
+      "wwwroot/css/site/content/guest/guestRestaurant.css"
     ]
   },
   {
