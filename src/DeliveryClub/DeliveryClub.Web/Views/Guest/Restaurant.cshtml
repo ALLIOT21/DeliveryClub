@@ -7,9 +7,10 @@
 }
 
 <div class="user-restaurant-full_name m-20">
-    <h1 class="display-4">@Model.Name </h1>
+    <h1 class="display-4" id="h1_name">@Model.Name </h1>
 </div>
 <div class="user-restaurant-full_info m-20">
+    <input type="hidden" value="@Model.Id" id="restaurant-id"/>
     <div class="user-restaurant-full_info__specializations">
         @foreach (var sp in Model.Specializations)
         {
@@ -24,16 +25,16 @@
         }
     </div>
     <div class="user-restaurant-full_info__ib-item">
-        <span title="Delivery Cost">@WebUtility.HtmlDecode(Symbols.Truck) @WebUtility.HtmlDecode(Symbols.MoneyBag) Delivery cost: @Model.DeliveryCost BYN</span>
+        <span>@WebUtility.HtmlDecode(Symbols.Truck) @WebUtility.HtmlDecode(Symbols.MoneyBag) Delivery cost: <span id="span_delivery-cost">@Model.DeliveryCost</span> BYN</span>
     </div>
     <div class="user-restaurant-full_info__ib-item">
-        <span title="Minimal order price">@WebUtility.HtmlDecode(Symbols.MoneyBag) Minimal order price: @Model.MinimalOrderPrice BYN</span>
+        <span title="Minimal order price">@WebUtility.HtmlDecode(Symbols.MoneyBag) Minimal order price: <span id="span_minimal-order-price">@Model.MinimalOrderPrice</span> BYN</span>
     </div>
     <div class="user-restaurant-full_info__ib-item">
-        <span title="Delivery max time">@WebUtility.HtmlDecode(Symbols.Truck) @WebUtility.HtmlDecode(Symbols.Timer) Delivery maximum time: @Model.DeliveryMaxTime hours</span>
+        <span title="Delivery max time">@WebUtility.HtmlDecode(Symbols.Truck) @WebUtility.HtmlDecode(Symbols.Timer) Delivery maximum time: <span id="span_delivery-max-time">@Model.DeliveryMaxTime</span> hours</span>
     </div>
     <div class="user-restaurant-full_info__ib-item">
-        <span title="Order time">@WebUtility.HtmlDecode(Symbols.Timer) Order time: @Model.OrderTimeBegin - @Model.OrderTimeEnd</span>
+        <span title="Order time">@WebUtility.HtmlDecode(Symbols.Timer) Order time: <span id="span_order-time-begin">@Model.OrderTimeBegin</span> - <span id="span_order-time-end">@Model.OrderTimeEnd</span></span>
     </div>
     <div class="user-restaurant-full_info__b-item">
         <blockquote class="blockquote">
@@ -60,8 +61,8 @@
                         int productIndex = 0;
                         foreach (var p in pg.Products)
                         {
-                            <div class="user-restaurant-full_product">
-
+                            <div class="user-restaurant-full_product" id="@("productgroup-" + productGroupIndex + "_product-" + productIndex)">
+                                <input type="hidden" id="@("productgroup-" + productGroupIndex + "_product-" + productIndex + "_id")" value="@p.Id">
                                 <div class="background-image-div">
                                     <img class="background-image" src="~/resources/img/site/product-back.png" />
                                 </div>
@@ -70,7 +71,7 @@
                                 </div>
 
                                 <div class="user-restaurant-full_product-name">
-                                    <h5 class="">@p.Name</h5>
+                                    <h5 id="@("productgroup-" + productGroupIndex + "_product-" + productIndex + "_name")" class="truncate">@p.Name</h5>
                                 </div>
                                 <div class="user-restaurant-full_product-description">
                                     <p class="truncate mb-3px" title="@p.Description"><small>@p.Description</small></p>
@@ -96,7 +97,7 @@
                                             {
                                                 if (p.PortionPrices.Count > 0)
                                                 {
-                                                    <span>@p.PortionPrices.ElementAt(0).Portion</span>
+                                                    <span id="@("productgroup-" + productGroupIndex + "_product-" + productIndex + "_portion-0")">@p.PortionPrices.ElementAt(0).Portion</span>
                                                 }
                                                 else
                                                 {
@@ -152,17 +153,24 @@
                                     </div>
                                 </div>
                                 <div class="user-restaurant-full_product-add block-btn">
-                                    <button class="btn btn-outline-danger">Add to cart</button>
+                                    <button class="btn btn-outline-danger" onclick="addProductToCart()">Add to cart</button>
                                 </div>
                             </div>
                             productIndex++;
                         }
                     }
                 </div>
+                productGroupIndex++;
             }                           
         }
     </div>
 </div>
+<script src="~/js/guest/menuIsActive.js">    
+</script>
+<script>
+    menuIsActive();
+</script>
+
 
 
 

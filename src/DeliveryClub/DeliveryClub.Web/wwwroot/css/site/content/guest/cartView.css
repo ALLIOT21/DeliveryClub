@@ -1,0 +1,47 @@
+﻿.order {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid rgb(200, 200, 200);
+    border-bottom: 1px solid rgb(200, 200, 200);
+    border-collapse: collapse;
+    padding: 10px;
+}
+
+.order-restaurant {
+    padding: 3px;
+}
+
+.order_products {
+    display: flex;
+    flex-direction: column;
+    padding: 3px;
+}
+
+.products_product {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2px;
+}
+
+.order_delivery {
+    padding: 3px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btn-change-amount {
+    border-radius: 50%;
+    background-color: gray;
+    color: black;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    vertical-align: central;
+}
+
+
+

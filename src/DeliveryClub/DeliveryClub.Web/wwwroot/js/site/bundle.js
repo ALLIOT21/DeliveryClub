@@ -669,3 +669,352 @@ function toggleGrayBackgroundParent() {
     event.target.classList.toggle("gray-background");
     event.target.parentNode.classList.toggle("gray-background");
 }
+function Cart() {
+    this.orders = [];
+}
+
+function addProductToCart() {
+    let cart = getCart();
+    if (cart == null) {
+        cart = createCart();
+    }
+
+    if (cart != "empty")
+        cart = JSON.parse(getCart());
+    else
+        cart = null;
+
+
+    let order = null;
+    let orderIndex;
+    if (cart != null) {
+        if (cart.orders != null) {
+            var result = getOrder(cart.orders, getRestaurantId());
+            if (result != null) {
+                orderIndex = result.orderIndex;
+                order = result.order;
+            }
+            else {
+                order = createOrder(null, null);
+            }
+        }
+        else {
+            order = createOrder(null, null);
+        }
+    }
+    else
+    {
+        cart = new Cart();
+        order = createOrder(null, null);
+    }
+
+    if (order.restaurant == null) {
+        order.restaurant = createRestaurant();
+        addProductToOrderProducts(createProduct(), order.products);
+        cart.orders.push(order);
+        addOrderView(order);
+    }
+    else {
+        let product = createProduct();
+        if (!addingProductIsInCart(product, order.products, orderIndex)) {
+            addProductToOrderProducts(product, order.products);
+            addProductView(product, orderIndex);
+        }
+    }
+
+    setCart(cart);
+}
+
+function createCart() {
+    localStorage.setItem("delivery-club-cart", "empty");
+}
+
+function deleteCart() {
+    localStorage.setItem("delivery-club-cart", "empty");
+    var cartMain = getCartMain();
+    while (cartMain.firstChild) {
+        cartMain.removeChild(cartMain.firstChild)
+    }
+}
+
+function getCart() {
+    return localStorage.getItem("delivery-club-cart");
+}
+
+function setCart(cart) {
+    localStorage.setItem("delivery-club-cart", JSON.stringify(cart));
+}
+
+function addingProductIsInCart(product, products, orderIndex) {
+    for (let i = 0; i < products.length; i++) {
+        if ((product.id == products[i].id) && (product.portion == products[i].portion)) {
+            products[i].amount++;
+            incrementProductView(products[i], i, orderIndex);
+            return true;
+        }
+    }
+    return false;
+}
+
+function fillCart() {
+    let cart = getCart();
+    if (cart != null) {
+        cart = JSON.parse(cart);
+        for (let i = 0; i < cart.orders.length; i++) {
+            addOrderView(cart.orders[i]);
+        }
+    }
+}
+function menuIsActive() {
+    let orderTimeBegin = document.getElementById("span_order-time-begin").innerHTML;
+    let orderTimeEnd = document.getElementById("span_order-time-end").innerHTML;
+
+    let addProductButtons = document.getElementsByClassName("btn btn-outline-danger");
+
+    let currentTime = new Date();
+    let currentTimeHours = currentTime.getHours();
+    let currentTimeMinutes = currentTime.getMinutes();
+
+    let currentTimeString = createTimeString(currentTimeHours, currentTimeMinutes)
+    
+    if ((currentTimeString > orderTimeBegin) && (currentTimeString < orderTimeEnd)) {
+        
+    }
+    else {
+        setButtonsDisabled(addProductButtons);
+        swal("Closed", "The restaurant is closed now :(", "error");
+    }
+}
+
+// return "12:28"
+function createTimeString(hours, minutes) {
+    return createDoubleDigitTimeValue(hours) + ':' + createDoubleDigitTimeValue(minutes);
+}
+
+function setButtonsDisabled(buttons) {
+    console.log(buttons);
+    for (let i = 0; i < buttons.length; i++) {
+        buttons[i].setAttribute("disabled", "disabled");
+    }
+}
+
+function createDoubleDigitTimeValue(timeValue) {
+    if (timeValue < 10) {
+        return "0" + timeValue;
+    }
+    return timeValue.toString();
+}
+function Order(restaurant, product) {
+    this.restaurant = restaurant
+    if (product != null) {
+        this.products = [product];
+    }
+    else
+        this.products = [];
+}
+
+function getOrder(orders, restId) {
+    console.log(orders);
+    for (let i = 0; i < orders.length; i++) {
+        console.log(orders[i]);
+        if (orders[i].restaurant.id == restId) {                
+            var result = {
+                orderIndex: i,
+                order: orders[i],
+            };
+            console.log(result);
+            return result;
+        }
+    }    
+}
+
+function createOrder(restaurant, product) {
+    let order = new Order(restaurant, product);
+    return order;
+}
+function Product(id, name, portion, price) {
+    this.id = id;
+    this.name = name;
+    this.amount = 1;
+    this.portion = portion;
+    this.price = price;
+}
+
+function createProduct() {
+    var productDiv = findDivByElement("user-restaurant-full_product");
+
+    let productDivId = productDiv.id;
+
+    let id = document.getElementById(productDivId + "_id").getAttribute("value");
+    let name = document.getElementById(productDivId + "_name").innerHTML;
+
+    let selectDivId = productDivId + "_select";
+    let portion;
+    let portionId;
+    var selectDiv = document.getElementById(selectDivId);
+    if (selectDiv != null) {
+        portionId = $(`#${selectDivId} option:selected`).attr("id");
+        portion = $(`#${selectDivId} option:selected`).html();
+    }
+    else {
+        portion = $(`#${productDivId}_portion-0`).html();
+        portionId = productDivId + "_portion-0";
+    }
+
+    let priceId = portionId.replace("portion", "price");
+    let price = document.getElementById(priceId).innerHTML;
+    price = price.substr(0, price.indexOf(" "));
+
+    let product = new Product(id, name, portion, price);
+
+    return product;
+}
+
+function getProduct(products) {
+    
+}
+
+function addProductToOrderProducts(newProduct, productList) {
+    productList.push(newProduct);
+    return productList.length - 1;
+}
+function Restaurant(id, name, deliveryCost, minOrderPrice) {
+    this.id = id;
+    this.name = name;
+    this.deliveryCost = deliveryCost;
+    this.minOrderPrice = minOrderPrice;
+}
+
+function createRestaurant() {
+    let id = getRestaurantId();
+    let name = document.getElementById("h1_name").innerHTML;
+    let deliveryCost = document.getElementById("span_delivery-cost").innerHTML;
+    let minOrderPrice = document.getElementById("span_minimal-order-price").innerHTML;
+
+    let restaurant = new Restaurant(id, name, deliveryCost, minOrderPrice);
+
+    return restaurant;
+}
+
+function getRestaurantId() {
+    return document.getElementById("restaurant-id").getAttribute("value");
+}
+function addOrderView(order) {
+    var cartMain = getCartMain();
+    cartMain.appendChild(createOrderView(order));
+}
+
+function addProductView(product, orderIndex) {
+    var cartMain = getCartMain();
+    var orderView = cartMain.getElementsByClassName("order")[orderIndex];
+
+    var orderProducts = orderView.getElementsByClassName("order_products")[0];
+    orderProducts.appendChild(createProductDiv(product));
+}
+
+function incrementProductView(product, productIndex, orderIndex) {
+    var cartMain = getCartMain();
+    var orderView = cartMain.getElementsByClassName("order")[orderIndex];
+    var orderProducts = orderView.getElementsByClassName("order_products")[0];
+    var productDiv = orderProducts.getElementsByClassName("products_product")[productIndex];
+
+    var amountDiv = productDiv.getElementsByClassName("product_amount")[0];
+    amountDiv.getElementsByTagName("span")[0].innerHTML++;
+
+    var price = productDiv.getElementsByClassName("product-price")[0];
+    console.log(price);
+    let newPrice = product.price * product.amount;
+    console.log(newPrice);
+    price.innerHTML = `${newPrice} BYN`;
+}
+
+function getCartMain() {
+    return $(`.cart-main`)[0];
+}
+
+function createOrderView(order) {
+    var orderDiv = createDivWithClass("order");
+    var orderDivRestaurant = createOrderDivRestaurant(order.restaurant);   
+    var orderDivProducts = createOrderDivProducts(order.products);
+    var orderDivDelivery = createOrderDivDelivery(order.restaurant.deliveryCost);
+
+    orderDiv.appendChild(orderDivRestaurant);
+    orderDiv.appendChild(orderDivProducts);
+    orderDiv.appendChild(orderDivDelivery);  
+
+    return orderDiv;
+}
+
+function createOrderDivRestaurant(restaurant) {
+    var orderDivRestaurant = createDivWithClass("order_restaurant");
+    var restaurantName = document.createElement("h4");
+    restaurantName.innerHTML = restaurant.name;
+    var restaurantId = document.createElement("input");
+    restaurantId.type = "hidden";
+    restaurantId.value = restaurant.id;
+
+    orderDivRestaurant.appendChild(restaurantName);
+    orderDivRestaurant.appendChild(restaurantId);
+
+    return orderDivRestaurant;
+}
+
+function createOrderDivProducts(products) {
+    var orderDivProducts = createDivWithClass("order_products");
+    var productDiv;
+    for (let i = 0; i < products.length; i++) {
+        productDiv = createProductDiv(products[i]);
+        orderDivProducts.appendChild(productDiv);
+    }
+    return orderDivProducts;
+}
+
+function createOrderDivDelivery(deliveryCost) {
+    var orderDivDelivery = createDivWithClass("order_delivery");
+    var deliveryTag = document.createElement("h6");
+    deliveryTag.innerHTML = "Delivery";
+    var deliveryCostSpan = document.createElement("span");
+    deliveryCostSpan.innerHTML = deliveryCost + " BYN";
+
+    orderDivDelivery.appendChild(deliveryTag);
+    orderDivDelivery.appendChild(deliveryCostSpan);
+
+    return orderDivDelivery;
+}
+
+function createProductDiv(product) {
+    var productDiv = createDivWithClass("products_product");
+    var productName = document.createElement("h6");
+    productName.innerHTML = product.name;
+
+    var productDivAmount = createDivWithClass("product_amount");
+
+    var productDecrementAmount = document.createElement("div");
+    productDecrementAmount.classList.toggle("btn-change-amount");
+    productDecrementAmount.innerHTML = "-";
+
+    var productAmount = document.createElement("span");
+    productAmount.innerHTML = product.amount;
+
+    var productIncrementAmount = document.createElement("div");
+    productIncrementAmount.classList.toggle("btn-change-amount");
+    productIncrementAmount.innerHTML = "+";    
+
+    productDivAmount.appendChild(productDecrementAmount);
+    productDivAmount.appendChild(productAmount);
+    productDivAmount.appendChild(productIncrementAmount);
+
+    var productPortion = document.createElement("span");
+    productPortion.classList.toggle("product-portion");
+    productPortion.innerHTML = product.portion;
+
+    var productPrice = document.createElement("span");
+    productPrice.classList.toggle("product-price");
+    productPrice.innerHTML = `${product.price * product.amount} BYN`;
+
+    productDiv.appendChild(productName);
+    productDiv.appendChild(productDivAmount);
+    productDiv.appendChild(productPortion);
+    productDiv.appendChild(productPrice);        
+    return productDiv;
+}

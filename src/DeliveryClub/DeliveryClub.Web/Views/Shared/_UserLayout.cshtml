@@ -40,11 +40,15 @@
     <script src="~/js/site/jquery-3.5.1.min.js"></script>
     <script src="~/js/site/dropzone.js"></script>
     <script src="~/js/site/iziToast.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     @if (ViewBag.Notification != null)
     {
         <script>
             showNotification("@ViewBag.Notification.Type", "@ViewBag.Notification.Message");
         </script>
     }
+    <script>
+        fillCart();
+    </script>
 </body>
 </html>

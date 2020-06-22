@@ -12,7 +12,8 @@
       "wwwroot/css/site/content/admin/adminMenu.css",
       "wwwroot/css/site/content/admin/adminProduct.css",
       "wwwroot/css/site/content/guest/guest.css",
-      "wwwroot/css/site/content/guest/guestRestaurant.css"
+      "wwwroot/css/site/content/guest/guestRestaurant.css",
+      "wwwroot/css/site/content/guest/cartView.css"
     ]
   },
   {
@@ -27,7 +28,13 @@
       "wwwroot/js/admin/productGroupHasPortionPrices.js",
       "wwwroot/js/admin/productUploadImage.js",
       "wwwroot/js/site/notification.js",
-      "wwwroot/js/guest/guest.js"
+      "wwwroot/js/guest/guest.js",
+      "wwwroot/js/guest/cart.js",
+      "wwwroot/js/guest/menuIsActive.js",
+      "wwwroot/js/guest/order.js",
+      "wwwroot/js/guest/product.js",
+      "wwwroot/js/guest/restaurant.js",
+      "wwwroot/js/guest/cartView.js"
     ],
     "minify": {
       "enabled": true,
