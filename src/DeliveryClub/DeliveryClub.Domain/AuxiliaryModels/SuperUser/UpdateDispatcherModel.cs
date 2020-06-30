@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DeliveryClub.Domain.AuxiliaryModels.Admin
+namespace DeliveryClub.Domain.AuxiliaryModels.SuperUser
 {
     public class UpdateDispatcherModel
     {

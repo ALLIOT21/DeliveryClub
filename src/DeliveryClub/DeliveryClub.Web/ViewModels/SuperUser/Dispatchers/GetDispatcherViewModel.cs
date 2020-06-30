@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DeliveryClub.Web.ViewModels.Admin.Dispatchers
+namespace DeliveryClub.Web.ViewModels.SuperUser.Dispatchers
 {
     public class GetDispatcherViewModel
     {

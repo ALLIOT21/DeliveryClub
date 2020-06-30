@@ -1,6 +1,6 @@
 ﻿using DeliveryClub.Data.Context;
 using DeliveryClub.Data.DTO.ActorsDTO;
-using DeliveryClub.Domain.AuxiliaryModels.Admin;
+using DeliveryClub.Domain.AuxiliaryModels.SuperUser;
 using DeliveryClub.Domain.Models.Actors;
 using DeliveryClub.Infrastructure.Mapping;
 using Microsoft.AspNetCore.Identity;
@@ -29,9 +29,9 @@ namespace DeliveryClub.Domain.Logic.Managers
             _userManager = userManager;
         }
 
-        public ICollection<Dispatcher> GetDispatchers(int restaurantId)
+        public async Task<ICollection<Dispatcher>> GetDispatchers()
         {
-            var dispatcherDtos = _dbContext.Dispatchers.Where(d => d.RestaurantId == restaurantId).Include(d => d.User).ToList();
+            var dispatcherDtos = await _dbContext.Dispatchers.Include(d => d.User).ToListAsync();
 
             var dispatchers = new List<Dispatcher>();
             foreach (var d in dispatcherDtos)
@@ -49,11 +49,10 @@ namespace DeliveryClub.Domain.Logic.Managers
             return _mapper.Map<DispatcherDTO, Dispatcher>(dispatcherDto);
         }
 
-        public async Task<Dispatcher> CreateDispatcher(string userId, int restaurantId)
+        public async Task<Dispatcher> CreateDispatcher(string userId)
         {
             var d = new Dispatcher()
             {
-                RestaurantId = restaurantId,
                 UserId = userId,
             };
             var result = await _dbContext.Dispatchers.AddAsync(_mapper.Map<Dispatcher, DispatcherDTO>(d));

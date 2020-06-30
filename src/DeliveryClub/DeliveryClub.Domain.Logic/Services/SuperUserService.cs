@@ -1,9 +1,11 @@
 ﻿using DeliveryClub.Data.Context;
 using DeliveryClub.Data.DTO.ActorsDTO;
 using DeliveryClub.Data.DTO.EntitiesDTO;
+using DeliveryClub.Domain.AuxiliaryModels.Admin;
 using DeliveryClub.Domain.AuxiliaryModels.SuperUser;
 using DeliveryClub.Domain.Logic.Interfaces;
 using DeliveryClub.Domain.Logic.Managers;
+using DeliveryClub.Domain.Logic.Mapping;
 using DeliveryClub.Domain.Models.Actors;
 using DeliveryClub.Domain.Models.Entities;
 using DeliveryClub.Infrastructure.Mapping;
@@ -21,15 +23,21 @@ namespace DeliveryClub.Domain.Logic.Services
         private readonly UserManager<IdentityUser> _userManager;
         private readonly Mapper _mapper;
         private readonly IdentityUserManager _identityUserManager;
+        private readonly DispatcherManager _dispatcherManager;
+        private readonly AuxiliaryMapper _auxiliaryMapper;
 
         public SuperUserService(ApplicationDbContext dbContext,
                                 UserManager<IdentityUser> userManager,
-                                IdentityUserManager identityUserManager)
+                                IdentityUserManager identityUserManager,
+                                DispatcherManager dispatcherManager,
+                                AuxiliaryMapper auxiliaryMapper)
         {
             _dbContext = dbContext;
             _userManager = userManager;
             _mapper = new Mapper(Assembly.GetExecutingAssembly());
             _identityUserManager = identityUserManager;
+            _dispatcherManager = dispatcherManager;
+            _auxiliaryMapper = auxiliaryMapper;
         }
 
         public IEnumerable<GetAdminModel> GetAdmins()
@@ -115,6 +123,43 @@ namespace DeliveryClub.Domain.Logic.Services
             DeleteIdentityUser(admin.UserId);
 
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<IdentityResult> CreateDispatcher(CreateDispatcherModel model)
+        {
+
+            var result = await _identityUserManager.CreateIdentityUser(model.Email, model.Password);
+            if (result.Item2.Succeeded)
+            {
+                await _dispatcherManager.CreateDispatcher(result.Item1.Id);
+                await _dbContext.SaveChangesAsync();
+            }
+            return result.Item2;
+        }
+
+        public async Task<ICollection<GetDispatcherModel>> GetDispatchers()
+        {
+            var dispatchers = await _dispatcherManager.GetDispatchers();
+
+            return _auxiliaryMapper.CreateGetDispatcherModels(dispatchers);
+        }
+
+        public UpdateDispatcherModel GetDispatcher(int id)
+        {
+            var d = _dispatcherManager.GetDispatcher(id);
+
+            return _auxiliaryMapper.CreateUpdateDispatcherModel(d);
+        }
+
+        public async Task<IdentityResult> UpdateDispatcher(UpdateDispatcherModel model)
+        {
+            var result = await _dispatcherManager.UpdateDispatcher(model);
+            return result;
+        }
+
+        public async Task DeleteDispatcher(int id)
+        {
+            await _dispatcherManager.DeleteDispatcher(id);
         }
 
         private async Task<Admin> CreateAdmin(string iuserId, int restaurantId)

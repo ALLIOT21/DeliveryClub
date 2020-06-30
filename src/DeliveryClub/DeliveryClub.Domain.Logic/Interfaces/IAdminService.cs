@@ -29,15 +29,5 @@ namespace DeliveryClub.Domain.Logic.Interfaces
         Task DeleteProduct(int id);
 
         Task<bool> HasPortionPrices(string productGroupName);
-
-        Task<ICollection<GetDispatcherModel>> GetDispatchers();
-
-        Task<IdentityResult> CreateDispatcher(CreateDispatcherModel model);
-
-        UpdateDispatcherModel GetDispatcher(int id);
-
-        Task<IdentityResult> UpdateDispatcher(UpdateDispatcherModel model);
-
-        Task DeleteDispatcher(int id);
     }
 }

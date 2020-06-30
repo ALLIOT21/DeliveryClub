@@ -13,9 +13,5 @@ namespace DeliveryClub.Domain.Models.Actors
         public string UserId { get; set; }
 
         public IdentityUser User { get; set; }
-
-        public int RestaurantId { get; set; }
-
-        public Restaurant Restaurant { get; set; }
     }
 }

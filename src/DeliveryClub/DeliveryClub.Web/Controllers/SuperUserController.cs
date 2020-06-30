@@ -1,7 +1,11 @@
 ﻿using DeliveryClub.Domain.AuxiliaryModels.SuperUser;
 using DeliveryClub.Domain.Logic.Interfaces;
+using DeliveryClub.Infrastructure;
+using DeliveryClub.Infrastructure.Extensions;
 using DeliveryClub.Infrastructure.Mapping;
+using DeliveryClub.Infrastructure.Notifications;
 using DeliveryClub.Web.ViewModels.SuperUser;
+using DeliveryClub.Web.ViewModels.SuperUser.Dispatchers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -80,6 +84,101 @@ namespace DeliveryClub.Web.Controllers
         {
             await _superUserService.DeleteAdminAndRestaurant(id);
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> Dispatchers()
+        {
+            var gdms = await _superUserService.GetDispatchers();
+            var gdvms = new List<GetDispatcherViewModel>();
+            foreach (var gdm in gdms)
+            {
+                gdvms.Add(_mapper.Map<GetDispatcherModel, GetDispatcherViewModel>(gdm));
+            }
+
+            this.AddNotificationToViewBag(TempData.GetNotificationMessage());
+
+            return View(gdvms);
+        }
+
+        [HttpGet]
+        public IActionResult CreateDispatcher()
+        {
+            this.AddNotificationToViewBag(TempData.GetNotificationMessage());
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateDispatcher(CreateDispatcherViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var createResult = await _superUserService.CreateDispatcher(_mapper.Map<CreateDispatcherViewModel, CreateDispatcherModel>(model));
+                if (createResult.Succeeded)
+                {
+                    TempData.AddNotificationMessage(new Notification
+                    {
+                        Type = NotificationType.Success,
+                        Message = "Dispatcher succesfully created!"
+                    });
+                    return RedirectToAction(nameof(CreateDispatcher));
+                }
+                AddModelErrors(ModelState, createResult);
+                this.AddNotificationToViewBag(new Notification
+                {
+                    Message = "Dispatcher has not been created!",
+                    Type = NotificationType.Warning
+                });
+            }
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult UpdateDispatcher(int id)
+        {
+            var d = _superUserService.GetDispatcher(id);
+            this.AddNotificationToViewBag(TempData.GetNotificationMessage());
+
+            return View(_mapper.Map<UpdateDispatcherModel, UpdateDispatcherViewModel>(d));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateDispatcher(UpdateDispatcherViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var iresult = await _superUserService.UpdateDispatcher(_mapper.Map<UpdateDispatcherViewModel, UpdateDispatcherModel>(model));
+                if (iresult.Succeeded)
+                {
+                    TempData.AddNotificationMessage(new Notification
+                    {
+                        Type = NotificationType.Success,
+                        Message = "Dispatcher succesfully updated!"
+                    });
+                    return RedirectToAction(nameof(Dispatchers));
+                }
+                AddModelErrors(ModelState, iresult);
+                this.AddNotificationToViewBag(new Notification
+                {
+                    Message = "Dispatcher is not updated",
+                    Type = NotificationType.Warning
+                });
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteDispatcher(int id)
+        {
+            await _superUserService.DeleteDispatcher(id);
+
+            TempData.AddNotificationMessage(new Notification
+            {
+                Type = NotificationType.Success,
+                Message = "Dispatcher succesfully deleted!"
+            });
+
+            return RedirectToAction(nameof(Dispatchers));
         }
 
         private void AddModelErrors(ModelStateDictionary modelState, IdentityResult result)

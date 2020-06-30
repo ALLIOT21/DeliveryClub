@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DeliveryClub.Domain.AuxiliaryModels.Admin
+namespace DeliveryClub.Domain.AuxiliaryModels.SuperUser
 {
     public class CreateDispatcherModel
     {

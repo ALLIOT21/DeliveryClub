@@ -5,7 +5,6 @@ using DeliveryClub.Infrastructure.Extensions;
 using DeliveryClub.Infrastructure.Mapping;
 using DeliveryClub.Infrastructure.Notifications;
 using DeliveryClub.Infrastructure.Validation;
-using DeliveryClub.Web.ViewModels.Admin.Dispatchers;
 using DeliveryClub.Web.ViewModels.Admin.Info;
 using DeliveryClub.Web.ViewModels.Admin.Menu;
 using Microsoft.AspNetCore.Identity;
@@ -52,101 +51,6 @@ namespace DeliveryClub.Web.Controllers
             this.AddNotificationToViewBag(TempData.GetNotificationMessage());
 
             return View(productGroupsView);
-        }
-
-        public async Task<IActionResult> Dispatchers()
-        {
-            var gdms = await _adminService.GetDispatchers();
-            var gdvms = new List<GetDispatcherViewModel>();
-            foreach (var gdm in gdms)
-            {
-                gdvms.Add(_mapper.Map<GetDispatcherModel, GetDispatcherViewModel>(gdm));
-            }
-
-            this.AddNotificationToViewBag(TempData.GetNotificationMessage());
-
-            return View(gdvms);
-        }
-
-        [HttpGet]
-        public IActionResult CreateDispatcher()
-        {
-            this.AddNotificationToViewBag(TempData.GetNotificationMessage());
-
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> CreateDispatcher(CreateDispatcherViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var createResult = await _adminService.CreateDispatcher(_mapper.Map<CreateDispatcherViewModel, CreateDispatcherModel>(model));
-                if (createResult.Succeeded)
-                {
-                    TempData.AddNotificationMessage(new Notification
-                    {
-                        Type = NotificationType.Success,
-                        Message = "Dispatcher succesfully created!"
-                    });
-                    return RedirectToAction(nameof(CreateDispatcher));
-                }
-                AddModelErrors(ModelState, createResult);
-                this.AddNotificationToViewBag(new Notification
-                {
-                    Message = "Dispatcher has not been created!",
-                    Type = NotificationType.Warning
-                });
-            }
-            return View(model);
-        }
-
-        [HttpGet]
-        public IActionResult UpdateDispatcher(int id)
-        {
-            var d = _adminService.GetDispatcher(id);
-            this.AddNotificationToViewBag(TempData.GetNotificationMessage());
-
-            return View(_mapper.Map<UpdateDispatcherModel, UpdateDispatcherViewModel>(d));
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> UpdateDispatcher(UpdateDispatcherViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var iresult = await _adminService.UpdateDispatcher(_mapper.Map<UpdateDispatcherViewModel, UpdateDispatcherModel>(model));
-                if (iresult.Succeeded)
-                {
-                    TempData.AddNotificationMessage(new Notification
-                    {
-                        Type = NotificationType.Success,
-                        Message = "Dispatcher succesfully updated!"
-                    });
-                    return RedirectToAction(nameof(Dispatchers));
-                }
-                AddModelErrors(ModelState, iresult);
-                this.AddNotificationToViewBag(new Notification
-                {
-                    Message = "Dispatcher is not updated",
-                    Type = NotificationType.Warning
-                });
-            }
-            return View(model);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> DeleteDispatcher(int id)
-        {
-            await _adminService.DeleteDispatcher(id);
-
-            TempData.AddNotificationMessage(new Notification
-            {
-                Type = NotificationType.Success,
-                Message = "Dispatcher succesfully deleted!"
-            });
-
-            return RedirectToAction(nameof(Dispatchers));
         }
 
         [HttpPost]

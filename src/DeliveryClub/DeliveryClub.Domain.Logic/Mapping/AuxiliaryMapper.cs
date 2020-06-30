@@ -1,5 +1,6 @@
 ﻿using DeliveryClub.Domain.AuxiliaryModels.Admin;
 using DeliveryClub.Domain.AuxiliaryModels.Guest;
+using DeliveryClub.Domain.AuxiliaryModels.SuperUser;
 using DeliveryClub.Domain.Logic.Managers;
 using DeliveryClub.Domain.Models.Actors;
 using DeliveryClub.Domain.Models.Entities;

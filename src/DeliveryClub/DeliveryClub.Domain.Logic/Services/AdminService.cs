@@ -145,46 +145,6 @@ namespace DeliveryClub.Domain.Logic.Services
 
             return _auxiliaryMapper.CreateProductModel(updatedProduct);
         }
-
-        public async Task<IdentityResult> CreateDispatcher(CreateDispatcherModel model)
-        {
-            var restaurantId = await GetCurrentRestaurantId();
-
-            var result = await _identityUserManager.CreateIdentityUser(model.Email, model.Password);
-            if (result.Item2.Succeeded)
-            {
-                await _dispatcherManager.CreateDispatcher(result.Item1.Id, restaurantId);
-                await _dbContext.SaveChangesAsync();
-            }
-            return result.Item2;
-        }
-
-        public async Task<ICollection<GetDispatcherModel>> GetDispatchers()
-        {
-            var restaurantId = await GetCurrentRestaurantId();
-
-            var dispatchers = _dispatcherManager.GetDispatchers(restaurantId);
-
-            return _auxiliaryMapper.CreateGetDispatcherModels(dispatchers);
-        }
-
-        public UpdateDispatcherModel GetDispatcher(int id)
-        {
-            var d = _dispatcherManager.GetDispatcher(id);            
-
-            return _auxiliaryMapper.CreateUpdateDispatcherModel(d);
-        }
-
-        public async Task<IdentityResult> UpdateDispatcher(UpdateDispatcherModel model)
-        {
-            var result = await _dispatcherManager.UpdateDispatcher(model);
-            return result;
-        }
-
-        public async Task DeleteDispatcher(int id)
-        {
-            await _dispatcherManager.DeleteDispatcher(id);
-        }
         
         public async Task DeleteProduct(int id)
         {

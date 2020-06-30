@@ -1,19 +1,16 @@
-﻿@model IEnumerable<DeliveryClub.Web.ViewModels.Admin.Dispatchers.GetDispatcherViewModel>
+﻿@model IEnumerable<DeliveryClub.Web.ViewModels.SuperUser.Dispatchers.GetDispatcherViewModel>
 @{
     ViewData["Title"] = "Index";
 }
 
-    <ul class="nav nav-pills nav-fill" id="pills-tab" role="tablist">
-        <li class="nav-item">
-            <a class="nav-link" href="/Admin" id="pills-info-tab" data-toggle="pill" role="tab" aria-controls="pills-home" onclick="ChangeTabs()">Info</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="/Admin/Menu" id="pills-menu-tab" data-toggle="pill" role="tab" aria-controls="pills-menu" onclick="ChangeTabs()">Menu</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active" href="/Admin/Dispatchers" id="pills-menu-tab" data-toggle="pill" role="tab" aria-controls="pills-menu" onclick="ChangeTabs()">Dispatchers</a>
-        </li>
-    </ul>
+<ul class="nav nav-pills nav-fill" id="pills-tab" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link" href="/SuperUser" id="pills-admin-tab" data-toggle="pill" role="tab" aria-controls="pills-home">Administrators</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" href="/SuperUser/Dispatchers" id="pills-menu-tab" data-toggle="pill" role="tab" aria-controls="pills-menu">Dispatchers</a>
+    </li>
+</ul>
 
 <div class="superuser-div">
     <h2>Dispatchers</h2>
