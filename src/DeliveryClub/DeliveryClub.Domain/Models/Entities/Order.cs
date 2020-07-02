@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using DeliveryClub.Domain.Models.Enumerations;
+using System;
+using System.Collections.Generic;
 
 namespace DeliveryClub.Domain.Models.Entities
 {
@@ -6,10 +8,22 @@ namespace DeliveryClub.Domain.Models.Entities
     {
         public int Id { get; set; }
 
-        public int? UserId { get; set; }
+        public string Name { get; set; }
 
-        public HashSet<OrderedProduct> OrderedProducts { get; set; }
+        public string DeliveryAddress { get; set; }
 
-        public int ReviewRating { get; set; }
+        public string PhoneNumber { get; set; }
+
+        public string Comment { get; set; }
+
+        public DateTime DateTime { get; set; }
+
+        public OrderStatus Status { get; set; }
+
+        public int DispatcherId { get; set; }
+
+        public int? RegisteredUserId { get; set; }
+
+        public List<RestaurantOrder> RestaurantOrders { get; set; }
     }
 }

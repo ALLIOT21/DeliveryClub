@@ -1,6 +1,6 @@
-﻿using System;
+﻿using DeliveryClub.Domain.Models.Enumerations;
+using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace DeliveryClub.Data.DTO.EntitiesDTO
 {
@@ -8,10 +8,22 @@ namespace DeliveryClub.Data.DTO.EntitiesDTO
     {
         public int Id { get; set; }
 
-        public HashSet<OrderedProductDTO> OrderedProducts { get; set; }        
+        public string Name { get; set; }
 
-        public int? ReviewRating { get; set; }
+        public string DeliveryAddress { get; set; }
 
-        public string UserId { get; set; }
+        public string PhoneNumber { get; set; }
+
+        public string Comment { get; set; }
+
+        public OrderStatus Status { get; set; }
+
+        public DateTime DateTime { get; set; }
+
+        public int DispatcherId { get; set; }
+
+        public int? RegisteredUserId { get; set; }
+
+        public List<RestaurantOrderDTO> RestaurantOrders { get; set; }
     }
 }

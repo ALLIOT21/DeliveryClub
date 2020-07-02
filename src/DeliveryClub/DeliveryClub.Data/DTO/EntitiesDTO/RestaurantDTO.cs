@@ -19,7 +19,5 @@ namespace DeliveryClub.Data.DTO.EntitiesDTO
         public RestaurantAdditionalInfoDTO Info { get; set; }
 
         public HashSet<ProductGroupDTO> Menu { get; set; }
-
-        public ReviewDTO Review { get; set; }
     }
 }

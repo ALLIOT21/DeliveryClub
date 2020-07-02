@@ -21,10 +21,36 @@ function incrementProductView(product, productIndex, orderIndex) {
     amountDiv.getElementsByTagName("span")[0].innerHTML++;
 
     var price = productDiv.getElementsByClassName("product-price")[0];
-    console.log(price);
-    let newPrice = product.price * product.amount;
-    console.log(newPrice);
-    price.innerHTML = `${newPrice} BYN`;
+    price.innerHTML = `${getPriceView(product.price * product.amount)} BYN`;
+}
+
+function deleteProductView(orderIndex, productIndex) {
+    var cartMain = getCartMain();
+    var orderView = cartMain.getElementsByClassName("order")[orderIndex];
+    var orderProducts = orderView.getElementsByClassName("order_products")[0];
+    var productDiv = orderProducts.getElementsByClassName("products_product")[productIndex];
+
+    productDiv.remove();
+}
+
+function deleteOrderView(orderIndex) {
+    var cartMain = getCartMain();
+    var orderView = cartMain.getElementsByClassName("order")[orderIndex];
+    orderView.remove();
+}
+
+function decrementProductView(product, orderIndex, productIndex) {
+    var cartMain = getCartMain();
+    var orderView = cartMain.getElementsByClassName("order")[orderIndex];
+    var orderProducts = orderView.getElementsByClassName("order_products")[0];
+    var productDiv = orderProducts.getElementsByClassName("products_product")[productIndex];
+
+    var amountDiv = productDiv.getElementsByClassName("product_amount")[0];
+    amountDiv.getElementsByTagName("span")[0].innerHTML--;
+
+    var price = productDiv.getElementsByClassName("product-price")[0];
+
+    price.innerHTML = `${getPriceView(product.price * product.amount)} BYN`;
 }
 
 function getCartMain() {
@@ -83,6 +109,11 @@ function createOrderDivDelivery(deliveryCost) {
 
 function createProductDiv(product) {
     var productDiv = createDivWithClass("products_product");
+
+    var productId = document.createElement("input");
+    productId.type = "hidden";
+    productId.value = product.id;
+
     var productName = document.createElement("h6");
     productName.innerHTML = product.name;
 
@@ -91,13 +122,15 @@ function createProductDiv(product) {
     var productDecrementAmount = document.createElement("div");
     productDecrementAmount.classList.toggle("btn-change-amount");
     productDecrementAmount.innerHTML = "-";
+    productDecrementAmount.onclick = decrementProductAmount;
 
     var productAmount = document.createElement("span");
     productAmount.innerHTML = product.amount;
 
     var productIncrementAmount = document.createElement("div");
     productIncrementAmount.classList.toggle("btn-change-amount");
-    productIncrementAmount.innerHTML = "+";    
+    productIncrementAmount.innerHTML = "+";
+    productIncrementAmount.onclick = incrementProductAmount;
 
     productDivAmount.appendChild(productDecrementAmount);
     productDivAmount.appendChild(productAmount);
@@ -109,11 +142,33 @@ function createProductDiv(product) {
 
     var productPrice = document.createElement("span");
     productPrice.classList.toggle("product-price");
-    productPrice.innerHTML = `${product.price * product.amount} BYN`;
+    productPrice.innerHTML = `${getPriceView(product.price * product.amount)} BYN`;
 
+    var productDetails = createDivWithClass("product-details");
+    productDetails.appendChild(productPortion);
+    productDetails.appendChild(productDivAmount);
+    productDetails.appendChild(productPrice);      
+
+    productDiv.appendChild(productId);
     productDiv.appendChild(productName);
-    productDiv.appendChild(productDivAmount);
-    productDiv.appendChild(productPortion);
-    productDiv.appendChild(productPrice);        
+    productDiv.appendChild(productDetails);
+      
     return productDiv;
+}
+
+function getPriceView(price) {
+    if (Math.floor(price) < price) {
+        return price.toFixed(2);
+    }
+    return price;
+}
+
+function addRestaurantIds(cart, form) {
+    for (let i = 0; i < cart.orders.length; i++) {
+        var input = document.createElement("input");
+        input.name = `restaurantIds[${i}]`;
+        input.value = cart.orders[i].restaurant.id;
+        input.type = "hidden";
+        form.appendChild(input);
+    }
 }

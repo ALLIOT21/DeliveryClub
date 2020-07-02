@@ -55,6 +55,21 @@ namespace DeliveryClub.Web.Mapping
 
             CreateMap<RestaurantFullViewModel, RestaurantFullModel>()
                 .ReverseMap();
+
+            CreateMap<NamePaymentViewModel, NamePaymentModel>()
+                .ReverseMap();
+
+            CreateMap<AddressViewModel, AddressModel>()
+                .ReverseMap();
+
+            CreateMap<RestaurantOrderViewModel, RestaurantOrderModel>()
+                .ReverseMap();
+
+            CreateMap<CreateOrderViewModel, CreateOrderModel>()
+                .ReverseMap();
+
+            CreateMap<OrderedProductViewModel, OrderedProductModel>()
+                .ReverseMap();
         }
     }
 }

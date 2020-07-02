@@ -16,19 +16,16 @@ namespace DeliveryClub.Domain.Logic.Managers
 {
     public class RestaurantAdditionalInfoManager
     {
-        private readonly UserManager<IdentityUser> _userManager;
         private readonly ApplicationDbContext _dbContext;
         private readonly Mapper _mapper;
         private readonly PaymentMethodManager _paymentMethodManager;
         private readonly AuxiliaryMapper _auxiliaryMapper;
 
         public RestaurantAdditionalInfoManager(ApplicationDbContext dbContext,
-                            UserManager<IdentityUser> userManager,
                             PaymentMethodManager paymentMethodManager,
                             AuxiliaryMapper auxiliaryMapper)
         {
             _dbContext = dbContext;
-            _userManager = userManager;
             _mapper = new Mapper(Assembly.GetExecutingAssembly());
             _paymentMethodManager = paymentMethodManager;
             _auxiliaryMapper = auxiliaryMapper;
@@ -41,6 +38,11 @@ namespace DeliveryClub.Domain.Logic.Managers
             restaurantAdditionalInfo.PaymentMethods = _paymentMethodManager.GetPaymentMethods(restaurantAdditionalInfo);
 
             return restaurantAdditionalInfo;
+        }
+
+        public int GetRestaurantAdditionalInfoId(int restaurantId)
+        {
+            return _dbContext.RestaurantAdditionalInfos.Where(rai => rai.RestaurantId == restaurantId).FirstOrDefault().Id;
         }
 
         public async Task<RestaurantAdditionalInfo> UpdateRestaurantAdditionalInfo(RestaurantAdditionalInfo restaurantAdditionalInfo, RestaurantInfoModel restaurantInfoModel)

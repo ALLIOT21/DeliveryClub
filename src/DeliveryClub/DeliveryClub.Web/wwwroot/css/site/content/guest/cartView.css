@@ -19,18 +19,14 @@
 
 .products_product {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
     padding: 2px;
 }
 
 .order_delivery {
     padding: 3px;
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
 }
 
 .btn-change-amount {
@@ -43,5 +39,11 @@
     vertical-align: central;
 }
 
+.product-details {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
 
 

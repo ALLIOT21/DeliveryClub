@@ -1,12 +1,15 @@
-﻿using DeliveryClub.Domain.AuxiliaryModels.Guest;
+﻿using DeliveryClub.Domain.AuxiliaryModels.Admin;
+using DeliveryClub.Domain.AuxiliaryModels.Guest;
 using DeliveryClub.Domain.Logic.Interfaces;
 using DeliveryClub.Infrastructure.Mapping;
+using DeliveryClub.Web.ViewModels.Admin.Info;
 using DeliveryClub.Web.ViewModels.Guest;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace DeliveryClub.Web.Controllers
 {
@@ -58,5 +61,24 @@ namespace DeliveryClub.Web.Controllers
             return View(restaurantViewModel);
         }
 
+        [HttpGet]
+        public IActionResult CreateOrder(List<int> restaurantIds)
+        {
+            var npvmList = new List<NamePaymentViewModel>();
+            foreach(var npm in _guestService.GetRestaurantNamePayments(restaurantIds))
+            {
+                npvmList.Add(_mapper.Map<NamePaymentModel, NamePaymentViewModel>(npm));
+            }
+
+            ViewBag.PaymentMethods = npvmList;
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateOrder(CreateOrderViewModel model)
+        {
+            var orderId = await _guestService.CreateOrder(_mapper.Map<CreateOrderViewModel, CreateOrderModel>(model));
+            return null;
+        }
     }
 }

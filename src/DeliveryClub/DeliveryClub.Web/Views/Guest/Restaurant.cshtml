@@ -24,6 +24,19 @@
             }
         }
     </div>
+    <div class="user-restaurant-full_info__paymentMethods">
+        @foreach (var pm in Model.PaymentMethods)
+        {
+            if (pm.IsSelected)
+            {
+                <div class="payment-method-item">
+                    <span>@WebUtility.HtmlDecode(Symbols.PaymentMethods[pm.PaymentMethod])</span>
+                    <br>
+                    <h6>@pm.PaymentMethod.ToString()</h6>
+                </div>
+            }
+        }
+    </div>
     <div class="user-restaurant-full_info__ib-item">
         <span>@WebUtility.HtmlDecode(Symbols.Truck) @WebUtility.HtmlDecode(Symbols.MoneyBag) Delivery cost: <span id="span_delivery-cost">@Model.DeliveryCost</span> BYN</span>
     </div>
@@ -92,12 +105,20 @@
                                                         }
                                                     }
                                                 </select>
+                                                portionIndex = 0;
+                                                foreach (var pp in p.PortionPrices)
+                                                {
+                                                    <input type="hidden" id="@("productgroup-" + productGroupIndex + "_product-" + productIndex + "_id-" + portionIndex)" value="@pp.Id" />
+                                                    portionIndex++;
+                                                }
                                             }
                                             else
                                             {
                                                 if (p.PortionPrices.Count > 0)
                                                 {
                                                     <span id="@("productgroup-" + productGroupIndex + "_product-" + productIndex + "_portion-0")">@p.PortionPrices.ElementAt(0).Portion</span>
+                                                    <input type="hidden" id="@("productgroup-" + productGroupIndex + "_product-" + productIndex + "_id-0")" value="@p.PortionPrices.ElementAt(0).Id" />
+
                                                 }
                                                 else
                                                 {
@@ -111,6 +132,13 @@
                                                             }
                                                         }
                                                     </select>
+                                                    portionIndex = 0;
+                                                    foreach (var pp in pg.PortionPrices)
+                                                    {
+                                                        <input type="hidden" id="@("productgroup-" + productGroupIndex + "_product-" + productIndex + "_id-" + portionIndex)" value="@pp.Id" />
+                                                        portionIndex++;
+                                                    }
+
                                                 }
                                             }
                                         }
@@ -170,12 +198,3 @@
 <script>
     menuIsActive();
 </script>
-
-
-
-
-
-
-
-
-

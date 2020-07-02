@@ -7,6 +7,7 @@ namespace DeliveryClub.Domain.Models.Enumerations
     public enum PaymentMethod
     {
         Cash,
-        Card
+        Card,
+        Online
     }
 }
