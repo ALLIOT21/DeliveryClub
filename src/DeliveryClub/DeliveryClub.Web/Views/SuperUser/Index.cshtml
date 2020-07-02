@@ -3,6 +3,15 @@
     ViewData["Title"] = "Index";
 }
 
+<ul class="nav nav-pills nav-fill" id="pills-tab" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" href="/SuperUser" id="pills-admin-tab" data-toggle="pill" role="tab" aria-controls="pills-home">Administrators</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/SuperUser/Dispatchers" id="pills-menu-tab" data-toggle="pill" role="tab" aria-controls="pills-menu">Dispatchers</a>
+    </li>
+</ul>
+
 <div class="superuser-div">
     <h2>Administrators</h2>
     <a class="usercrud-div_create-a__size_m usercrud-div_create-a__no-highlight" id="createSpecialUser-a" asp-action="CreateAdmin" asp-controller="SuperUser">Create</a>
@@ -23,26 +32,26 @@
         <tbody>
             @foreach (var admin in Model)
             {
-            <tr>
-                <td>
-                    @admin.Email
-                </td>
-                <td>
-                    @admin.RestaurantName
-                </td>
-                <td>
-                    <div class="user-table_option-column">
-                        <form method="get" asp-action="UpdateAdmin">
-                            <input type="hidden" name="id" value=@admin.Id />
-                            <a class="user-table_option-a__no-highlight" onclick="this.parentNode.submit()">✏️</a>
-                        </form>
-                        <form method="post" asp-action="DeleteAdmin">
-                            <input type="hidden" name="id" value=@admin.Id />
-                            <a class="user-table_option-a__no-highlight" onclick="this.parentNode.submit()">🗑️</a>
-                        </form>
-                    </div>
-                </td>
-            </tr>
+                <tr>
+                    <td>
+                        @admin.Email
+                    </td>
+                    <td>
+                        @admin.RestaurantName
+                    </td>
+                    <td>
+                        <div class="user-table_option-column">
+                            <form method="get" asp-action="UpdateAdmin">
+                                <input type="hidden" name="id" value=@admin.Id />
+                                <a class="user-table_option-a__no-highlight" onclick="this.parentNode.submit()">✏️</a>
+                            </form>
+                            <form method="post" asp-action="DeleteAdmin">
+                                <input type="hidden" name="id" value=@admin.Id />
+                                <a class="user-table_option-a__no-highlight" onclick="this.parentNode.submit()">🗑️</a>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
             }
         </tbody>
     </table>

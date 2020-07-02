@@ -34,7 +34,8 @@
       "wwwroot/js/guest/order.js",
       "wwwroot/js/guest/product.js",
       "wwwroot/js/guest/restaurant.js",
-      "wwwroot/js/guest/cartView.js"
+      "wwwroot/js/guest/cartView.js",
+      "wwwroot/js/superuser/toggleActivity.js"
     ],
     "minify": {
       "enabled": true,

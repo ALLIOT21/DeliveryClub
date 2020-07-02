@@ -106,6 +106,7 @@ namespace DeliveryClub.Domain.Logic.Mapping
                 var gdm = new GetDispatcherModel()
                 {
                     Email = d.User.Email,
+                    IsActive = d.IsActive,
                     Id = d.Id,
                 };
                 getDispatcherModels.Add(gdm);

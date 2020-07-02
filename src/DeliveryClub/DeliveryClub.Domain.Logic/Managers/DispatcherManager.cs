@@ -54,6 +54,7 @@ namespace DeliveryClub.Domain.Logic.Managers
             var d = new Dispatcher()
             {
                 UserId = userId,
+                IsActive = false,
             };
             var result = await _dbContext.Dispatchers.AddAsync(_mapper.Map<Dispatcher, DispatcherDTO>(d));
             return _mapper.Map<DispatcherDTO, Dispatcher>(result.Entity);
@@ -86,6 +87,15 @@ namespace DeliveryClub.Domain.Logic.Managers
             
             _dbContext.Dispatchers.Remove(dispatcherDto);
             _dbContext.Users.Remove(dispatcherDto.User);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task ToggleActivity(int id)
+        {
+            var d = GetDispatcher(id);
+            d.IsActive = !d.IsActive;
+
+            _dbContext.Dispatchers.Update(_mapper.Map<Dispatcher, DispatcherDTO>(d));
             await _dbContext.SaveChangesAsync();
         }
     }

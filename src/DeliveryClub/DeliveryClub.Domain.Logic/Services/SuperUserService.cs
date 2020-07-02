@@ -1,7 +1,6 @@
 ﻿using DeliveryClub.Data.Context;
 using DeliveryClub.Data.DTO.ActorsDTO;
 using DeliveryClub.Data.DTO.EntitiesDTO;
-using DeliveryClub.Domain.AuxiliaryModels.Admin;
 using DeliveryClub.Domain.AuxiliaryModels.SuperUser;
 using DeliveryClub.Domain.Logic.Interfaces;
 using DeliveryClub.Domain.Logic.Managers;
@@ -162,6 +161,11 @@ namespace DeliveryClub.Domain.Logic.Services
             await _dispatcherManager.DeleteDispatcher(id);
         }
 
+        public async Task ToggleDispatcherActivity(int id)
+        {
+            await _dispatcherManager.ToggleActivity(id);
+        }
+
         private async Task<Admin> CreateAdmin(string iuserId, int restaurantId)
         {
             var admin = new Admin()
@@ -212,6 +216,6 @@ namespace DeliveryClub.Domain.Logic.Services
         private void DeleteAdmin(int id)
         {
             _dbContext.Admins.Remove(_dbContext.Admins.Find(id));
-        }
+        }        
     }
 }

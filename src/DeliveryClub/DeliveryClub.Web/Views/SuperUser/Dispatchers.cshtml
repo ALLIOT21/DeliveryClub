@@ -22,6 +22,9 @@
                     Login
                 </th>
                 <th>
+                    Active
+                </th>
+                <th>
                     Options
                 </th>
             </tr>
@@ -32,7 +35,10 @@
                 <tr>
                     <td>
                         @dispatcher.Email
-                    </td>                    
+                    </td>   
+                    <td>
+                        <input type="checkbox" id="toggle-activity-@dispatcher.Id" @(dispatcher.IsActive ? "checked" : "") onchange="toggleActivity(@dispatcher.Id)">
+                    </td>
                     <td>
                         <div class="user-table_option-column">
                             <form method="get" asp-action="UpdateDispatcher">

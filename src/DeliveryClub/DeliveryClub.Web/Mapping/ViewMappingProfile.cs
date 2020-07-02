@@ -1,14 +1,12 @@
 ﻿using AutoMapper;
-using DeliveryClub.Domain.AuxiliaryModels.SuperUser;
-using DeliveryClub.Web.ViewModels.SuperUser;
-using DeliveryClub.Web.ViewModels.Admin;
 using DeliveryClub.Domain.AuxiliaryModels.Admin;
-using DeliveryClub.Web.ViewModels;
-using DeliveryClub.Web.ViewModels.Admin.Dispatchers;
-using DeliveryClub.Web.ViewModels.Admin.Menu;
-using DeliveryClub.Web.ViewModels.Admin.Info;
-using DeliveryClub.Web.ViewModels.Guest;
 using DeliveryClub.Domain.AuxiliaryModels.Guest;
+using DeliveryClub.Domain.AuxiliaryModels.SuperUser;
+using DeliveryClub.Web.ViewModels.Admin.Info;
+using DeliveryClub.Web.ViewModels.Admin.Menu;
+using DeliveryClub.Web.ViewModels.Guest;
+using DeliveryClub.Web.ViewModels.SuperUser;
+using DeliveryClub.Web.ViewModels.SuperUser.Dispatchers;
 
 namespace DeliveryClub.Web.Mapping
 {

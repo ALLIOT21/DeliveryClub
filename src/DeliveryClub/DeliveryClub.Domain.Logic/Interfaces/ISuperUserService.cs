@@ -29,5 +29,7 @@ namespace DeliveryClub.Domain.Logic.Interfaces
         Task<IdentityResult> UpdateDispatcher(UpdateDispatcherModel model);
 
         Task DeleteDispatcher(int id);
+
+        Task ToggleDispatcherActivity(int id);
     }
 }
