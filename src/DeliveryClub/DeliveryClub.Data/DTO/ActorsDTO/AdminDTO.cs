@@ -16,7 +16,6 @@ namespace DeliveryClub.Data.DTO.ActorsDTO
 
         public int RestaurantId { get; set; }
 
-        public RestaurantDTO Restaurant { get; set; }
-                
+        public RestaurantDTO Restaurant { get; set; }                
     }
 }

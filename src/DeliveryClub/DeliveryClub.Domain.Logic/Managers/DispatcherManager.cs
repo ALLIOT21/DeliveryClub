@@ -88,5 +88,11 @@ namespace DeliveryClub.Domain.Logic.Managers
             _dbContext.Users.Remove(dispatcherDto.User);
             await _dbContext.SaveChangesAsync();
         }
+
+        public Dispatcher GetNextActiveDispatcher(int prevId)
+        {
+            var nextDispatcher = _dbContext.Dispatchers.Where(d => d.IsActive).Where(d => d.Id > prevId).OrderBy(d => d.Id).FirstOrDefault();
+            return nextDispatcher != null ? _mapper.Map<DispatcherDTO, Dispatcher>(nextDispatcher) : _mapper.Map<DispatcherDTO, Dispatcher>(_dbContext.Dispatchers.Where(d => d.IsActive).FirstOrDefault()); 
+        } 
     }
 }

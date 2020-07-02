@@ -1,5 +1,7 @@
-﻿using DeliveryClub.Domain.AuxiliaryModels.Guest;
+﻿using DeliveryClub.Domain.AuxiliaryModels.Admin;
+using DeliveryClub.Domain.AuxiliaryModels.Guest;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DeliveryClub.Domain.Logic.Interfaces
 {
@@ -10,5 +12,9 @@ namespace DeliveryClub.Domain.Logic.Interfaces
         ICollection<RestaurantPartialModel> GetRestaurantsPartially();
 
         RestaurantFullModel GetRestaurantFull(int id);
+
+        List<NamePaymentModel> GetRestaurantNamePayments(List<int> restaurantIds);
+
+        Task<int> CreateOrder(CreateOrderModel model);
     }
 }

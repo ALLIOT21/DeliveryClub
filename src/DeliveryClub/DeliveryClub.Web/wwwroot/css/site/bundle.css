@@ -430,6 +430,17 @@ input-edit-product_group-price {
     cursor: pointer;
 }
 
+.payment-method-item {
+    border: 2px solid rgb(43, 29, 133);
+    border-radius: 10px;
+    height: 6vh;
+    width: 10vh;
+    text-align: center;
+    vertical-align: central;
+    margin: 1vh 1vw 1vh 0;
+    cursor: pointer;
+}
+
 .gray-background {
     background-color: rgb(70, 194, 4);    
 }
@@ -487,10 +498,18 @@ input-edit-product_group-price {
 
 .cart-main {
     height: 80%;
+    overflow-y: auto;
 }
 
 .cart-footer {
     height: 10%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    border-top: 1px solid rgb(200, 200, 200);
+    align-items: center;
+    padding-left: 1vw;
+    padding-right: 1vw;
 }
 
 .user-content {
@@ -530,8 +549,6 @@ input-edit-product_group-price {
     justify-content: space-between;
     align-items: center; 
 }
-
-
 .user-restaurant-tag {
     font-size: 48px;
     display: block;
@@ -553,6 +570,12 @@ input-edit-product_group-price {
     display: flex;
     flex-direction: row;
 }
+
+.user-restaurant-full_info__paymentMethods {
+    display: flex;
+    flex-direction: row;
+}
+
 
 .user-restaurant-full_info__ib-item {
     display: inline-block;
@@ -663,18 +686,14 @@ input-edit-product_group-price {
 
 .products_product {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
     padding: 2px;
 }
 
 .order_delivery {
     padding: 3px;
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
 }
 
 .btn-change-amount {
@@ -685,4 +704,85 @@ input-edit-product_group-price {
     height: 20px;
     text-align: center;
     vertical-align: central;
+}
+
+.product-details {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+
+
+.delivery-address-form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.delivery-address_street-div {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 1vh;
+}
+
+.delivery-address_addit-div {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 1vh;
+}
+
+.delivery-address_addit-div-item {
+    display: flex;
+    flex-direction: row;
+    width: calc(1 / 3 * 100%);
+    padding: 0 2px 0 2px;
+}
+
+.delivery-address_label {
+    margin-right: 0.5vw;
+    margin-top: 0.7vh;
+}
+
+.order_form-item {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.order_title {
+    margin-bottom: 1vh;
+    position: relative;
+    z-index: 0;
+    margin-top: -70vh;
+    margin-left: 2vw;
+}
+
+.order_form {
+    width: 35%;
+    position: relative;
+    z-index: 0;
+    margin-left: 2vw;
+    margin-bottom: 8vh;
+}
+
+.order-background {
+    background-image: url(/resources/img/site/orderBackgrou.png);
+    background-size: contain;
+    position: relative;
+    z-index: -1;
+    width: 55.5vh;
+    height: 75vh;
+}
+
+.order-div {
+    margin-left: 10%;
+}
+
+.order_btn-send {
+    margin-top: 2vh;
+}
+
+.order_comment {
+    resize: none;
 }

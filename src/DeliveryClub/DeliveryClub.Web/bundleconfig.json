@@ -13,7 +13,8 @@
       "wwwroot/css/site/content/admin/adminProduct.css",
       "wwwroot/css/site/content/guest/guest.css",
       "wwwroot/css/site/content/guest/guestRestaurant.css",
-      "wwwroot/css/site/content/guest/cartView.css"
+      "wwwroot/css/site/content/guest/cartView.css",
+      "wwwroot/css/site/content/guest/order.css"
     ]
   },
   {
@@ -34,7 +35,8 @@
       "wwwroot/js/guest/order.js",
       "wwwroot/js/guest/product.js",
       "wwwroot/js/guest/restaurant.js",
-      "wwwroot/js/guest/cartView.js"
+      "wwwroot/js/guest/cartView.js",
+      "wwwroot/js/guest/createOrder.js"
     ],
     "minify": {
       "enabled": true,

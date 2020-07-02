@@ -1,0 +1,71 @@
+﻿.delivery-address-form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.delivery-address_street-div {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 1vh;
+}
+
+.delivery-address_addit-div {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 1vh;
+}
+
+.delivery-address_addit-div-item {
+    display: flex;
+    flex-direction: row;
+    width: calc(1 / 3 * 100%);
+    padding: 0 2px 0 2px;
+}
+
+.delivery-address_label {
+    margin-right: 0.5vw;
+    margin-top: 0.7vh;
+}
+
+.order_form-item {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.order_title {
+    margin-bottom: 1vh;
+    position: relative;
+    z-index: 0;
+    margin-top: -70vh;
+    margin-left: 2vw;
+}
+
+.order_form {
+    width: 35%;
+    position: relative;
+    z-index: 0;
+    margin-left: 2vw;
+    margin-bottom: 8vh;
+}
+
+.order-background {
+    background-image: url(/resources/img/site/orderBackgrou.png);
+    background-size: contain;
+    position: relative;
+    z-index: -1;
+    width: 55.5vh;
+    height: 75vh;
+}
+
+.order-div {
+    margin-left: 10%;
+}
+
+.order_btn-send {
+    margin-top: 2vh;
+}
+
+.order_comment {
+    resize: none;
+}

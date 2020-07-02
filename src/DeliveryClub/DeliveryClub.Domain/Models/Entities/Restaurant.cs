@@ -21,8 +21,5 @@ namespace DeliveryClub.Domain.Models.Entities
         public RestaurantAdditionalInfo RestaurantAdditionalInfo { get; set; }
 
         public ICollection<ProductGroup> Menu { get; set; }
-
-        public Review Review { get; set; }
-
     }
 }

@@ -1,15 +1,13 @@
-﻿using DeliveryClub.Data.Context;
-using DeliveryClub.Domain.AuxiliaryModels.Guest;
+﻿using DeliveryClub.Domain.AuxiliaryModels.Guest;
 using DeliveryClub.Domain.Logic.Interfaces;
 using DeliveryClub.Domain.Logic.Managers;
 using DeliveryClub.Domain.Logic.Mapping;
 using DeliveryClub.Domain.Models;
-using DeliveryClub.Domain.Models.Entities;
 using DeliveryClub.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Identity;
-using System;
 using System.Collections.Generic;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace DeliveryClub.Domain.Logic.Services
 {
@@ -18,14 +16,23 @@ namespace DeliveryClub.Domain.Logic.Services
         private readonly RestaurantManager _restaurantManager;
         private readonly AuxiliaryMapper _auxiliaryMapper;
         private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly RestaurantAdditionalInfoManager _restaurantAdditionalInfoManager;
+        private readonly PaymentMethodManager _paymentMethodManager;
+        private readonly OrderManager _orderManager;
 
         public GuestService(SignInManager<IdentityUser> signInManager,
                             RestaurantManager restaurantManager,
-                            AuxiliaryMapper auxiliaryMapper)
+                            AuxiliaryMapper auxiliaryMapper,
+                            RestaurantAdditionalInfoManager restaurantAdditionalInfoManager,
+                            PaymentMethodManager paymentMethodManager, 
+                            OrderManager orderManager)
         {
             _signInManager = signInManager;
             _restaurantManager = restaurantManager;
             _auxiliaryMapper = auxiliaryMapper;
+            _restaurantAdditionalInfoManager = restaurantAdditionalInfoManager;
+            _paymentMethodManager = paymentMethodManager;
+            _orderManager = orderManager;
         }
 
         public ICollection<RestaurantPartialModel> GetRestaurantsPartially()
@@ -40,6 +47,25 @@ namespace DeliveryClub.Domain.Logic.Services
         {
             var restaurantFull = _restaurantManager.GetRestaurantFull(id);
             return _auxiliaryMapper.CreateRestaurantFullModel(restaurantFull);
+        }
+
+        public List<NamePaymentModel> GetRestaurantNamePayments(List<int> restaurantIds)
+        {
+            var result = new List<NamePaymentModel>();
+            foreach (var rid in restaurantIds)
+            {
+                var raiId = _restaurantAdditionalInfoManager.GetRestaurantAdditionalInfoId(rid);
+                var name = _restaurantManager.GetRestaurant(rid).Name;
+
+                var npm = new NamePaymentModel
+                {
+                    Name = name,
+                    PaymentMethods = _auxiliaryMapper.CreatePaymentMethodModelList(_paymentMethodManager.GetPaymentMethods(raiId))
+                };
+
+                result.Add(npm);
+            }
+            return result;            
         }
 
         public string GetUserRole()
@@ -67,6 +93,12 @@ namespace DeliveryClub.Domain.Logic.Services
             {
                 return null;
             }
+        }
+
+        public async Task<int> CreateOrder(CreateOrderModel model)
+        {
+            var orderId = await _orderManager.CreateOrder(model);
+            return orderId;
         }
 
         private ClaimsPrincipal GetUserClaims()

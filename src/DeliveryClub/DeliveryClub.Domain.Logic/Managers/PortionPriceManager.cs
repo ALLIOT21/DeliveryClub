@@ -12,18 +12,6 @@ namespace DeliveryClub.Domain.Logic.Managers
 {
     public class PortionPriceManager
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly ApplicationDbContext _dbContext;
-        private readonly Mapper _mapper;
-
-        public PortionPriceManager(ApplicationDbContext dbContext,
-                            UserManager<IdentityUser> userManager)
-        {
-            _dbContext = dbContext;
-            _userManager = userManager;
-            _mapper = new Mapper(Assembly.GetExecutingAssembly());
-        }
-
         public ICollection<PortionPrice> CreatePortionPrices(ICollection<PortionPriceModel> portionPriceModels)
         {
             if (portionPriceModels != null)

@@ -5,7 +5,7 @@
                 <h3 class="cart-header_h3-cart__mo-margin">Cart</h3>
             </div>
             <div class="cart_green-round">
-                <h6 class="cart-header_h6-cart__mo-margin">35</h6>
+                <h6 class="cart-header_h6-cart__mo-margin" id="cart-product-overall-amount"></h6>
             </div>
         </div>
         <div>
@@ -15,5 +15,13 @@
     <div class="cart-main">
     </div>
     <div class="cart-footer">
+        <form method="get" asp-action="CreateOrder" id="form-create-order">
+            <button type="button" class="btn btn-success" onclick="placeAnOrder()" for="">
+                Place an order
+            </button>
+        </form>
+        <h4 id="cart-overall-price">
+            0 BYN
+        </h4>
     </div>
 </div>

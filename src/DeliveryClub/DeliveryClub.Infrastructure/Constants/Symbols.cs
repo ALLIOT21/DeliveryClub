@@ -18,6 +18,13 @@ namespace DeliveryClub.Infrastructure.Constants
             { Specialization.Salad, "&#129367;"}
         };
 
+        public static Dictionary<PaymentMethod, string> PaymentMethods = new Dictionary<PaymentMethod, string>
+        {
+            { PaymentMethod.Card, "&#128179;"},
+            { PaymentMethod.Cash, "&#128176;"},
+            { PaymentMethod.Online, "&#128176;"}
+        };
+
         public static string Truck => "&#128666;";
 
         public static string MoneyBag => "&#128176;";

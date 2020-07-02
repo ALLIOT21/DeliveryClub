@@ -19,6 +19,7 @@ namespace DeliveryClub.Data.Context
         {
             base.OnModelCreating(builder);
 
+            var orderStatusConverter = new EnumToNumberConverter<OrderStatus, int>();
             var specializationConverter = new EnumToNumberConverter<Specialization, int>();
             var paymentMethodConverter = new EnumToNumberConverter<PaymentMethod, int>();
 
@@ -34,7 +35,7 @@ namespace DeliveryClub.Data.Context
 
             builder
                 .Entity<OrderedProductDTO>()
-                .HasKey(o => new { o.ProductId, o.OrderId, o.PortionPriceId });
+                .HasKey(o => new { o.ProductId, o.RestaurantOrderId, o.PortionPriceId });
 
             builder
                 .Entity<PortionPriceProductsDTO>()
@@ -66,13 +67,13 @@ namespace DeliveryClub.Data.Context
         public DbSet<SpecializationDTO> Specializations { get; set; }
 
         public DbSet<PaymentMethodDTO> PaymentMethods { get; set; }
- 
-        public DbSet<ReviewDTO> Reviews { get; set; }
 
         public DbSet<AdminDTO> Admins { get; set; }
 
         public DbSet<DispatcherDTO> Dispatchers { get; set; }
 
         public DbSet<RegisteredUserDTO> RegisteredUsers { get; set; }
+
+        public DbSet<RestaurantOrderDTO> RestaurantOrders { get; set; } 
     }
 }

@@ -53,6 +53,17 @@ namespace DeliveryClub.Domain.Logic.Managers
             return result;
         }
 
+        public HashSet<PaymentMethod> GetPaymentMethods(int restaurantAdditionalInfoId)
+        {
+            var paymentMethods = _dbContext.PaymentMethods.Where(pm => pm.RestaurantAdditionalInfoId == restaurantAdditionalInfoId).ToHashSet();
+            var result = new HashSet<PaymentMethod>();
+            foreach (var pm in paymentMethods)
+            {
+                result.Add(pm.PaymentMethod);
+            }
+            return result;
+        }
+
         public async Task UpdatePaymentMethods(RestaurantAdditionalInfo restaurantAdditionalInfo, HashSet<PaymentMethod> newPaymentMethods)
         {
             var oldPaymentMethod = GetPaymentMethods(restaurantAdditionalInfo);

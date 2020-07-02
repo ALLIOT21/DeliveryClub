@@ -42,6 +42,15 @@ namespace DeliveryClub.Domain.Logic.Mapping
 
             CreateMap<Dispatcher, DispatcherDTO>()
                 .ReverseMap();
+
+            CreateMap<Order, OrderDTO>()
+                .ReverseMap();
+
+            CreateMap<RestaurantOrder, RestaurantOrderDTO>()
+                .ReverseMap();
+
+            CreateMap<OrderedProduct, OrderedProductDTO>()
+                .ReverseMap();
         }
     }
 }

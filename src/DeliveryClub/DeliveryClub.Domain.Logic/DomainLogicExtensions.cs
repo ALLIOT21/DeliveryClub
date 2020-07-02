@@ -28,7 +28,10 @@ namespace DeliveryClub.Domain.Logic
             services.AddScoped<RestaurantAdditionalInfoManager>();
             services.AddScoped<RestaurantManager>();
             services.AddScoped<SpecializationManager>();
-            services.AddScoped<AuxiliaryMapper>();
+            services.AddScoped<OrderManager>();
+            services.AddScoped<RestaurantOrderManager>();
+            services.AddScoped<OrderedProductManager>();
+            services.AddScoped<AuxiliaryMapper>();           
             return services;
         }
     }

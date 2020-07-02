@@ -20,6 +20,12 @@
     flex-direction: row;
 }
 
+.user-restaurant-full_info__paymentMethods {
+    display: flex;
+    flex-direction: row;
+}
+
+
 .user-restaurant-full_info__ib-item {
     display: inline-block;
     margin-top: 3vh;

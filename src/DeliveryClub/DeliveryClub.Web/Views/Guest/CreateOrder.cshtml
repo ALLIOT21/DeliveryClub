@@ -1,0 +1,85 @@
+﻿@using DeliveryClub.Domain.Models.Enumerations
+@model DeliveryClub.Web.ViewModels.Guest.CreateOrderViewModel
+@{
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+<div class="order-div">
+    <div class="order-background">
+    </div>
+    <div class="order_title">
+        <h4 class="display-4">Order</h4>
+    </div>
+    <div class="order_form">
+        <form method="post" asp-action="CreateOrder" id="form-create-order">
+            <div class="form-group order_form-item">
+                <h4>Your name</h4>
+                <input asp-for="Name" class="form-control form-control-lg" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group order_form-item">
+                <h4>Your phone number</h4>
+                <input asp-for="PhoneNumber" class="form-control form-control-lg" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="delivery-address-form-group order_form-item">
+                <h4>Delivery address</h4>
+                <div class="delivery-address_street-div">
+                    <label asp-for="DeliveryAddress.Street" class="delivery-address_label">street</label>
+                    <input asp-for="DeliveryAddress.Street" class="form-control" />
+                </div>
+                <div class="delivery-address_addit-div">
+                    <div class="delivery-address_addit-div-item">
+                        <label asp-for="DeliveryAddress.Building" class="delivery-address_label">building</label>
+                        <input asp-for="DeliveryAddress.Building" class="form-control" />
+                    </div>
+                    <div class="delivery-address_addit-div-item">
+                        <label asp-for="DeliveryAddress.House" class="delivery-address_label">house</label>
+                        <input asp-for="DeliveryAddress.House" class="form-control" />
+                    </div>
+                    <div class="delivery-address_addit-div-item">
+                        <label asp-for="DeliveryAddress.Flat" class="delivery-address_label">flat</label>
+                        <input asp-for="DeliveryAddress.Flat" class="form-control" />
+                    </div>
+                </div>
+                <span asp-validation-for="DeliveryAddress" class="text-danger"></span>
+            </div>
+            <div>
+                <h4>Payment methods</h4>
+                <div>
+                    @{
+                        int i = 0;
+                        foreach (var npvm in ViewBag.PaymentMethods)
+                        {
+                            <div>
+                            <span>@npvm.Name :</span>
+                            @{ 
+                                foreach (var pm in npvm.PaymentMethods)
+                                {
+                                    if (pm.IsSelected)
+                                    {
+                                    @Html.RadioButton($"Orders[{i}].PaymentMethod", (object)pm.PaymentMethod);
+                                    <span class="mr-2">@pm.PaymentMethod</span>;
+                                    }
+                                }
+                                i++;
+                            }
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+            <div class="form-group">
+                <h4>Comment</h4>
+                <textarea class="form-control order_comment" asp-for="Comment" rows="2"></textarea>
+                <span asp-validation-for="Comment" class="text-danger"></span>
+            </div>
+        </form>
+    </div>
+    <div class="form-group order-btn-send">
+        <button type="submit" value="Create" class="btn btn-primary" onclick="addCartToOrder()">Send</button>
+    </div>
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
+</div>
+
