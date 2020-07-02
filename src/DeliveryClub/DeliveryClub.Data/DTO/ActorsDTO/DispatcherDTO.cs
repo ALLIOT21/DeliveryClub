@@ -10,5 +10,7 @@ namespace DeliveryClub.Data.DTO.ActorsDTO
         public string UserId { get; set; }
 
         public IdentityUser User { get; set; }
+
+        public bool IsActive { get; set; }
     }
 }

@@ -13,5 +13,7 @@ namespace DeliveryClub.Domain.Models.Actors
         public string UserId { get; set; }
 
         public IdentityUser User { get; set; }
+
+        public bool IsActive { get; set; }
     }
 }
