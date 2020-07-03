@@ -5,6 +5,7 @@ using DeliveryClub.Domain.AuxiliaryModels.SuperUser;
 using DeliveryClub.Domain.Logic.Interfaces;
 using DeliveryClub.Domain.Logic.Managers;
 using DeliveryClub.Domain.Logic.Mapping;
+using DeliveryClub.Domain.Models;
 using DeliveryClub.Domain.Models.Actors;
 using DeliveryClub.Domain.Models.Entities;
 using DeliveryClub.Infrastructure.Mapping;
@@ -82,7 +83,7 @@ namespace DeliveryClub.Domain.Logic.Services
 
         public async Task<IdentityResult> CreateAdminAndRestaurant(CreateAdminModel model)
         {
-            var result = await _identityUserManager.CreateIdentityUser(model.Email, model.Password);
+            var result = await _identityUserManager.CreateIdentityUser(model.Email, model.Password, Role.Admin);
             if (result.Item2.Succeeded)
             {
                 var restaurant = CreateRestaurant();
@@ -126,8 +127,7 @@ namespace DeliveryClub.Domain.Logic.Services
 
         public async Task<IdentityResult> CreateDispatcher(CreateDispatcherModel model)
         {
-
-            var result = await _identityUserManager.CreateIdentityUser(model.Email, model.Password);
+            var result = await _identityUserManager.CreateIdentityUser(model.Email, model.Password, Role.Dispatcher);
             if (result.Item2.Succeeded)
             {
                 await _dispatcherManager.CreateDispatcher(result.Item1.Id);

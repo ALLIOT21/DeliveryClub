@@ -17,11 +17,13 @@
             form.appendChild(productPortionId);
         }
     }
+    deleteCart();
     form.submit();
 }
 
 function createInput(name, value) {
     var input = document.createElement("input");
+    input.type = "hidden";
     input.name = name;
     input.value = value;
     return input;

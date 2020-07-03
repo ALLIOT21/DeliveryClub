@@ -1,6 +1,5 @@
-﻿using System;
+﻿using DeliveryClub.Domain.Models.Enumerations;
 using System.Collections.Generic;
-using System.Text;
 
 namespace DeliveryClub.Data.DTO.EntitiesDTO
 {
@@ -8,7 +7,7 @@ namespace DeliveryClub.Data.DTO.EntitiesDTO
     {
         public int Id { get; set; }
 
-        public PaymentMethodDTO PaymentMethod { get; set; }
+        public PaymentMethod PaymentMethod { get; set; }
 
         public List<OrderedProductDTO> OrderedProducts { get; set; }
 

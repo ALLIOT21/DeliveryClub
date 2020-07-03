@@ -6,6 +6,7 @@ using DeliveryClub.Domain.Models.Entities;
 using DeliveryClub.Domain.Models.Enumerations;
 using DeliveryClub.Infrastructure.Mapping;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -29,6 +30,16 @@ namespace DeliveryClub.Domain.Logic.Managers
             _dispatcherManager = dispatcherManager;
         }
 
+        public ICollection<Order> GetOrders(OrderStatus orderStatus, int dispId)
+        {
+            var orders = new List<Order>();
+            foreach (var o in _dbContext.Orders.Where(o => o.DispatcherId == dispId).Where(o => o.Status == orderStatus).ToList())
+            {
+                orders.Add(_mapper.Map<OrderDTO, Order>(o));
+            };
+            return orders;
+        }
+
         public async Task<int> CreateOrder(CreateOrderModel model)
         {
             var lastOrder = GetLastOrder();
@@ -46,16 +57,16 @@ namespace DeliveryClub.Domain.Logic.Managers
                 DispatcherId = nextDispatcherId,
             };
 
-            order = _mapper.Map<OrderDTO, Order>(_dbContext.Orders.Add(_mapper.Map<Order, OrderDTO>(order)).Entity);
+            var newOrder = _dbContext.Orders.Add(_mapper.Map<Order, OrderDTO>(order)).Entity;
             _dbContext.SaveChanges();
 
             foreach(var ro in model.Orders)
             {                
-                _restaurantOrderManager.CreateRestaurantOrder(ro, order.Id);
+                _restaurantOrderManager.CreateRestaurantOrder(ro, newOrder.Id);
             }
 
             await _dbContext.SaveChangesAsync();
-            return order.Id;
+            return newOrder.Id;
         }
 
         public Order GetLastOrder()

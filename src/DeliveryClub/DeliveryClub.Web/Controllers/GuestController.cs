@@ -1,8 +1,6 @@
-﻿using DeliveryClub.Domain.AuxiliaryModels.Admin;
-using DeliveryClub.Domain.AuxiliaryModels.Guest;
+﻿using DeliveryClub.Domain.AuxiliaryModels.Guest;
 using DeliveryClub.Domain.Logic.Interfaces;
 using DeliveryClub.Infrastructure.Mapping;
-using DeliveryClub.Web.ViewModels.Admin.Info;
 using DeliveryClub.Web.ViewModels.Guest;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
@@ -78,7 +76,7 @@ namespace DeliveryClub.Web.Controllers
         public async Task<IActionResult> CreateOrder(CreateOrderViewModel model)
         {
             var orderId = await _guestService.CreateOrder(_mapper.Map<CreateOrderViewModel, CreateOrderModel>(model));
-            return null;
+            return View("OrderSent", orderId);
         }
     }
 }

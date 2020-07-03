@@ -7,8 +7,9 @@ namespace DeliveryClub.Domain.Models.Enumerations
     public enum OrderStatus
     {
         Received,
-        Accepted,
         Declined,
-        Delivered,
+        Accepted,
+        Courier,
+        Delivered
     }
 }
