@@ -1,0 +1,63 @@
+﻿@using DeliveryClub.Domain.Models.Enumerations;
+@model ICollection<DeliveryClub.Web.ViewModels.Dispatchers.DispatcherOrderViewModel>
+@{
+}
+<h2>Orders</h2>
+
+<ul class="nav nav-pills nav-fill mtb-1vh" id="pills-tab" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link @(ViewBag.OrderStatus == OrderStatus.Received ? "active" : "")" href="/Dispatcher" data-toggle="pill" role="tab" aria-controls="pills-home">Received</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @(ViewBag.OrderStatus == OrderStatus.Declined ? "active" : "")" href="/Dispatcher/Declined" data-toggle="pill" role="tab" aria-controls="pills-menu">Declined</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @(ViewBag.OrderStatus == OrderStatus.Accepted ? "active" : "")" href="/Dispatcher/Accepted" data-toggle="pill" role="tab" aria-controls="pills-menu">Accepted</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @(ViewBag.OrderStatus == OrderStatus.Courier ? "active" : "")" href="/Dispatcher/Courier" data-toggle="pill" role="tab" aria-controls="pills-menu">Courier</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @(ViewBag.OrderStatus == OrderStatus.Delivered ? "active" : "")" href="/Dispatcher/Delivered" data-toggle="pill" role="tab" aria-controls="pills-menu">Delivered</a>
+    </li>
+</ul>
+
+
+<div class="superuser-div">    
+    <table class="table usercrud-div_user-table__fixed">
+        <thead class="thead-dark">
+            <tr>
+                <th>
+                    Id
+                </th>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Phone
+                </th>
+                <th>
+                    Delivery address
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model)
+            {
+                <tr>
+                    <td>
+                        @order.Id
+                    </td>
+                    <td>
+                        @order.Name
+                    <td>
+                        <a href="tel:@(order.PhoneNumber)">@order.PhoneNumber</a>
+                    </td>
+                    <td>
+                        @order.DeliveryAddress
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

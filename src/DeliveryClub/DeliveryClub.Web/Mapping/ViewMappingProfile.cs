@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using DeliveryClub.Domain.AuxiliaryModels.Admin;
+using DeliveryClub.Domain.AuxiliaryModels.Dispatcher;
 using DeliveryClub.Domain.AuxiliaryModels.Guest;
 using DeliveryClub.Domain.AuxiliaryModels.SuperUser;
 using DeliveryClub.Web.ViewModels.Admin.Info;
 using DeliveryClub.Web.ViewModels.Admin.Menu;
+using DeliveryClub.Web.ViewModels.Dispatchers;
 using DeliveryClub.Web.ViewModels.Guest;
 using DeliveryClub.Web.ViewModels.SuperUser;
 using DeliveryClub.Web.ViewModels.SuperUser.Dispatchers;
@@ -69,6 +71,9 @@ namespace DeliveryClub.Web.Mapping
                 .ReverseMap();
 
             CreateMap<OrderedProductViewModel, OrderedProductModel>()
+                .ReverseMap();
+
+            CreateMap<DispatcherOrderViewModel, DispatcherOrderModel>()
                 .ReverseMap();
         }
     }

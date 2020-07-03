@@ -1,4 +1,5 @@
 ﻿using DeliveryClub.Domain.AuxiliaryModels.Admin;
+using DeliveryClub.Domain.AuxiliaryModels.Dispatcher;
 using DeliveryClub.Domain.AuxiliaryModels.Guest;
 using DeliveryClub.Domain.AuxiliaryModels.SuperUser;
 using DeliveryClub.Domain.Logic.Managers;
@@ -239,6 +240,18 @@ namespace DeliveryClub.Domain.Logic.Mapping
             };
 
             return restaurantFullModel;
+        }
+
+        public DispatcherOrderModel CreateDispatcherOrderModel(Order order)
+        {
+            var dom = new DispatcherOrderModel
+            {
+                Id = order.Id,
+                Name = order.Name,
+                DeliveryAddress = order.DeliveryAddress,
+                PhoneNumber = order.PhoneNumber,
+            };
+            return dom;
         }
     }
 }
