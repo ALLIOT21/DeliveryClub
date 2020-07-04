@@ -40,7 +40,7 @@ namespace DeliveryClub.Domain.Logic.Managers
             return orders;
         }
 
-        public async Task<int> CreateOrder(CreateOrderModel model)
+        public async Task<Order> CreateOrder(CreateOrderModel model)
         {
             var lastOrder = GetLastOrder();
             int dispatcherId = lastOrder != null ? lastOrder.DispatcherId : 0;            
@@ -66,7 +66,7 @@ namespace DeliveryClub.Domain.Logic.Managers
             }
 
             await _dbContext.SaveChangesAsync();
-            return newOrder.Id;
+            return _mapper.Map<OrderDTO, Order>(newOrder);
         }
 
         public Order GetLastOrder()

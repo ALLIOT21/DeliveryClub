@@ -3,6 +3,7 @@ using DeliveryClub.Domain.Logic.Extensions;
 using DeliveryClub.Domain.Logic.Interfaces;
 using DeliveryClub.Domain.Logic.Managers;
 using DeliveryClub.Domain.Logic.Mapping;
+using DeliveryClub.Domain.Models.Actors;
 using DeliveryClub.Domain.Models.Enumerations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -34,13 +35,14 @@ namespace DeliveryClub.Domain.Logic.Services
 
         public async Task<ICollection<DispatcherOrderModel>> GetOrders(OrderStatus orderStatus)
         {
-            var dispId = await GetCurrentDispatcherId();
+            var disp = await GetCurrentDispatcher();
 
             var doms = new List<DispatcherOrderModel>();
-            foreach (var order in _orderManager.GetOrders(orderStatus, dispId))
+            foreach (var order in _orderManager.GetOrders(orderStatus, disp.Id))
             {
                 doms.Add(_auxiliaryMapper.CreateDispatcherOrderModel(order));
             }
+
             return doms;
         }
 
@@ -49,10 +51,10 @@ namespace DeliveryClub.Domain.Logic.Services
             return null;
         }
         
-        private async Task<int> GetCurrentDispatcherId()
+        private async Task<Dispatcher> GetCurrentDispatcher()
         {            
             var currentIdentityUser = await _userManager.GetCurrentIdentityUser(_httpContextAccessor.HttpContext.User);
-            return _dispatcherManager.GetDispatcher(currentIdentityUser.Id).Id;      
+            return _dispatcherManager.GetDispatcher(currentIdentityUser.Id);      
         }
     }
 }

@@ -4,7 +4,9 @@ using DeliveryClub.Domain.Logic.Managers;
 using DeliveryClub.Domain.Logic.Mapping;
 using DeliveryClub.Domain.Models;
 using DeliveryClub.Infrastructure.Extensions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SignalR;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -19,13 +21,19 @@ namespace DeliveryClub.Domain.Logic.Services
         private readonly RestaurantAdditionalInfoManager _restaurantAdditionalInfoManager;
         private readonly PaymentMethodManager _paymentMethodManager;
         private readonly OrderManager _orderManager;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IHubContext<DispatcherNotificationHub> _hubContext;
+        private readonly DispatcherManager _dispatcherManager;
 
         public GuestService(SignInManager<IdentityUser> signInManager,
                             RestaurantManager restaurantManager,
                             AuxiliaryMapper auxiliaryMapper,
                             RestaurantAdditionalInfoManager restaurantAdditionalInfoManager,
-                            PaymentMethodManager paymentMethodManager, 
-                            OrderManager orderManager)
+                            PaymentMethodManager paymentMethodManager,
+                            OrderManager orderManager,
+                            IHttpContextAccessor httpContextAccessor,
+                            IHubContext<DispatcherNotificationHub> hubContext,
+                            DispatcherManager dispatcherManager)
         {
             _signInManager = signInManager;
             _restaurantManager = restaurantManager;
@@ -33,6 +41,9 @@ namespace DeliveryClub.Domain.Logic.Services
             _restaurantAdditionalInfoManager = restaurantAdditionalInfoManager;
             _paymentMethodManager = paymentMethodManager;
             _orderManager = orderManager;
+            _httpContextAccessor = httpContextAccessor;
+            _hubContext = hubContext;
+            _dispatcherManager = dispatcherManager;
         }
 
         public ICollection<RestaurantPartialModel> GetRestaurantsPartially()
@@ -97,8 +108,12 @@ namespace DeliveryClub.Domain.Logic.Services
 
         public async Task<int> CreateOrder(CreateOrderModel model)
         {
-            var orderId = await _orderManager.CreateOrder(model);
-            return orderId;
+            var order = await _orderManager.CreateOrder(model);
+
+            var group = _hubContext.Clients.Group(_dispatcherManager.GetDispatcher(order.DispatcherId).User.Email);
+            await group.SendAsync("ReceiveOrder");
+
+            return order.Id;
         }
 
         private ClaimsPrincipal GetUserClaims()

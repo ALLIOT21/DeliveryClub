@@ -13,15 +13,12 @@ namespace DeliveryClub.Domain.Logic.Managers
 {
     public class PortionPriceProductGroupManager
     {
-        private readonly UserManager<IdentityUser> _userManager;
         private readonly ApplicationDbContext _dbContext;
         private readonly Mapper _mapper;
 
-        public PortionPriceProductGroupManager(ApplicationDbContext dbContext,
-                            UserManager<IdentityUser> userManager)
+        public PortionPriceProductGroupManager(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
-            _userManager = userManager;
             _mapper = new Mapper(Assembly.GetExecutingAssembly());
         }
         public ICollection<PortionPriceProductGroup> CreatePortionPricesProductGroup(ICollection<PortionPrice> portionPrices, ProductGroup productGroup)

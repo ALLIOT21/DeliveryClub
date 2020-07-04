@@ -1234,6 +1234,17 @@ function addRestaurantIds(cart, form) {
         form.appendChild(input);
     }
 }
+function toggleActivity(id) {
+    jQuery.ajax({
+        url: `/api/dispatcher/${id}/active`,
+        type: "POST",
+        dataType: "json",
+        success: function () {
+            var checkbox = document.getElementById(`toggle-activity-${id}`);
+            checkbox.setAttribute("checked", !checkbox.getAttribute("checked"));
+        }
+    })
+}
 function addCartToOrder() {
     var cart = getCart();
     cart = JSON.parse(cart);
@@ -1253,11 +1264,19 @@ function addCartToOrder() {
             form.appendChild(productPortionId);
         }
     }
+    
+    const hubConnection = new signalR.HubConnectionBuilder()
+        .withUrl("/DispatcherNotification")
+        .build();
+    hubConnection.invoke("Send", "New order!");
+    hubConnection.start();
+    deleteCart();
     form.submit();
 }
 
 function createInput(name, value) {
     var input = document.createElement("input");
+    input.type = "hidden";
     input.name = name;
     input.value = value;
     return input;

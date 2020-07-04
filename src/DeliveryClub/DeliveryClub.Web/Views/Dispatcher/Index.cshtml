@@ -23,7 +23,7 @@
 </ul>
 
 
-<div class="superuser-div">    
+<div class="superuser-div">
     <table class="table usercrud-div_user-table__fixed">
         <thead class="thead-dark">
             <tr>
@@ -61,3 +61,16 @@
         </tbody>
     </table>
 </div>
+<script src="~/js/site/signalr/dist/browser/signalr.min.js"></script>
+@{
+    if (ViewBag.OrderStatus != OrderStatus.Received)
+    { 
+        <script src="~/js/dispatcher/simpleHubConnection.js">
+        </script>
+    }
+    else
+    {
+        <script src="~/js/dispatcher/complexHubConnection.js">
+        </script>
+    }
+}

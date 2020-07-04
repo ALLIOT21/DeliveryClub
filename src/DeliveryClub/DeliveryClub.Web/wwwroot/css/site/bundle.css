@@ -786,3 +786,6 @@ input-edit-product_group-price {
 .order_comment {
     resize: none;
 }
+.mtb-1vh {
+    margin: 1vh 0 1vh 0;
+}

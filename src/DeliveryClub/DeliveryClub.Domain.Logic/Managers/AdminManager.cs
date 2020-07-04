@@ -10,15 +10,12 @@ namespace DeliveryClub.Domain.Logic.Managers
 {
     public class AdminManager
     {
-        private readonly UserManager<IdentityUser> _userManager;
         private readonly ApplicationDbContext _dbContext;
         private readonly Mapper _mapper;
 
-        public AdminManager(ApplicationDbContext dbContext,
-                            UserManager<IdentityUser> userManager)
+        public AdminManager(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
-            _userManager = userManager;
             _mapper = new Mapper(Assembly.GetExecutingAssembly());
         }
 

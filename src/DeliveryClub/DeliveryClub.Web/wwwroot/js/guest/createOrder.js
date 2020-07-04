@@ -17,6 +17,12 @@
             form.appendChild(productPortionId);
         }
     }
+    
+    const hubConnection = new signalR.HubConnectionBuilder()
+        .withUrl("/DispatcherNotification")
+        .build();
+    hubConnection.invoke("Send", "New order!");
+    hubConnection.start();
     deleteCart();
     form.submit();
 }

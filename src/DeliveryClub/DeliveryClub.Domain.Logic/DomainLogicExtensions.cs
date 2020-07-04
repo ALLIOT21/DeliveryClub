@@ -16,6 +16,7 @@ namespace DeliveryClub.Domain.Logic
             services.AddScoped<IGuestService, GuestService>();
             services.AddScoped<ISuperUserService, SuperUserService>();
             services.AddScoped<IAdminService, AdminService>();
+            services.AddScoped<IDispatcherService, DispatcherService>();
             services.AddScoped<AdminManager>();
             services.AddScoped<DispatcherManager>();
             services.AddScoped<IdentityUserManager>();
@@ -31,7 +32,8 @@ namespace DeliveryClub.Domain.Logic
             services.AddScoped<OrderManager>();
             services.AddScoped<RestaurantOrderManager>();
             services.AddScoped<OrderedProductManager>();
-            services.AddScoped<AuxiliaryMapper>();           
+            services.AddScoped<AuxiliaryMapper>();
+            services.AddSignalR();
             return services;
         }
     }

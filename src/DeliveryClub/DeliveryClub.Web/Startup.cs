@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using System.Globalization;
 
 namespace DeliveryClub.Web
@@ -53,10 +52,14 @@ namespace DeliveryClub.Web
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            if (Configuration.GetSection("ErrorHandlingMode").Value == "development")
             {
                 app.UseDeveloperExceptionPage();
                 app.UseOpenApi().UseSwaggerUi3();
+            }
+            else
+            {
+                app.UseExceptionHandler();
             }
 
             app.UseHttpsRedirection();
@@ -66,6 +69,7 @@ namespace DeliveryClub.Web
             app.UseAuthorization();
             app.UseAuthentication();
             app.UseStaticFiles();
+            app.UseStatusCodePages();
 
             app.UseRequestLocalization();
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
@@ -77,6 +81,11 @@ namespace DeliveryClub.Web
                     name: "default",
                     pattern: "{controller=Guest}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
+            });
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapHub<DispatcherNotificationHub>("/DispatcherNotification");
             });
         }
     }

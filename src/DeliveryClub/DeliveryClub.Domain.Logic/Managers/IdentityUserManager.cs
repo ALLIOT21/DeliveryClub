@@ -17,7 +17,7 @@ namespace DeliveryClub.Domain.Logic.Managers
             _userManager = userManager;
         }
 
-        public async Task<(IdentityUser, IdentityResult)> CreateIdentityUser(string email, string password)
+        public async Task<(IdentityUser, IdentityResult)> CreateIdentityUser(string email, string password, string role)
         {
             var iuser = new IdentityUser { UserName = email, Email = email };
             var passwordValidationResult = ValidatePassword(_userManager, iuser, password);
@@ -26,7 +26,7 @@ namespace DeliveryClub.Domain.Logic.Managers
                 var createResult = await _userManager.CreateAsync(iuser, password);
                 if (createResult.Succeeded)
                 {
-                    await _userManager.AddToRoleAsync(iuser, Role.Admin);
+                    await _userManager.AddToRoleAsync(iuser, role);
                 }
                 return (iuser, createResult);
             }
