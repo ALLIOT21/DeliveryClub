@@ -8,5 +8,7 @@ namespace DeliveryClub.Domain.Logic.Interfaces
     public interface IDispatcherService
     {
         Task<ICollection<DispatcherOrderModel>> GetOrders(OrderStatus orderStatus);
+
+        Task SetOrderStatus(int orderId, OrderStatus orderStatus);
     }
 }

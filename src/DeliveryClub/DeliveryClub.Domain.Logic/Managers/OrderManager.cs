@@ -40,6 +40,18 @@ namespace DeliveryClub.Domain.Logic.Managers
             return orders;
         }
 
+        public Order GetOrder(int id)
+        {
+            return _mapper.Map<OrderDTO, Order>(_dbContext.Orders.Where(o => o.Id == id).FirstOrDefault());
+        }
+
+        public async Task SetOrderStatus(Order order, OrderStatus orderStatus)
+        {
+            order.Status = orderStatus;
+            _dbContext.Orders.Update(_mapper.Map<Order, OrderDTO>(order));
+            await _dbContext.SaveChangesAsync();
+        }
+
         public async Task<Order> CreateOrder(CreateOrderModel model)
         {
             var lastOrder = GetLastOrder();

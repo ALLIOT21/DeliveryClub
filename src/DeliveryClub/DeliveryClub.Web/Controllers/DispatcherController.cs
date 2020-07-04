@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DeliveryClub.Domain.AuxiliaryModels.Dispatcher;
 using DeliveryClub.Domain.Logic.Interfaces;
-using DeliveryClub.Infrastructure.Mapping;
 using DeliveryClub.Domain.Models.Enumerations;
+using DeliveryClub.Infrastructure.Mapping;
 using DeliveryClub.Web.ViewModels.Dispatchers;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Reflection;
-using DeliveryClub.Domain.AuxiliaryModels.Dispatcher;
 using System.Threading.Tasks;
 
 namespace DeliveryClub.Web.Controllers
@@ -14,40 +14,33 @@ namespace DeliveryClub.Web.Controllers
     {
         private readonly IDispatcherService _dispatcherService;
         private readonly Mapper _mapper;
+        private const string REFERER_HEADER = "Referer";
+
         public DispatcherController(IDispatcherService dispatcherService)
         {
             _dispatcherService = dispatcherService;
             _mapper = new Mapper(Assembly.GetExecutingAssembly());
         }
 
+        [Route("[controller]/Orders/Received")]
         public async Task<IActionResult> Index()
         {
             ViewBag.OrderStatus = OrderStatus.Received;
             return View(await GetOrders(OrderStatus.Received));
         }
 
-        public async new Task<IActionResult> Accepted()
+        [Route("[controller]/[action]/{orderStatus}")]
+        public async Task<ActionResult> Orders(OrderStatus orderStatus)
         {
-            ViewBag.OrderStatus = OrderStatus.Accepted;
-            return View(nameof(Index), await GetOrders(OrderStatus.Accepted));
+            ViewBag.OrderStatus = orderStatus;
+            return View(nameof(Index), await GetOrders(orderStatus));
         }
 
-        public async Task<IActionResult> Declined()
+        [HttpPost]
+        public async Task<IActionResult> SetOrderStatus(SetOrderStatusViewModel model)
         {
-            ViewBag.OrderStatus = OrderStatus.Declined;
-            return View(nameof(Index), await GetOrders(OrderStatus.Declined));
-        }
-
-        public async Task<IActionResult> Courier()
-        {
-            ViewBag.OrderStatus = OrderStatus.Courier;
-            return View(nameof(Index), await GetOrders(OrderStatus.Courier));
-        }
-
-        public async Task<IActionResult> Delivered()
-        {
-            ViewBag.OrderStatus = OrderStatus.Delivered;
-            return View(nameof(Index), await GetOrders(OrderStatus.Delivered));
+            await _dispatcherService.SetOrderStatus(model.Id, model.OrderStatus);
+            return Redirect(Request.Headers[REFERER_HEADER].ToString());
         }
 
         private async Task<ICollection<DispatcherOrderViewModel>> GetOrders(OrderStatus orderStatus)
@@ -59,5 +52,7 @@ namespace DeliveryClub.Web.Controllers
             }
             return dovms;
         }
+
+
     }
 }

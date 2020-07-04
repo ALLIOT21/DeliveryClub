@@ -50,6 +50,12 @@ namespace DeliveryClub.Domain.Logic.Services
         {
             return null;
         }
+
+        public async Task SetOrderStatus(int orderId, OrderStatus orderStatus)
+        {
+            var order = _orderManager.GetOrder(orderId);
+            await _orderManager.SetOrderStatus(order, orderStatus);
+        }
         
         private async Task<Dispatcher> GetCurrentDispatcher()
         {            
