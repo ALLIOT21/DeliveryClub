@@ -1,11 +1,10 @@
 ﻿using DeliveryClub.Domain.Models.Enumerations;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace DeliveryClub.Domain.AuxiliaryModels.Dispatcher
+namespace DeliveryClub.Web.ViewModels.Dispatchers
 {
-    public class DispatcherOrderFullModel
+    public class DispatcherOrderFullViewModel
     {
         public int Id { get; set; }
 
@@ -21,7 +20,6 @@ namespace DeliveryClub.Domain.AuxiliaryModels.Dispatcher
 
         public OrderStatus Status { get; set; }
 
-        public List<GetRestaurantOrderModel> RestaurantOrders { get; set; }
-
+        public List<GetRestaurantOrderViewModel> RestaurantOrders { get; set; }
     }
 }

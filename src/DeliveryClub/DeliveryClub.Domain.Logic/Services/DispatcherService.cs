@@ -48,7 +48,9 @@ namespace DeliveryClub.Domain.Logic.Services
 
         public DispatcherOrderFullModel GetOrder(int id)
         {
-            return null;
+            var fullOrder = _orderManager.GetFullOrder(id);
+            var dofm = _auxiliaryMapper.CreateDispatcherOrderFullModel(fullOrder);
+            return dofm;
         }
 
         public async Task SetOrderStatus(int orderId, OrderStatus orderStatus)
@@ -61,6 +63,6 @@ namespace DeliveryClub.Domain.Logic.Services
         {            
             var currentIdentityUser = await _userManager.GetCurrentIdentityUser(_httpContextAccessor.HttpContext.User);
             return _dispatcherManager.GetDispatcher(currentIdentityUser.Id);      
-        }
+        }        
     }
 }

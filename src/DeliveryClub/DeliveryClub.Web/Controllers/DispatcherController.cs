@@ -30,10 +30,16 @@ namespace DeliveryClub.Web.Controllers
         }
 
         [Route("[controller]/[action]/{orderStatus}")]
-        public async Task<ActionResult> Orders(OrderStatus orderStatus)
+        public async Task<IActionResult> Orders(OrderStatus orderStatus)
         {
             ViewBag.OrderStatus = orderStatus;
             return View(nameof(Index), await GetOrders(orderStatus));
+        }
+
+        public IActionResult Order(int id)
+        {
+            var dofvm = _mapper.Map<DispatcherOrderFullModel, DispatcherOrderFullViewModel>(_dispatcherService.GetOrder(id));
+            return View(dofvm);
         }
 
         [HttpPost]

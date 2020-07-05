@@ -253,5 +253,56 @@ namespace DeliveryClub.Domain.Logic.Mapping
             };
             return dom;
         }
+
+        public DispatcherOrderFullModel CreateDispatcherOrderFullModel(Order order)
+        {
+            var dofm = new DispatcherOrderFullModel
+            {
+                Id = order.Id,
+                Name = order.Name,
+                DeliveryAddress = order.DeliveryAddress,
+                DateTime = order.DateTime,
+                PhoneNumber = order.PhoneNumber,
+                Comment = order.Comment,
+                Status = order.Status,
+                RestaurantOrders = CreateRestaurantOrderModels(order.RestaurantOrders).ToList(),
+            };
+            return dofm;
+        }
+
+        private ICollection<GetRestaurantOrderModel> CreateRestaurantOrderModels(ICollection<RestaurantOrder> restaurantOrders)
+        {
+            var groms = new List<GetRestaurantOrderModel>();
+            foreach (var ro in restaurantOrders)
+            {
+                var grom = new GetRestaurantOrderModel
+                {
+                    Name = ro.Restaurant.Name,
+                    DeliveryCost = ro.Restaurant.DeliveryCost,
+                    PaymentMethod = ro.PaymentMethod,
+                    Products = CreateOrderedProductModels(ro.OrderedProducts),
+                };
+                groms.Add(grom);
+            }
+            return groms;
+        }
+
+        private ICollection<GetOrderedProductModel> CreateOrderedProductModels(List<OrderedProduct> orderedProducts)
+        {
+            var gopms = new List<GetOrderedProductModel>();
+            foreach (var op in orderedProducts)
+            {
+                var gopm = new GetOrderedProductModel
+                {
+                    Name = op.Product.Name,
+                    Amount = op.Amount,
+                    Portion = op.PortionPrice.Portion,
+                    Price = op.PortionPrice.Price,
+                };
+                gopms.Add(gopm);
+            }
+            return gopms;
+        }
     }
 }
+

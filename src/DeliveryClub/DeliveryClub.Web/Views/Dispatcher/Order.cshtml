@@ -1,0 +1,115 @@
+﻿@using DeliveryClub.Domain.Models.Enumerations
+@model DeliveryClub.Web.ViewModels.Dispatchers.DispatcherOrderFullViewModel
+
+@{
+    ViewData["Title"] = "View";
+}
+
+<h1>Order</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.DeliveryAddress)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DeliveryAddress)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PhoneNumber)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.PhoneNumber)
+        </dd>
+        @if (Model.Comment != null)
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Comment)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Comment)
+            </dd>
+        }
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.DateTime)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DateTime)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Status)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Status)
+        </dd>
+    </dl>
+</div>
+
+@foreach (var ro in Model.RestaurantOrders)
+{
+<div>
+    <h4>@ro.Name - @ro.PaymentMethod</h4>
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th>Name</th>
+                <th>Portion</th>
+                <th>Amount</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                double overallPrice = 0;
+                foreach (var p in ro.Products)
+                {
+                    <tr>
+                        <td>@p.Name</td>
+                        <td>@p.Portion</td>
+                        <td>@p.Amount</td>
+                        <td>@p.Price BYN</td>
+                    </tr>
+                    overallPrice += p.Price;
+                }
+                <tr>
+                    <td>Delivery</td>
+                    <td></td>
+                    <td></td>
+                    <td>@ro.DeliveryCost BYN</td>
+                </tr>
+                <tr>
+                    <td><strong>Total</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td><strong>@((overallPrice + ro.DeliveryCost).ToString("N2")) BYN</strong></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+}
+  
+
+    <div>
+        @if (Model.Status == OrderStatus.Received)
+        {
+            <a asp-action="Index">Back to List</a>
+        }
+        else
+        {
+            <a asp-action="Orders" asp-route-orderStatus="@Model.Status">Back to List</a>
+        }
+    </div>

@@ -19,15 +19,18 @@ namespace DeliveryClub.Domain.Logic.Managers
         private readonly ApplicationDbContext _dbContext;
         private readonly Mapper _mapper;
         private readonly DispatcherManager _dispatcherManager;
+        private readonly OrderedProductManager _orderedProductManager;
 
         public OrderManager(RestaurantOrderManager restaurantOrderManager,
                             ApplicationDbContext dbContext, 
-                            DispatcherManager dispatcherManager)
+                            DispatcherManager dispatcherManager,
+                            OrderedProductManager orderedProductManager)
         {
             _restaurantOrderManager = restaurantOrderManager;
             _dbContext = dbContext;
             _mapper = new Mapper(Assembly.GetExecutingAssembly());
             _dispatcherManager = dispatcherManager;
+            _orderedProductManager = orderedProductManager;
         }
 
         public ICollection<Order> GetOrders(OrderStatus orderStatus, int dispId)
@@ -43,6 +46,20 @@ namespace DeliveryClub.Domain.Logic.Managers
         public Order GetOrder(int id)
         {
             return _mapper.Map<OrderDTO, Order>(_dbContext.Orders.Where(o => o.Id == id).FirstOrDefault());
+        }
+
+        public Order GetFullOrder(int id)
+        {
+            var order = GetOrder(id);
+
+            order.RestaurantOrders = _restaurantOrderManager.GetRestaurantOrders(order.Id).ToList();
+
+            foreach(var ro in order.RestaurantOrders)
+            {
+                ro.OrderedProducts = _orderedProductManager.GetOrderedProducts(ro.Id).ToList();
+            }
+
+            return order;
         }
 
         public async Task SetOrderStatus(Order order, OrderStatus orderStatus)

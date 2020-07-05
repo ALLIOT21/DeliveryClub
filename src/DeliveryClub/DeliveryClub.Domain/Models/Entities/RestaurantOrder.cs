@@ -14,5 +14,9 @@ namespace DeliveryClub.Domain.Models.Entities
         public Order Order { get; set; }
 
         public int OrderId { get; set; }        
+
+        public Restaurant Restaurant { get; set; }
+
+        public int RestaurantId { get; set; }
     }
 }

@@ -4,14 +4,10 @@ using DeliveryClub.Domain.Logic.Extensions;
 using DeliveryClub.Domain.Logic.Interfaces;
 using DeliveryClub.Domain.Logic.Managers;
 using DeliveryClub.Domain.Logic.Mapping;
-using DeliveryClub.Domain.Models.Actors;
 using DeliveryClub.Domain.Models.Entities;
-using DeliveryClub.Infrastructure.Mapping;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace DeliveryClub.Domain.Logic.Services

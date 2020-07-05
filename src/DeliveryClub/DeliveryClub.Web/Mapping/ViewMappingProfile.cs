@@ -75,6 +75,15 @@ namespace DeliveryClub.Web.Mapping
 
             CreateMap<DispatcherOrderViewModel, DispatcherOrderModel>()
                 .ReverseMap();
+
+            CreateMap<DispatcherOrderFullViewModel, DispatcherOrderFullModel>().
+                ReverseMap();
+
+            CreateMap<GetOrderedProductViewModel, GetOrderedProductModel>().
+                ReverseMap();
+
+            CreateMap<GetRestaurantOrderViewModel, GetRestaurantOrderModel>().
+                ReverseMap();
         }
     }
 }

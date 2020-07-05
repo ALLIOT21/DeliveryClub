@@ -48,9 +48,9 @@
         <tbody>
             @foreach (var order in Model)
             {
-                <tr action="@(Url.Action("Order", "Dispatchers", new { id = order.Id}))">
+                <tr>
                     <td>
-                        @order.Id
+                        <a href="@(Url.Action("Order", "Dispatcher", new { id = order.Id}))">@order.Id</a>
                     </td>
                     <td>
                         @order.Name

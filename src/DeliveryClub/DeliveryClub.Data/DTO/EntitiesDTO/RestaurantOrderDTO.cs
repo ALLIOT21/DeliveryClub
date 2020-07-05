@@ -14,5 +14,9 @@ namespace DeliveryClub.Data.DTO.EntitiesDTO
         public OrderDTO Order { get; set; }
 
         public int OrderId { get; set; }
+
+        public RestaurantDTO Restaurant { get; set; }
+
+        public int RestaurantId { get; set; }
     }
 }

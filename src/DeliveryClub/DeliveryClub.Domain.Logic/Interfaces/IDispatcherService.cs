@@ -10,5 +10,7 @@ namespace DeliveryClub.Domain.Logic.Interfaces
         Task<ICollection<DispatcherOrderModel>> GetOrders(OrderStatus orderStatus);
 
         Task SetOrderStatus(int orderId, OrderStatus orderStatus);
+
+        DispatcherOrderFullModel GetOrder(int id);
     }
 }
