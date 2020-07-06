@@ -10,7 +10,7 @@ namespace DeliveryClub.Data
         public static IServiceCollection AddDataServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<ApplicationDbContext>
-                (options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+                (options => options.UseSqlServer(configuration.GetConnectionString("LocalConnection")));
 
             return services;
         }
