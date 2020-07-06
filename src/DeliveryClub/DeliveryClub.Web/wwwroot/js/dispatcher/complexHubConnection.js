@@ -87,5 +87,5 @@ function createDispatcherOrder(dispatcherOrder) {
 
     tr.classList.toggle("new-order");
 
-    orderTableBody.append(tr);
+    orderTableBody.prepend(tr);
 }
