@@ -80,13 +80,13 @@ namespace DeliveryClub.Domain.Logic.Managers
 
         public Product GetProduct(int id)
         {
-            var productDTO = _dbContext.Products.Find(id);
-
-            productDTO.ProductGroup = _dbContext.ProductGroups.Find(productDTO.ProductGroupId);
+            var productDTO = _dbContext.Products.Where(p => p.Id == id).FirstOrDefault();            
 
             var product = _mapper.Map<ProductDTO, Product>(productDTO);
 
             var portionPricesProduct = _portionPriceProductManager.GetPortionPriceProducts(product.Id).ToHashSet();
+
+            product.ProductGroup = _mapper.Map<ProductGroupDTO, ProductGroup>(_dbContext.ProductGroups.Where(pg => pg.Id == productDTO.ProductGroupId).FirstOrDefault());
 
             product.PortionPrices = portionPricesProduct;
 
@@ -96,7 +96,11 @@ namespace DeliveryClub.Domain.Logic.Managers
         public async Task<Product> UpdateProduct(ProductModel newModel, int productGroupId)
         {
             var product = GetProduct(newModel.Id);
-            
+
+            var portionPrices = _portionPriceManager.CreatePortionPrices(newModel.PortionPrices);
+            _portionPriceProductManager.UpdatePortionPriceProduct(portionPrices, product);
+            _dbContext.SaveChanges();
+
             if (newModel.Image != null)
             {
                 string fileName;
@@ -112,17 +116,14 @@ namespace DeliveryClub.Domain.Logic.Managers
                 }
                 product.ImageName = fileName;
             }
-
-            product.Id = newModel.Id;
             product.Name = newModel.Name;
             product.Description = newModel.Description;
             product.ProductGroupId = productGroupId;
-
-            var portionPrices = _portionPriceManager.CreatePortionPrices(newModel.PortionPrices);
-            _portionPriceProductManager.UpdatePortionPriceProduct(portionPrices, product);
+            product.ProductGroup = null;
             _dbContext.Products.Update(_mapper.Map<Product, ProductDTO>(product));
-            await _dbContext.SaveChangesAsync();
-            return product;
+            _dbContext.SaveChanges();
+
+            return GetProduct(newModel.Id);
         }
 
         public async Task DeleteProduct(int id)

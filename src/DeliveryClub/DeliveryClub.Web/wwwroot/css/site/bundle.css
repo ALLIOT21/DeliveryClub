@@ -791,3 +791,7 @@ input-edit-product_group-price {
 .mtb-1vh {
     margin: 1vh 0 1vh 0;
 }
+
+.new-order {
+    background-color: lightgreen;
+}

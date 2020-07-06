@@ -4,7 +4,7 @@
                                         .build();
 
     dispatcherNotificationHub.on("ReceiveOrder", function (data) {
-        showNotification("Success", data);
+        showNotification("Success", data[0]);
         ion.sound({
             sounds: [
                 { name: "bell_ring" }
@@ -14,7 +14,6 @@
             volume: 0.3
         });
         ion.sound.play("bell_ring");
-        console.log("tut");
     });
 
     dispatcherNotificationHub.start().then(() => {

@@ -45,8 +45,8 @@
                 }
             </tr>
         </thead>
-        <tbody>
-            @foreach (var order in Model.OrderByDescending(o => o.Id))
+        <tbody id="order-table-body">
+            @foreach (var order in Model)
             {
                 <tr>
                     <td>
@@ -65,7 +65,11 @@
                         <td>
                             @if (ViewBag.OrderStatus != OrderStatus.Declined)
                             {
-                                <button asp-action="SetOrderStatus" sp-route-status="@OrderStatus.Declined" class="btn btn-danger">Decline</button>
+                            <form asp-action="SetOrderStatus" method="post">
+                                <input type="hidden" name="Id" value="@order.Id" />
+                                <input type="hidden" name="OrderStatus" value="@OrderStatus.Declined">
+                                <button class="btn btn-danger">Decline</button>
+                            </form>
                             }
                             <form asp-action="SetOrderStatus" method="post">
                                 <input type="hidden" name="Id" value="@order.Id" />

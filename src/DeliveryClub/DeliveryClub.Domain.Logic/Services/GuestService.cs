@@ -1,4 +1,5 @@
-﻿using DeliveryClub.Domain.AuxiliaryModels.Guest;
+﻿using DeliveryClub.Domain.AuxiliaryModels.Dispatcher;
+using DeliveryClub.Domain.AuxiliaryModels.Guest;
 using DeliveryClub.Domain.Logic.Interfaces;
 using DeliveryClub.Domain.Logic.Managers;
 using DeliveryClub.Domain.Logic.Mapping;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.SignalR;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace DeliveryClub.Domain.Logic.Services
 {
@@ -87,9 +89,18 @@ namespace DeliveryClub.Domain.Logic.Services
         public async Task<int> CreateOrder(CreateOrderModel model)
         {
             var order = await _orderManager.CreateOrder(model);
-
             var group = _hubContext.Clients.Group(_dispatcherManager.GetDispatcher(order.DispatcherId).User.Email);
-            await group.SendAsync("ReceiveOrder", "New Order!");
+            await group.SendAsync("ReceiveOrder", JsonConvert.SerializeObject(new OrderNotificationData
+            {
+                Message = "New Order!",
+                DispatcherOrderModel = new DispatcherOrderModel
+                {
+                    Id = order.Id,
+                    Name = order.Name,
+                    DeliveryAddress = order.DeliveryAddress,
+                    PhoneNumber = order.PhoneNumber,
+                }
+            }));
 
             return order.Id;
         }
