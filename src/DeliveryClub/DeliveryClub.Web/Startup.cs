@@ -46,6 +46,7 @@ namespace DeliveryClub.Web
             services.AddOpenApiDocument();
             services.AddControllersWithViews();
             services.AddAutoMapper(typeof(Startup).Assembly);
+            services.AddSignalR().AddAzureSignalR("Endpoint=https://deliveryclubsignalrfrance.service.signalr.net;AccessKey=1s+MyDDZVCLzsitZItIe6ajsSdglAPOP+l8+zDsRRCg=;Version=1.0;");
 
             services.Configure<SuperUser>(Configuration.GetSection("SuperUser"));
         }

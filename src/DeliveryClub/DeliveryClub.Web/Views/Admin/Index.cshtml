@@ -73,7 +73,7 @@
                     <div class="info-item-content">
                         <div class="custom-file">
                             <input asp-for="CoverImage" type="file" accept="image/*" onchange="onChangeImgInput()" id="image-input" class="custom-file-input" disabled/>
-                            <label class="text-truncate custom-file-label" id="image-label">@Model.CoverImageName</label>
+                            <label class="text-truncate custom-file-label" id="image-label"></label>
                         </div>
                     </div>
                     <label class="text-danger non-visible" id="file-size-error">File is too big.</label>

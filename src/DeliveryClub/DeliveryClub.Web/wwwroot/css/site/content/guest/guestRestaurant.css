@@ -52,6 +52,7 @@
 .user-restaurant-full_products {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
 }
 
 .user-restaurant-full_product {

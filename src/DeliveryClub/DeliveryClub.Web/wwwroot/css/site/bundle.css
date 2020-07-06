@@ -181,9 +181,10 @@
 .menu-content-create_group_active {
     width: 50%;
     border: solid 1px rgb(200, 200, 200);
+    padding-top: 1vh;
     padding-left: 1vw;
     padding-right: 1vw;
-    padding-bottom: 2vh;
+    padding-bottom: 1vh;
 }
 
 .display-none {
@@ -603,6 +604,7 @@ input-edit-product_group-price {
 .user-restaurant-full_products {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
 }
 
 .user-restaurant-full_product {

@@ -63,10 +63,10 @@
         </div>
     }    
 </div>
-@{
-    <div class="card-container">
-        @if (Model.RestaurantPartialViewModels.Count > 0) 
-        { 
+
+<div class="card-container">
+    @if (Model.RestaurantPartialViewModels.Count > 0) 
+    { 
         @foreach (var r in Model.RestaurantPartialViewModels)
         {
             <a class="card-a m-20" asp-action="Restaurant" asp-route-id="@r.Id">
@@ -108,12 +108,12 @@
                     </div>
                 </div>
             </a>
-            }
-         } 
-         else
-         {
-            <p>There are no active restaurants now.</p>
-         } 
-    </div>
-}
+        }
+    } 
+    else
+    {
+        <p>There are no active restaurants now.</p>
+    } 
+</div>
+
 

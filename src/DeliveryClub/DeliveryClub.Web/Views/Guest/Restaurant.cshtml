@@ -49,6 +49,7 @@
     <div class="user-restaurant-full_menu-content">
         @{ 
             int productGroupIndex = 0;
+            if (Model.Menu.Count > 0)
             foreach (var pg in Model.Menu)
             {
                 <div class="user-restaurant-full_product-group m-20">
@@ -59,60 +60,34 @@
                 <div class="user-restaurant-full_products">
                     @{
                         int productIndex = 0;
-                        foreach (var p in pg.Products)
-                        {
-                            <div class="user-restaurant-full_product" id="@("productgroup-" + productGroupIndex + "_product-" + productIndex)">
-                                <input type="hidden" id="@("productgroup-" + productGroupIndex + "_product-" + productIndex + "_id")" value="@p.Id">
-                                <div class="background-image-div">
-                                    <img class="background-image" src="~/resources/img/site/product-back.png" />
-                                </div>
-                                <div class="product_product-image-div">
-                                    <img class="product_product-image__size-m" src="@(PathConstants.ImageFolder + p.ImageName)" />
-                                </div>
+                        if (pg.Products.Count > 0)
+                            foreach (var p in pg.Products)
+                            {
+                                <div class="user-restaurant-full_product" id="@("productgroup-" + productGroupIndex + "_product-" + productIndex)">
+                                    <input type="hidden" id="@("productgroup-" + productGroupIndex + "_product-" + productIndex + "_id")" value="@p.Id">
+                                    <div class="background-image-div">
+                                        <img class="background-image" src="~/resources/img/site/product-back.png" />
+                                    </div>
+                                    <div class="product_product-image-div">
+                                        <img class="product_product-image__size-m" src="@(PathConstants.ImageFolder + p.ImageName)" />
+                                    </div>
 
-                                <div class="user-restaurant-full_product-name">
-                                    <h5 id="@("productgroup-" + productGroupIndex + "_product-" + productIndex + "_name")" class="truncate">@p.Name</h5>
-                                </div>
-                                <div class="user-restaurant-full_product-description">
-                                    <p class="truncate mb-3px" title="@p.Description"><small>@p.Description</small></p>
-                                </div>
-                                <div class="product-portion-price">
-                                    <div class="product-portion">
-                                        @if (p.PortionPrices != null)
-                                        {
-                                            if (p.PortionPrices.Count > 1)
+                                    <div class="user-restaurant-full_product-name">
+                                        <h5 id="@("productgroup-" + productGroupIndex + "_product-" + productIndex + "_name")" class="truncate">@p.Name</h5>
+                                    </div>
+                                    <div class="user-restaurant-full_product-description">
+                                        <p class="truncate mb-3px" title="@p.Description"><small>@p.Description</small></p>
+                                    </div>
+                                    <div class="product-portion-price">
+                                        <div class="product-portion">
+                                            @if (p.PortionPrices != null)
                                             {
-                                                <select id="@("productgroup-" + productGroupIndex + "_product-" + productIndex + "_select")" class="portion-select" onchange="switchPrice()">
-                                                    @{
-                                                        int portionIndex = 0;
-                                                        foreach (var pp in p.PortionPrices)
-                                                        {
-                                                            <option id="@("productgroup-" + productGroupIndex + "_product-" + productIndex + "_portion-" + portionIndex)" value="@pp.Portion">@pp.Portion</option>
-                                                            portionIndex++;
-                                                        }
-                                                    }
-                                                </select>
-                                                portionIndex = 0;
-                                                foreach (var pp in p.PortionPrices)
-                                                {
-                                                    <input type="hidden" id="@("productgroup-" + productGroupIndex + "_product-" + productIndex + "_id-" + portionIndex)" value="@pp.Id" />
-                                                    portionIndex++;
-                                                }
-                                            }
-                                            else
-                                            {
-                                                if (p.PortionPrices.Count > 0)
-                                                {
-                                                    <span id="@("productgroup-" + productGroupIndex + "_product-" + productIndex + "_portion-0")">@p.PortionPrices.ElementAt(0).Portion</span>
-                                                    <input type="hidden" id="@("productgroup-" + productGroupIndex + "_product-" + productIndex + "_id-0")" value="@p.PortionPrices.ElementAt(0).Id" />
-
-                                                }
-                                                else
+                                                if (p.PortionPrices.Count > 1)
                                                 {
                                                     <select id="@("productgroup-" + productGroupIndex + "_product-" + productIndex + "_select")" class="portion-select" onchange="switchPrice()">
                                                         @{
                                                             int portionIndex = 0;
-                                                            foreach (var pp in pg.PortionPrices)
+                                                            foreach (var pp in p.PortionPrices)
                                                             {
                                                                 <option id="@("productgroup-" + productGroupIndex + "_product-" + productIndex + "_portion-" + portionIndex)" value="@pp.Portion">@pp.Portion</option>
                                                                 portionIndex++;
@@ -120,36 +95,48 @@
                                                         }
                                                     </select>
                                                     portionIndex = 0;
-                                                    foreach (var pp in pg.PortionPrices)
+                                                    foreach (var pp in p.PortionPrices)
                                                     {
                                                         <input type="hidden" id="@("productgroup-" + productGroupIndex + "_product-" + productIndex + "_id-" + portionIndex)" value="@pp.Id" />
                                                         portionIndex++;
                                                     }
-
                                                 }
-                                            }
-                                        }
-                                    </div>
-                                    <div class="product-price">
-                                        @{
-                                            int priceIndex = 0;
-                                            if (p.PortionPrices.Count > 0)
-                                                foreach (var pp in p.PortionPrices)
+                                                else
                                                 {
-                                                    if (priceIndex > 0)
+                                                    if (p.PortionPrices.Count > 0)
                                                     {
-                                                        <h5 class="price non-visible" id="@("productgroup-" + productGroupIndex + "_product-" + productIndex + "_price-" + priceIndex)" value="@pp.Price">@pp.Price BYN</h5>
+                                                        <span id="@("productgroup-" + productGroupIndex + "_product-" + productIndex + "_portion-0")">@p.PortionPrices.ElementAt(0).Portion</span>
+                                                        <input type="hidden" id="@("productgroup-" + productGroupIndex + "_product-" + productIndex + "_id-0")" value="@p.PortionPrices.ElementAt(0).Id" />
+
                                                     }
                                                     else
                                                     {
-                                                        <h5 class="price is-visible" id="@("productgroup-" + productGroupIndex + "_product-" + productIndex + "_price-" + priceIndex)" value="@pp.Price">@pp.Price BYN</h5>
+                                                        <select id="@("productgroup-" + productGroupIndex + "_product-" + productIndex + "_select")" class="portion-select" onchange="switchPrice()">
+                                                            @{
+                                                                int portionIndex = 0;
+                                                                foreach (var pp in pg.PortionPrices)
+                                                                {
+                                                                    <option id="@("productgroup-" + productGroupIndex + "_product-" + productIndex + "_portion-" + portionIndex)" value="@pp.Portion">@pp.Portion</option>
+                                                                    portionIndex++;
+                                                                }
+                                                            }
+                                                        </select>
+                                                        portionIndex = 0;
+                                                        foreach (var pp in pg.PortionPrices)
+                                                        {
+                                                            <input type="hidden" id="@("productgroup-" + productGroupIndex + "_product-" + productIndex + "_id-" + portionIndex)" value="@pp.Id" />
+                                                            portionIndex++;
+                                                        }
+
                                                     }
-                                                    priceIndex++;
                                                 }
-                                            else
-                                            {                                                                        
-                                                {
-                                                    foreach (var pp in pg.PortionPrices)
+                                            }
+                                        </div>
+                                        <div class="product-price">
+                                            @{
+                                                int priceIndex = 0;
+                                                if (p.PortionPrices.Count > 0)
+                                                    foreach (var pp in p.PortionPrices)
                                                     {
                                                         if (priceIndex > 0)
                                                         {
@@ -161,22 +148,47 @@
                                                         }
                                                         priceIndex++;
                                                     }
+                                                else
+                                                {
+                                                    {
+                                                        foreach (var pp in pg.PortionPrices)
+                                                        {
+                                                            if (priceIndex > 0)
+                                                            {
+                                                                <h5 class="price non-visible" id="@("productgroup-" + productGroupIndex + "_product-" + productIndex + "_price-" + priceIndex)" value="@pp.Price">@pp.Price BYN</h5>
+                                                            }
+                                                            else
+                                                            {
+                                                                <h5 class="price is-visible" id="@("productgroup-" + productGroupIndex + "_product-" + productIndex + "_price-" + priceIndex)" value="@pp.Price">@pp.Price BYN</h5>
+                                                            }
+                                                            priceIndex++;
+                                                        }
+                                                    }
                                                 }
-                                            }
 
-                                        }
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="user-restaurant-full_product-add block-btn">
+                                        <button class="btn btn-outline-danger" onclick="addProductToCart()">Add to cart</button>
                                     </div>
                                 </div>
-                                <div class="user-restaurant-full_product-add block-btn">
-                                    <button class="btn btn-outline-danger" onclick="addProductToCart()">Add to cart</button>
-                                </div>
+                                productIndex++;
+                            }
+                        else
+                        {
+                            <div class="user-restaurant-full_products m-20">
+                                <h5>The product group is empty now.</h5>
                             </div>
-                            productIndex++;
                         }
                     }
                 </div>
                 productGroupIndex++;
-            }                           
+            }  
+            else
+            {                
+                <h4>The menu is empty now.</h4>                
+            }
         }
     </div>
 </div>

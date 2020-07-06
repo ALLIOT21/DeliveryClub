@@ -23,150 +23,161 @@
     </div>
 </div>
 
-<div class="menu-content-menu">    
-    @{ 
+<div class="menu-content-menu">
+    @{
         int productGroupIndex = 0;
-        foreach (var pg in Model)
+        if (Model.Count > 0)
         {
-        <div class="product-group">
-            <div class="product-group-title">
-                <div class="product-group-title-info">
-                    <form asp-action="UpdateProductGroup" id=@("form-UpdateProductGroup-" + pg.Id)>
-                        <div class="product-group-title-info-name">
-                            <h2 class="is-visible to-edit">@pg.Name</h2>
-                            <input class="non-visible to-edit form-control input-edit-product_group" name="Name"/>
-                            <input type="hidden" name="Id" value="@pg.Id" />
+            foreach (var pg in Model)
+            {
+                <div class="product-group">
+                    <div class="product-group-title">
+                        <div class="product-group-title-info">
+                            <form asp-action="UpdateProductGroup" id=@("form-UpdateProductGroup-" + pg.Id)>
+                                <div class="product-group-title-info-name">
+                                    <h2 class="is-visible to-edit">@pg.Name</h2>
+                                    <input class="non-visible to-edit form-control input-edit-product_group" name="Name" />
+                                    <input type="hidden" name="Id" value="@pg.Id" />
+                                </div>
+                                <div class="product-group-title-info-portion_prices">
+                                    @{
+                                        int i = 0;
+                                        foreach (var pp in pg.PortionPrices)
+                                        {
+                                            <div class="product-group-title-info-portion_price">
+                                                <span class="is-visible to-edit span-edit-product_group-portion">@pp.Portion</span>
+                                                <span class="is-visible to-edit">—</span>
+                                                <span class="is-visible to-edit span-edit-product_group-price">@pp.Price</span>
+                                                <span class="is-visible to-edit"> BYN</span>
+                                            </div>
+                                            <input type="hidden" name="PortionPrices[@i].Id" value="@pp.Id">
+                                            i++;
+                                        }
+                                    }
+                                </div>
+                            </form>
                         </div>
-                        <div class="product-group-title-info-portion_prices">
-                            @{ 
-                                int i = 0;
-                                foreach (var pp in pg.PortionPrices)
-                                {
-                                    <div class="product-group-title-info-portion_price">
-                                        <span class="is-visible to-edit span-edit-product_group-portion">@pp.Portion</span>
-                                        <span class="is-visible to-edit">—</span>                        
-                                        <span class="is-visible to-edit span-edit-product_group-price">@pp.Price</span>
-                                        <span class="is-visible to-edit"> BYN</span>                                
-                                    </div>
-                                    <input type="hidden" name="PortionPrices[@i].Id" value="@pp.Id">
-                                    i++;
-                                }
-                            }
+                        <div class="product-group-title-options">
+                            <button class="btn btn-secondary button-edit-product-group to-edit is-visible" onclick="setEditModeMenu()">
+                                Edit ✏️
+                            </button>
+                            <button class="btn btn-primary to-edit non-visible" form="@("form-UpdateProductGroup-" + pg.Id)">
+                                Save 💾
+                            </button>
+                            <button class="btn btn-light to-edit non-visible" form="" onclick="setSaveModeMenu()">
+                                Decline ✖
+                            </button>
+                            <form method="post" asp-action="DeleteProductGroup">
+                                <input type="hidden" name="Id" value=@pg.Id />
+                                <button class="btn btn-secondary to-edit is-visible">
+                                    Delete 🗑️
+                                </button>
+                            </form>
                         </div>
-                    </form>
-                </div>
-                <div class="product-group-title-options">              
-                    <button class="btn btn-secondary button-edit-product-group to-edit is-visible" onclick="setEditModeMenu()">
-                        Edit ✏️
-                    </button>
-                    <button class="btn btn-primary to-edit non-visible" form="@("form-UpdateProductGroup-" + pg.Id)">
-                        Save 💾
-                    </button>
-                    <button class="btn btn-light to-edit non-visible" form="" onclick="setSaveModeMenu()">
-                        Decline ✖
-                    </button>
-                    <form method="post" asp-action="DeleteProductGroup">
-                        <input type="hidden" name="Id" value=@pg.Id />
-                        <button class="btn btn-secondary to-edit is-visible">
-                            Delete 🗑️
-                        </button>
-                    </form>
-                </div>
-            </div>
-            <div class="product-group-content">
-               @if (pg.Products.Count > 0)
-                {
-                    int productIndex = 0;
-                    foreach (var p in pg.Products)
-                    {
-                    <div class="product">
-                    @{
-                        if (p.ImageName != null)
+                    </div>
+                    <div class="product-group-content">
+                        @if (pg.Products.Count > 0)
                         {
-                            var imagePath = PathConstants.ImageFolder + p.ImageName;
-                            <div class="product-image">
-                                <img class="product-img img-thumbnail" src="@imagePath" asp-append-version="true">
-                            </div>
+                            int productIndex = 0;
+                            foreach (var p in pg.Products)
+                            {
+                                <div class="product">
+                                    @{
+                                        if (p.ImageName != null)
+                                        {
+                                            var imagePath = PathConstants.ImageFolder + p.ImageName;
+                                            <div class="product-image">
+                                                <img class="product-img img-thumbnail" src="@imagePath" asp-append-version="true">
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="product-image">
+                                                <img class="product-img img-thumbnail" src="~/resources/img/site/productNotFound.png" asp-append-version="true">
+                                            </div>
+                                        }
+                                    }
+                                    <div class="product-name">
+                                        <h5>@p.Name</h5>
+                                    </div>
+                                    <div class="product-description text-truncate">
+                                        <span class="" title="@p.Description">@p.Description</span>
+                                    </div>
+                                    <div class="product-portion-price">
+                                        <div class="product-portion">
+                                            @if (p.PortionPrices != null)
+                                            {
+                                                if (p.PortionPrices.Count > 1)
+                                                {
+                                                    <select id="@("productgroup-" + productGroupIndex + "_product-" + productIndex + "_select")" class="portion-select" onchange="switchPrice()">
+                                                        @{
+                                                            int portionIndex = 0;
+                                                            foreach (var pp in p.PortionPrices)
+                                                            {
+                                                                <option id="@("productgroup-" + productGroupIndex + "_product-" + productIndex + "_portion-" + portionIndex)" value="@pp.Portion">@pp.Portion</option>
+                                                                portionIndex++;
+                                                            }
+                                                        }
+                                                    </select>
+                                                }
+                                                else
+                                                {
+                                                    if (p.PortionPrices.Count > 0)
+                                                    {
+                                                        <span>@p.PortionPrices.ElementAt(0).Portion</span>
+                                                    }
+                                                }
+                                            }
+                                        </div>
+                                        <div class="product-price">
+                                            @{
+                                                int priceIndex = 0;
+                                                foreach (var pp in p.PortionPrices)
+                                                {
+                                                    if (priceIndex > 0)
+                                                    {
+                                                        <h5 class="price non-visible" id="@("productgroup-" + productGroupIndex + "_product-" + productIndex + "_price-" + priceIndex)" value="@pp.Price">@pp.Price BYN</h5>
+                                                    }
+                                                    else
+                                                    {
+                                                        <h5 class="price is-visible" id="@("productgroup-" + productGroupIndex + "_product-" + productIndex + "_price-" + priceIndex)" value="@pp.Price">@pp.Price BYN</h5>
+                                                    }
+                                                    priceIndex++;
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="product-buttons">
+                                        <form method="get" action="UpdateProduct">
+                                            <input name="Id" type="hidden" value="@p.Id">
+                                            <button class="btn btn-primary product-button">Edit ✏️</button>
+                                        </form>
+                                        <form method="post" action="DeleteProduct">
+                                            <input name="Id" type="hidden" value="@p.Id" />
+                                            <button class="btn btn-primary product-button">Delete 🗑️</button>
+                                        </form>
+                                    </div>
+                                </div>
+                                productIndex++;
+                            }
                         }
                         else
                         {
-                            <div class="product-image">
-                                <img class="product-img img-thumbnail" src="~/resources/img/site/productNotFound.png" asp-append-version="true">
-                            </div>
+                            <span>Product group is empty.</span>
                         }
-                    }
-                    <div class="product-name">
-                        <h5>@p.Name</h5>
                     </div>
-                    <div class="product-description text-truncate">
-                        <span class="" title="@p.Description">@p.Description</span>
-                    </div>
-                    <div class="product-portion-price">
-                        <div class="product-portion">
-                           @if (p.PortionPrices != null)
-                            {
-                                if (p.PortionPrices.Count > 1)
-                                {
-                                    <select id="@("productgroup-" + productGroupIndex + "_product-" + productIndex + "_select")" class="portion-select" onchange="switchPrice()">
-                                        @{
-                                            int portionIndex = 0;
-                                            foreach (var pp in p.PortionPrices)
-                                            {
-                                                <option id="@("productgroup-" + productGroupIndex + "_product-" + productIndex + "_portion-" + portionIndex)" value="@pp.Portion">@pp.Portion</option>
-                                                portionIndex++;
-                                            }
-                                        }
-                                    </select>
-                                }
-                                else
-                                {
-                                    if (p.PortionPrices.Count > 0)
-                                    {
-                                        <span>@p.PortionPrices.ElementAt(0).Portion</span>
-                                    }
-                                }
-                            }
-                        </div>
-                        <div class="product-price">
-                            @{
-                                int priceIndex = 0;
-                                foreach (var pp in p.PortionPrices)
-                                {
-                                    if (priceIndex > 0)
-                                    {
-                                        <h5 class="price non-visible" id="@("productgroup-" + productGroupIndex + "_product-" + productIndex + "_price-" + priceIndex)" value="@pp.Price">@pp.Price BYN</h5>
-                                    }
-                                    else
-                                    {
-                                        <h5 class="price is-visible" id="@("productgroup-" + productGroupIndex + "_product-" + productIndex + "_price-" + priceIndex)" value="@pp.Price">@pp.Price BYN</h5>
-                                    }
-                                    priceIndex++;
-                                }
-                            }
-                        </div>
-                    </div>
-                    <div class="product-buttons">
-                        <form method="get" action="UpdateProduct">
-                            <input name="Id" type="hidden" value="@p.Id">
-                            <button class="btn btn-primary product-button">Edit ✏️</button>
-                        </form>
-                        <form method="post" action="DeleteProduct">
-                            <input name="Id" type="hidden" value="@p.Id"/>
-                            <button class="btn btn-primary product-button">Delete 🗑️</button>
-                        </form>                        
-                    </div>
-                    </div>
-                        productIndex++;
-                    }                        
-                }
-                else
-                {
-                    <span>Product group is empty.</span>
-                }
-            </div>        
-        </div>    
-            productGroupIndex++;
-        }        
+                </div>
+                productGroupIndex++;
+            }
+            
+        }
+        else
+        {
+            <div class="product-group">
+                <h3>The menu is clear.</h3>
+            </div>
+        }
     }
 </div>
+
 
