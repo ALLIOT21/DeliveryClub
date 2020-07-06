@@ -73,14 +73,19 @@ namespace DeliveryClub.Domain.Logic.Managers
         {
             var lastOrder = GetLastOrder();
             int dispatcherId = lastOrder != null ? lastOrder.DispatcherId : 0;            
-            var nextDispatcherId = _dispatcherManager.GetNextActiveDispatcher(dispatcherId).Id;               
+            var nextDispatcherId = _dispatcherManager.GetNextActiveDispatcher(dispatcherId).Id;
+
+            var building = model.DeliveryAddress.Building != 0 ? $", b. {model.DeliveryAddress.Building}" : "";
+            var flat = model.DeliveryAddress.Flat != 0 ? $", fl. {model.DeliveryAddress.Flat}" : "";
+            var deliveryAddress = $"str. {model.DeliveryAddress.Street}, h. {model.DeliveryAddress.House}" + building + flat;
 
             var order = new Order
             {
                 Name = model.Name,
-                DeliveryAddress = $"str. {model.DeliveryAddress.Street}, build. {model.DeliveryAddress.Building}, h. {model.DeliveryAddress.House}, fl. {model.DeliveryAddress.Flat}",
+                DeliveryAddress = deliveryAddress,
                 PhoneNumber = model.PhoneNumber,
                 Comment = model.Comment,
+                PaymentMethod = model.PaymentMethod,
                 Status = OrderStatus.Received,
                 DateTime = DateTime.Now,
                 DispatcherId = nextDispatcherId,

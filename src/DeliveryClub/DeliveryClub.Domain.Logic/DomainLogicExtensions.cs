@@ -20,7 +20,6 @@ namespace DeliveryClub.Domain.Logic
             services.AddScoped<AdminManager>();
             services.AddScoped<DispatcherManager>();
             services.AddScoped<IdentityUserManager>();
-            services.AddScoped<PaymentMethodManager>();
             services.AddScoped<PortionPriceManager>();
             services.AddScoped<PortionPriceProductGroupManager>();
             services.AddScoped<PortionPriceProductManager>();

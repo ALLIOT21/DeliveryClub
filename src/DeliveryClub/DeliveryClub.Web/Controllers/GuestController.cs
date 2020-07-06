@@ -60,23 +60,20 @@ namespace DeliveryClub.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult CreateOrder(List<int> restaurantIds)
-        {
-            var npvmList = new List<NamePaymentViewModel>();
-            foreach(var npm in _guestService.GetRestaurantNamePayments(restaurantIds))
-            {
-                npvmList.Add(_mapper.Map<NamePaymentModel, NamePaymentViewModel>(npm));
-            }
-
-            ViewBag.PaymentMethods = npvmList;
+        public IActionResult CreateOrder()
+        {         
             return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateOrder(CreateOrderViewModel model)
         {
-            var orderId = await _guestService.CreateOrder(_mapper.Map<CreateOrderViewModel, CreateOrderModel>(model));
-            return View("OrderSent", orderId);
+            if (ModelState.IsValid)
+            {
+                var orderId = await _guestService.CreateOrder(_mapper.Map<CreateOrderViewModel, CreateOrderModel>(model));
+                return View("OrderSent", orderId);
+            }            
+            return View(model);
         }
     }
 }

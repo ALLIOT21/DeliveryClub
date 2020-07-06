@@ -65,7 +65,7 @@
                         <td>
                             @if (ViewBag.OrderStatus != OrderStatus.Declined)
                             {
-                            <button asp-action="SetOrderStatus" sp-route-status="@OrderStatus.Declined" class="btn btn-danger">Decline</button>
+                                <button asp-action="SetOrderStatus" sp-route-status="@OrderStatus.Declined" class="btn btn-danger">Decline</button>
                             }
                             <form asp-action="SetOrderStatus" method="post">
                                 <input type="hidden" name="Id" value="@order.Id" />
@@ -99,9 +99,10 @@
     </table>
 </div>
 <script src="~/js/site/signalr/dist/browser/signalr.min.js"></script>
+<script src="~/js/site/ion-sound/ion.sound.min.js"></script>
 @{
     if (ViewBag.OrderStatus != OrderStatus.Received)
-    { 
+    {
         <script src="~/js/dispatcher/simpleHubConnection.js">
         </script>
     }

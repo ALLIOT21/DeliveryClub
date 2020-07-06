@@ -16,6 +16,8 @@ namespace DeliveryClub.Domain.Models.Entities
 
         public string Comment { get; set; }
 
+        public PaymentMethod PaymentMethod { get; set; }
+
         public DateTime DateTime { get; set; }
 
         public OrderStatus Status { get; set; }

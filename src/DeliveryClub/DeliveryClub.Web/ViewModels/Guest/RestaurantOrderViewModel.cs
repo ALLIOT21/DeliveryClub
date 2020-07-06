@@ -10,8 +10,6 @@ namespace DeliveryClub.Web.ViewModels.Guest
     {
         public int RestaurantId { get; set; }
 
-        public PaymentMethod PaymentMethod { get; set; }
-
         public ICollection<OrderedProductViewModel> Products { get; set; }
     }
 }

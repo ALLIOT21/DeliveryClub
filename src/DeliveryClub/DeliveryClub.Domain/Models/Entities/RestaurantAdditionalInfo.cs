@@ -8,9 +8,7 @@ namespace DeliveryClub.Domain.Models.Entities
     {
         public int Id { get; set; }
 
-        public string Description { get; set; }
-
-        public HashSet<PaymentMethod> PaymentMethods { get; set; }        
+        public string Description { get; set; }    
 
         public TimeSpan? DeliveryMaxTime { get; set; }
 

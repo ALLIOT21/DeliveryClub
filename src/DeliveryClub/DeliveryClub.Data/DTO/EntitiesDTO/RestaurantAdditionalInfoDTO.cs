@@ -7,9 +7,7 @@ namespace DeliveryClub.Data.DTO.EntitiesDTO
     {
         public int Id { get; set; }
 
-        public string Description { get; set; }        
-
-        public virtual HashSet<PaymentMethodDTO> PaymentMethods { get; set; }        
+        public string Description { get; set; }           
 
         public TimeSpan? DeliveryMaxTime { get; set; }
 

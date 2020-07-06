@@ -15,6 +15,8 @@ namespace DeliveryClub.Domain.AuxiliaryModels.Dispatcher
 
         public string PhoneNumber { get; set; }
 
+        public PaymentMethod PaymentMethod { get; set; }
+
         public string Comment { get; set; }
 
         public DateTime DateTime { get; set; }

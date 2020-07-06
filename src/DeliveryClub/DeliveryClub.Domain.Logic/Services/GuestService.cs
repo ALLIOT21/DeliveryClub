@@ -19,7 +19,6 @@ namespace DeliveryClub.Domain.Logic.Services
         private readonly AuxiliaryMapper _auxiliaryMapper;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly RestaurantAdditionalInfoManager _restaurantAdditionalInfoManager;
-        private readonly PaymentMethodManager _paymentMethodManager;
         private readonly OrderManager _orderManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IHubContext<DispatcherNotificationHub> _hubContext;
@@ -29,7 +28,6 @@ namespace DeliveryClub.Domain.Logic.Services
                             RestaurantManager restaurantManager,
                             AuxiliaryMapper auxiliaryMapper,
                             RestaurantAdditionalInfoManager restaurantAdditionalInfoManager,
-                            PaymentMethodManager paymentMethodManager,
                             OrderManager orderManager,
                             IHttpContextAccessor httpContextAccessor,
                             IHubContext<DispatcherNotificationHub> hubContext,
@@ -39,7 +37,6 @@ namespace DeliveryClub.Domain.Logic.Services
             _restaurantManager = restaurantManager;
             _auxiliaryMapper = auxiliaryMapper;
             _restaurantAdditionalInfoManager = restaurantAdditionalInfoManager;
-            _paymentMethodManager = paymentMethodManager;
             _orderManager = orderManager;
             _httpContextAccessor = httpContextAccessor;
             _hubContext = hubContext;
@@ -58,26 +55,7 @@ namespace DeliveryClub.Domain.Logic.Services
         {
             var restaurantFull = _restaurantManager.GetRestaurantFull(id);
             return _auxiliaryMapper.CreateRestaurantFullModel(restaurantFull);
-        }
-
-        public List<NamePaymentModel> GetRestaurantNamePayments(List<int> restaurantIds)
-        {
-            var result = new List<NamePaymentModel>();
-            foreach (var rid in restaurantIds)
-            {
-                var raiId = _restaurantAdditionalInfoManager.GetRestaurantAdditionalInfoId(rid);
-                var name = _restaurantManager.GetRestaurant(rid).Name;
-
-                var npm = new NamePaymentModel
-                {
-                    Name = name,
-                    PaymentMethods = _auxiliaryMapper.CreatePaymentMethodModelList(_paymentMethodManager.GetPaymentMethods(raiId))
-                };
-
-                result.Add(npm);
-            }
-            return result;            
-        }
+        }        
 
         public string GetUserRole()
         {
@@ -111,7 +89,7 @@ namespace DeliveryClub.Domain.Logic.Services
             var order = await _orderManager.CreateOrder(model);
 
             var group = _hubContext.Clients.Group(_dispatcherManager.GetDispatcher(order.DispatcherId).User.Email);
-            await group.SendAsync("ReceiveOrder");
+            await group.SendAsync("ReceiveOrder", "New Order!");
 
             return order.Id;
         }

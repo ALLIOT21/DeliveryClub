@@ -28,7 +28,6 @@ namespace DeliveryClub.Domain.Logic.Managers
         {
             var restaurantOrder = new RestaurantOrder
             {
-                PaymentMethod = model.PaymentMethod,
                 OrderedProducts = new List<OrderedProduct>(),
                 OrderId = id,
                 RestaurantId = model.RestaurantId,                

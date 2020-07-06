@@ -26,12 +26,7 @@ namespace DeliveryClub.Data.Context
             builder
                 .Entity<SpecializationDTO>()
                 .Property(s => s.Specialization)
-                .HasConversion(specializationConverter);
-
-            builder
-                .Entity<PaymentMethodDTO>()
-                .Property(p => p.PaymentMethod)
-                .HasConversion(paymentMethodConverter);
+                .HasConversion(specializationConverter);;
 
             builder
                 .Entity<OrderedProductDTO>()
@@ -65,8 +60,6 @@ namespace DeliveryClub.Data.Context
         public DbSet<RestaurantDTO> Restaurants { get; set; }
 
         public DbSet<SpecializationDTO> Specializations { get; set; }
-
-        public DbSet<PaymentMethodDTO> PaymentMethods { get; set; }
 
         public DbSet<AdminDTO> Admins { get; set; }
 

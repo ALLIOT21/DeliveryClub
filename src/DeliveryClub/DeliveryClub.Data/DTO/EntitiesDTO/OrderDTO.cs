@@ -14,6 +14,8 @@ namespace DeliveryClub.Data.DTO.EntitiesDTO
 
         public string PhoneNumber { get; set; }
 
+        public PaymentMethod PaymentMethod { get; set; }
+
         public string Comment { get; set; }
 
         public OrderStatus Status { get; set; }

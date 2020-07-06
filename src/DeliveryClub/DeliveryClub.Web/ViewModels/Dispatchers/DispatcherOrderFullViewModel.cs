@@ -14,6 +14,8 @@ namespace DeliveryClub.Web.ViewModels.Dispatchers
 
         public string PhoneNumber { get; set; }
 
+        public PaymentMethod PaymentMethod { get; set; }
+
         public string Comment { get; set; }
 
         public DateTime DateTime { get; set; }

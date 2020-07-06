@@ -1,5 +1,5 @@
 ﻿(function createHubConnection() {
-    var dispatcherNotificationHub = new signalR.HubConnectionBuilder()
+    const dispatcherNotificationHub = new signalR.HubConnectionBuilder()
                                         .withUrl("/DispatcherNotification")
                                         .build();
 
@@ -9,11 +9,12 @@
             sounds: [
                 { name: "bell_ring" }
             ],
-            path: "sounds/",
+            path: "/js/site/ion-sound/sounds/",
             preload: true,
-            volume: 1.0
+            volume: 0.3
         });
         ion.sound.play("bell_ring");
+        console.log("tut");
     });
 
     dispatcherNotificationHub.start().then(() => {

@@ -7,8 +7,6 @@ namespace DeliveryClub.Data.DTO.EntitiesDTO
     {
         public int Id { get; set; }
 
-        public PaymentMethod PaymentMethod { get; set; }
-
         public List<OrderedProductDTO> OrderedProducts { get; set; }
 
         public OrderDTO Order { get; set; }

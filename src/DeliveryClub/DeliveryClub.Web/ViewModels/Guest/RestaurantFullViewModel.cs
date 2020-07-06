@@ -18,8 +18,6 @@ namespace DeliveryClub.Web.ViewModels.Guest
 
         public string Description { get; set; }
 
-        public List<PaymentMethodViewModel> PaymentMethods { get; set; }
-
         public string DeliveryMaxTime { get; set; }
 
         public string OrderTimeBegin { get; set; }

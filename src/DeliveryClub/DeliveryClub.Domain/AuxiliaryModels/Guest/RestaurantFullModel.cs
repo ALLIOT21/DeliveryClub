@@ -17,8 +17,6 @@ namespace DeliveryClub.Domain.AuxiliaryModels.Guest
 
         public string Description { get; set; }
 
-        public List<PaymentMethodModel> PaymentMethods { get; set; }
-
         public string DeliveryMaxTime { get; set; }
 
         public string OrderTimeBegin { get; set; }

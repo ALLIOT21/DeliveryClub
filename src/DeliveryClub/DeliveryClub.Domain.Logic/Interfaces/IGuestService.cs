@@ -13,8 +13,6 @@ namespace DeliveryClub.Domain.Logic.Interfaces
 
         RestaurantFullModel GetRestaurantFull(int id);
 
-        List<NamePaymentModel> GetRestaurantNamePayments(List<int> restaurantIds);
-
         Task<int> CreateOrder(CreateOrderModel model);
     }
 }

@@ -20,8 +20,6 @@ namespace DeliveryClub.Web.ViewModels.Admin.Info
 
         public string CoverImageName { get; set; }
 
-        public List<PaymentMethodViewModel> PaymentMethods { get; set; }
-
         public string DeliveryMaxTime { get; set; }
 
         public string OrderTimeBegin { get; set; }

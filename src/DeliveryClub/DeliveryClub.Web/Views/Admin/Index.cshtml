@@ -103,27 +103,7 @@
                         <span class="is-visible inline to-edit" id="display-description">@Model.Description</span>
                         <textarea class="info-input info-textarea non-visible to-edit" asp-for="Description" id="edit-description" rows="3"></textarea>
                     </div>
-                </div>
-                <div class="info-item">
-                    <div class="info-item-title">
-                        <h5>Payment methods: </h5>
-                    </div>
-                    <div class="info-item-content">
-                        @for (int i = 0; i < Model.PaymentMethods.Count; i++)
-                        {
-                            <div class="checkbox">
-                                @Html.CheckBoxFor(m => m.PaymentMethods[i].IsSelected,
-                                    new
-                                    {
-                                        @class = "checkbox-disabled payment-method",
-                                        @disabled = true,
-                                    })
-                                @Html.LabelFor(m => m.PaymentMethods[i].IsSelected, Model.PaymentMethods[i].PaymentMethod.ToString())
-                                @Html.HiddenFor(m => m.PaymentMethods[i].PaymentMethod)
-                            </div>
-                        }
-                    </div>
-                </div>
+                </div>                
                 <div class="info-item">
                     <div class="info-item-title">
                         <h5>Delivery maximum time: </h5>

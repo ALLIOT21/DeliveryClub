@@ -11,7 +11,6 @@ function setEditModeIndex() {
     saveImageSrc();
 
     saveCheckboxValues(getSpecializationList());
-    saveCheckboxValues(getPaymentList());
 
     fillEditFields();
 }
@@ -27,7 +26,6 @@ function setSaveModeIndex() {
     returnImageSrc();
 
     setCheckboxValues(getSpecializationList());
-    setCheckboxValues(getPaymentList());
 }
 
 function toggleVisibilityClassesInListIndex(list)

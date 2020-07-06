@@ -25,7 +25,6 @@ namespace DeliveryClub.Domain.Logic.Mapping
             restaurantInfo.MinimalOrderPrice = restaurant.MinimalOrderPrice;
             restaurantInfo.Description = restaurant.RestaurantAdditionalInfo.Description;
             restaurantInfo.CoverImageName = restaurant.CoverImageName;
-            restaurantInfo.PaymentMethods = CreatePaymentMethodModelList(restaurant.RestaurantAdditionalInfo.PaymentMethods);
             restaurantInfo.DeliveryMaxTime = stringTimeSpanConverter.TimeSpanToString(restaurant.RestaurantAdditionalInfo.DeliveryMaxTime);
             restaurantInfo.OrderTimeBegin = stringTimeSpanConverter.TimeSpanToString(restaurant.RestaurantAdditionalInfo.OrderTimeBegin);
             restaurantInfo.OrderTimeEnd = stringTimeSpanConverter.TimeSpanToString(restaurant.RestaurantAdditionalInfo.OrderTimeEnd);
@@ -171,34 +170,6 @@ namespace DeliveryClub.Domain.Logic.Mapping
             return result;
         }
 
-        public List<PaymentMethodModel> CreatePaymentMethodModelList(HashSet<PaymentMethod> paymentMethods)
-        {
-            var result = new List<PaymentMethodModel>();
-            foreach (var pm in Enum.GetValues(typeof(PaymentMethod)))
-            {
-                if (paymentMethods.Contains((PaymentMethod)pm))
-                {
-                    result.Add(new PaymentMethodModel { PaymentMethod = (PaymentMethod)pm, IsSelected = true });
-                }
-                else
-                {
-                    result.Add(new PaymentMethodModel { PaymentMethod = (PaymentMethod)pm, IsSelected = false });
-                }
-            }
-            return result;
-        }
-        public HashSet<PaymentMethod> CreatePaymentMethodHashSet(List<PaymentMethodModel> paymentMethods)
-        {
-            var result = new HashSet<PaymentMethod>();
-            foreach (var sp in paymentMethods)
-            {
-                if (sp.IsSelected)
-                {
-                    result.Add(sp.PaymentMethod);
-                }
-            }
-            return result;
-        }
 
         public ICollection<RestaurantPartialModel> CreateRestaurantPartialModels(ICollection<Restaurant> restaurants)
         {
@@ -236,7 +207,6 @@ namespace DeliveryClub.Domain.Logic.Mapping
                 Description = restaurant.RestaurantAdditionalInfo.Description,
                 Menu = CreateProductGroupModels(restaurant.Menu),
                 Specializations = CreateSpecializationModelList(restaurant.Specializations),
-                PaymentMethods = CreatePaymentMethodModelList(restaurant.RestaurantAdditionalInfo.PaymentMethods)
             };
 
             return restaurantFullModel;

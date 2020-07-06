@@ -5,9 +5,7 @@ namespace DeliveryClub.Domain.AuxiliaryModels.Guest
 {
     public class RestaurantOrderModel
     {
-        public int RestaurantId { get; set; }
-
-        public PaymentMethod PaymentMethod { get; set; }
+        public int RestaurantId { get; set; }        
 
         public ICollection<OrderedProductModel> Products { get; set; }
     }

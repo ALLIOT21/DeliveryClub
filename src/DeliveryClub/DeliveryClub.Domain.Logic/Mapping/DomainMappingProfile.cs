@@ -19,11 +19,8 @@ namespace DeliveryClub.Domain.Logic.Mapping
             CreateMap<RestaurantDTO, Restaurant>()
                 .ForMember(m => m.Specializations, act => act.Ignore());
 
-            CreateMap<RestaurantAdditionalInfo, RestaurantAdditionalInfoDTO>()
-                .ForMember(m => m.PaymentMethods, act => act.Ignore());
-
-            CreateMap<RestaurantAdditionalInfoDTO, RestaurantAdditionalInfo>()
-                .ForMember(m => m.PaymentMethods, act => act.Ignore());
+            CreateMap<RestaurantAdditionalInfoDTO, RestaurantAdditionalInfo>().
+                ReverseMap();
 
             CreateMap<PortionPrice, PortionPriceDTO>()
                 .ReverseMap();

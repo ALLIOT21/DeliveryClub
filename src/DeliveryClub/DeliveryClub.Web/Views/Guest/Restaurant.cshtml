@@ -24,19 +24,6 @@
             }
         }
     </div>
-    <div class="user-restaurant-full_info__paymentMethods">
-        @foreach (var pm in Model.PaymentMethods)
-        {
-            if (pm.IsSelected)
-            {
-                <div class="payment-method-item">
-                    <span>@WebUtility.HtmlDecode(Symbols.PaymentMethods[pm.PaymentMethod])</span>
-                    <br>
-                    <h6>@pm.PaymentMethod.ToString()</h6>
-                </div>
-            }
-        }
-    </div>
     <div class="user-restaurant-full_info__ib-item">
         <span>@WebUtility.HtmlDecode(Symbols.Truck) @WebUtility.HtmlDecode(Symbols.MoneyBag) Delivery cost: <span id="span_delivery-cost">@Model.DeliveryCost</span> BYN</span>
     </div>

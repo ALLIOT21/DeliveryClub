@@ -14,12 +14,10 @@
             <div class="form-group order_form-item">
                 <h4>Your name</h4>
                 <input asp-for="Name" class="form-control form-control-lg" />
-                <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group order_form-item">
                 <h4>Your phone number</h4>
                 <input asp-for="PhoneNumber" class="form-control form-control-lg" />
-                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
             </div>
             <div class="delivery-address-form-group order_form-item">
                 <h4>Delivery address</h4>
@@ -41,40 +39,30 @@
                         <input asp-for="DeliveryAddress.Flat" class="form-control" />
                     </div>
                 </div>
-                <span asp-validation-for="DeliveryAddress" class="text-danger"></span>
             </div>
             <div>
                 <h4>Payment methods</h4>
                 <div>
-                    @{
-                        int i = 0;
-                        foreach (var npvm in ViewBag.PaymentMethods)
-                        {
-                            <div>
-                            <span>@npvm.Name :</span>
-                            @{ 
-                                foreach (var pm in npvm.PaymentMethods)
-                                {
-                                    if (pm.IsSelected)
-                                    {
-                                    @Html.RadioButton($"Orders[{i}].PaymentMethod", (object)pm.PaymentMethod);
-                                    <span class="mr-2">@pm.PaymentMethod</span>;
-                                    }
-                                }
-                                i++;
+                    @{                        
+                        <div>                            
+                        @{ 
+                            foreach (var pm in Enum.GetNames(typeof(PaymentMethod)))
+                            {                               
+                                @Html.RadioButton("PaymentMethod", (object)Enum.Parse(typeof(PaymentMethod), pm));
+                                <span class="mr-2">@pm</span>;                                
                             }
-                            </div>
                         }
-                    }
+                        </div>
+                    }                    
                 </div>
             </div>
             <div class="form-group">
                 <h4>Comment</h4>
                 <textarea class="form-control order_comment" asp-for="Comment" rows="2"></textarea>
-                <span asp-validation-for="Comment" class="text-danger"></span>
             </div>
         </form>
     </div>
+    <div asp-validation-summary="All" class="text-danger"></div>
     <div class="form-group order-btn-send">
         <button type="submit" value="Create" class="btn btn-primary" onclick="addCartToOrder()">Send</button>
     </div>

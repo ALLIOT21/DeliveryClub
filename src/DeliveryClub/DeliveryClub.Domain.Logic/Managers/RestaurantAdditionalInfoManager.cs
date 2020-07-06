@@ -18,16 +18,13 @@ namespace DeliveryClub.Domain.Logic.Managers
     {
         private readonly ApplicationDbContext _dbContext;
         private readonly Mapper _mapper;
-        private readonly PaymentMethodManager _paymentMethodManager;
         private readonly AuxiliaryMapper _auxiliaryMapper;
 
         public RestaurantAdditionalInfoManager(ApplicationDbContext dbContext,
-                            PaymentMethodManager paymentMethodManager,
                             AuxiliaryMapper auxiliaryMapper)
         {
             _dbContext = dbContext;
             _mapper = new Mapper(Assembly.GetExecutingAssembly());
-            _paymentMethodManager = paymentMethodManager;
             _auxiliaryMapper = auxiliaryMapper;
         }
 
@@ -35,7 +32,6 @@ namespace DeliveryClub.Domain.Logic.Managers
         {
             var restaurantAdditionalInfoDTO = _dbContext.RestaurantAdditionalInfos.Where(rai => rai.RestaurantId == id).FirstOrDefault();
             var restaurantAdditionalInfo = _mapper.Map<RestaurantAdditionalInfoDTO, RestaurantAdditionalInfo>(restaurantAdditionalInfoDTO);
-            restaurantAdditionalInfo.PaymentMethods = _paymentMethodManager.GetPaymentMethods(restaurantAdditionalInfo);
 
             return restaurantAdditionalInfo;
         }
@@ -54,7 +50,6 @@ namespace DeliveryClub.Domain.Logic.Managers
             restaurantAdditionalInfo.OrderTimeBegin = stringTimeSpanConverter.StringToTimeSpan(restaurantInfoModel.OrderTimeBegin);
             restaurantAdditionalInfo.OrderTimeEnd = stringTimeSpanConverter.StringToTimeSpan(restaurantInfoModel.OrderTimeEnd);
             var updateResult = _dbContext.RestaurantAdditionalInfos.Update(_mapper.Map<RestaurantAdditionalInfo, RestaurantAdditionalInfoDTO>(restaurantAdditionalInfo));
-            await _paymentMethodManager.UpdatePaymentMethods(restaurantAdditionalInfo, _auxiliaryMapper.CreatePaymentMethodHashSet(restaurantInfoModel.PaymentMethods));
             return _mapper.Map<RestaurantAdditionalInfoDTO, RestaurantAdditionalInfo>(updateResult.Entity);
         }
     }
