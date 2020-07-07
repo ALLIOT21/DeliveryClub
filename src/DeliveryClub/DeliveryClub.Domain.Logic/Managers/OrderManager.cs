@@ -1,7 +1,6 @@
 ﻿using DeliveryClub.Data.Context;
 using DeliveryClub.Data.DTO.EntitiesDTO;
 using DeliveryClub.Domain.AuxiliaryModels.Guest;
-using DeliveryClub.Domain.Models.Actors;
 using DeliveryClub.Domain.Models.Entities;
 using DeliveryClub.Domain.Models.Enumerations;
 using DeliveryClub.Infrastructure.Mapping;
@@ -36,7 +35,7 @@ namespace DeliveryClub.Domain.Logic.Managers
         public ICollection<Order> GetOrders(OrderStatus orderStatus, int dispId)
         {
             var orders = new List<Order>();
-            foreach (var o in _dbContext.Orders.Where(o => o.DispatcherId == dispId).Where(o => o.Status == orderStatus).ToList())
+            foreach (var o in _dbContext.Orders.Where(o => o.DispatcherId == dispId).Where(o => o.Status == orderStatus).Where(o => o.DateTime.AddHours(3) > DateTime.UtcNow).ToList())
             {
                 orders.Add(_mapper.Map<OrderDTO, Order>(o));
             };
@@ -87,7 +86,7 @@ namespace DeliveryClub.Domain.Logic.Managers
                 Comment = model.Comment,
                 PaymentMethod = model.PaymentMethod,
                 Status = OrderStatus.Received,
-                DateTime = DateTime.Now,
+                DateTime = DateTime.UtcNow,
                 DispatcherId = nextDispatcherId,
             };
 
