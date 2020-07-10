@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Serilog;
+using Serilog.Events;
 using System.Globalization;
 
 namespace DeliveryClub.Web
@@ -46,31 +49,29 @@ namespace DeliveryClub.Web
             services.AddOpenApiDocument();
             services.AddControllersWithViews();
             services.AddAutoMapper(typeof(Startup).Assembly);
-            services.AddSignalR().AddAzureSignalR("Endpoint=https://deliveryclubsignalrfrance.service.signalr.net;AccessKey=1s+MyDDZVCLzsitZItIe6ajsSdglAPOP+l8+zDsRRCg=;Version=1.0;");
+            services.AddSignalR().AddAzureSignalR("Endpoint=https://deliveryclubsignal.service.signalr.net;AccessKey=S0Unq8T/ZsEBZTjYBlZT6CDjNs/+QH4Cfb+czxFRyRA=;Version=1.0;");
 
             services.Configure<SuperUser>(Configuration.GetSection("SuperUser"));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (Configuration.GetSection("ErrorHandlingMode").Value == "development")
+            if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseOpenApi().UseSwaggerUi3();
             }
             else
             {
-                app.UseExceptionHandler();
+                app.UseStatusCodePagesWithReExecute("/Error/{0}");
             }
 
+            app.UseSerilogRequestLogging();
             app.UseHttpsRedirection();
-
             app.UseRouting();
 
             app.UseAuthorization();
             app.UseAuthentication();
             app.UseStaticFiles();
-            app.UseStatusCodePages();
 
             app.UseRequestLocalization();
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
@@ -88,6 +89,7 @@ namespace DeliveryClub.Web
             {
                 endpoints.MapHub<DispatcherNotificationHub>("/DispatcherNotification");
             });
+            
         }
     }
 }

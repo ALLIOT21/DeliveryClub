@@ -89,6 +89,7 @@ namespace DeliveryClub.Domain.Logic.Services
         public async Task<int> CreateOrder(CreateOrderModel model)
         {
             var order = await _orderManager.CreateOrder(model);
+
             var group = _hubContext.Clients.Group(_dispatcherManager.GetDispatcher(order.DispatcherId).User.Email);
             await group.SendAsync("ReceiveOrder", JsonConvert.SerializeObject(new OrderNotificationData
             {

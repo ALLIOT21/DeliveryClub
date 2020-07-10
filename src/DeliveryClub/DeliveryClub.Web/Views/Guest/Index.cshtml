@@ -53,17 +53,6 @@
     }
 </div>
 
-<div class="specialization-list" >
-    @foreach (var sp in Enum.GetNames(typeof(Specialization)))
-    {
-        <div class="specialization-item" onclick="toggleGrayBackground()">
-            <span onclick="toggleGrayBackgroundParent()">@WebUtility.HtmlDecode(Symbols.Specializations[(Specialization)Enum.Parse(typeof(Specialization), sp)])</span>      
-            <br>
-            <h6 onclick="toggleGrayBackgroundParent()">@sp</h6>
-        </div>
-    }    
-</div>
-
 <div class="card-container">
     @if (Model.RestaurantPartialViewModels.Count > 0) 
     { 

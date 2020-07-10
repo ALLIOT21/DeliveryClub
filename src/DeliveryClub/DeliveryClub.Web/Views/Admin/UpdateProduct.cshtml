@@ -60,7 +60,7 @@
             }
             <div class="form-group">
                 <label asp-for="ProductGroupName" class="control-label">Product Group</label>
-                <select asp-for="ProductGroupName" onchange="HasPortionPrices(this)" class="form-control">
+                <select asp-for="ProductGroupName" onload="HasPortionPrices(this)" onchange="HasPortionPrices(this)" class="form-control">
                     @foreach (var opt in ViewBag.ProductGroupNames)
                     {
                         if (Model.ProductGroupName != opt)
