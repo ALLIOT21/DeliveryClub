@@ -43,7 +43,7 @@ namespace DeliveryClub.Domain.Logic.Managers
         public Restaurant GetRestaurant(int id)
         {
             var restaurantDTO = _dbContext.Restaurants.Where(r => r.Id == id).FirstOrDefault();
-            var restaurant = _mapper.Map<RestaurantDTO, Restaurant>(restaurantDTO);
+            var restaurant = _mapper.Map<RestaurantDAO, Restaurant>(restaurantDTO);
             restaurant.RestaurantAdditionalInfo = _restaurantAdditionalInfoManager.GetRestaurantAdditionalInfo(restaurant.Id);
             var specializations = _specializationManager.GetSpecializations(restaurant);
             restaurant.Specializations = specializations;
@@ -54,7 +54,7 @@ namespace DeliveryClub.Domain.Logic.Managers
         public Restaurant GetRestaurantFull(int id)
         {
             var restaurantDTO = _dbContext.Restaurants.Where(r => r.Id == id).FirstOrDefault();
-            var restaurant = _mapper.Map<RestaurantDTO, Restaurant>(restaurantDTO);
+            var restaurant = _mapper.Map<RestaurantDAO, Restaurant>(restaurantDTO);
             restaurant.RestaurantAdditionalInfo = _restaurantAdditionalInfoManager.GetRestaurantAdditionalInfo(restaurant.Id);
             var specializations = _specializationManager.GetSpecializations(restaurant);
             restaurant.Specializations = specializations;
@@ -69,7 +69,7 @@ namespace DeliveryClub.Domain.Logic.Managers
             var result = new List<Restaurant>();
             foreach(var rdto in _dbContext.Restaurants.ToList())
             {
-                var r = _mapper.Map<RestaurantDTO, Restaurant>(rdto);
+                var r = _mapper.Map<RestaurantDAO, Restaurant>(rdto);
 
                 r.Specializations = _specializationManager.GetSpecializations(r);
 
@@ -103,8 +103,8 @@ namespace DeliveryClub.Domain.Logic.Managers
 
             var updateInfoResult = await _restaurantAdditionalInfoManager.UpdateRestaurantAdditionalInfo(restaurant.RestaurantAdditionalInfo, restaurantInfoModel);
             restaurant.RestaurantAdditionalInfo = updateInfoResult;
-            var updateResultDTO = _dbContext.Restaurants.Update(_mapper.Map<Restaurant, RestaurantDTO>(restaurant));
-            var updateResult = _mapper.Map<RestaurantDTO, Restaurant>(updateResultDTO.Entity);
+            var updateResultDTO = _dbContext.Restaurants.Update(_mapper.Map<Restaurant, RestaurantDAO>(restaurant));
+            var updateResult = _mapper.Map<RestaurantDAO, Restaurant>(updateResultDTO.Entity);
             updateResult.Specializations = _specializationManager.GetSpecializations(updateResult);
             updateResult.RestaurantAdditionalInfo = _restaurantAdditionalInfoManager.GetRestaurantAdditionalInfo(updateResult.Id);
             await _dbContext.SaveChangesAsync();

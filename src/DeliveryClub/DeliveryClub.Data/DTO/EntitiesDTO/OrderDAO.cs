@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace DeliveryClub.Data.DTO.EntitiesDTO
 {
-    public class OrderDTO
+    public class OrderDAO
     {
         public int Id { get; set; }
 
@@ -26,6 +26,6 @@ namespace DeliveryClub.Data.DTO.EntitiesDTO
 
         public int? RegisteredUserId { get; set; }
 
-        public List<RestaurantOrderDTO> RestaurantOrders { get; set; }
+        public List<RestaurantOrderDAO> RestaurantOrders { get; set; }
     }
 }

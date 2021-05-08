@@ -35,10 +35,10 @@ namespace DeliveryClub.Domain.Logic.Managers
                 portionPricesProduct.Add(newPortionPriceProduct);
             }
 
-            var portionPricesProductDTO = new List<PortionPriceProductsDTO>();
+            var portionPricesProductDTO = new List<PortionPriceProductsDAO>();
             foreach (var ppp in portionPricesProduct)
             {
-                portionPricesProductDTO.Add(_mapper.Map<PortionPriceProduct, PortionPriceProductsDTO>(ppp));
+                portionPricesProductDTO.Add(_mapper.Map<PortionPriceProduct, PortionPriceProductsDAO>(ppp));
             }
 
             _dbContext.PortionPriceProducts.AddRange(portionPricesProductDTO);
@@ -49,7 +49,7 @@ namespace DeliveryClub.Domain.Logic.Managers
             {
                 result.Add(new PortionPriceProduct
                 {
-                    PortionPrice = _mapper.Map<PortionPriceDTO, PortionPrice>(ppp.PortionPrice)
+                    PortionPrice = _mapper.Map<PortionPriceDAO, PortionPrice>(ppp.PortionPrice)
                 });
             }
 
@@ -65,11 +65,11 @@ namespace DeliveryClub.Domain.Logic.Managers
                 ProductId = product.Id,
             };
 
-            var portionPriceProductDTO = _mapper.Map<PortionPriceProduct, PortionPriceProductsDTO>(newPortionPriceProduct);
+            var portionPriceProductDTO = _mapper.Map<PortionPriceProduct, PortionPriceProductsDAO>(newPortionPriceProduct);
 
             _dbContext.PortionPriceProducts.Add(portionPriceProductDTO);
 
-            var result = _mapper.Map<PortionPriceProductsDTO, PortionPriceProduct>(portionPriceProductDTO);
+            var result = _mapper.Map<PortionPriceProductsDAO, PortionPriceProduct>(portionPriceProductDTO);
 
             return result;
         }
@@ -123,14 +123,14 @@ namespace DeliveryClub.Domain.Logic.Managers
             var result = new List<PortionPriceProduct>();
             foreach (var pppdto in portionPriceProductsDTO)
             {
-                result.Add(_mapper.Map<PortionPriceProductsDTO, PortionPriceProduct>(pppdto));
+                result.Add(_mapper.Map<PortionPriceProductsDAO, PortionPriceProduct>(pppdto));
             }
             return result;
         }
 
         public void DeletePortionPriceProduct(PortionPriceProduct ppp)
         {
-            var pppDTO = _mapper.Map<PortionPriceProduct, PortionPriceProductsDTO>(ppp);
+            var pppDTO = _mapper.Map<PortionPriceProduct, PortionPriceProductsDAO>(ppp);
             _dbContext.PortionPriceProducts.Remove(pppDTO);
             _dbContext.PortionPrices.Remove(pppDTO.PortionPrice);
         }

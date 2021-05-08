@@ -36,7 +36,7 @@ namespace DeliveryClub.Domain.Logic.Managers
             var dispatchers = new List<Dispatcher>();
             foreach (var d in dispatcherDtos)
             {
-                dispatchers.Add(_mapper.Map<DispatcherDTO, Dispatcher>(d));
+                dispatchers.Add(_mapper.Map<DispatcherDAO, Dispatcher>(d));
             }
 
             return dispatchers;
@@ -46,14 +46,14 @@ namespace DeliveryClub.Domain.Logic.Managers
         {
             var dispatcherDto = _dbContext.Dispatchers.Where(d => d.Id == id).Include(d => d.User).FirstOrDefault();
 
-            return _mapper.Map<DispatcherDTO, Dispatcher>(dispatcherDto);
+            return _mapper.Map<DispatcherDAO, Dispatcher>(dispatcherDto);
         }
 
         public Dispatcher GetDispatcher(string id)
         {
             var dispatcherDto = _dbContext.Dispatchers.Where(d => d.UserId == id).FirstOrDefault();
 
-            return _mapper.Map<DispatcherDTO, Dispatcher>(dispatcherDto);
+            return _mapper.Map<DispatcherDAO, Dispatcher>(dispatcherDto);
         }
 
         public async Task<Dispatcher> CreateDispatcher(string userId)
@@ -63,8 +63,8 @@ namespace DeliveryClub.Domain.Logic.Managers
                 UserId = userId,
                 IsActive = false,
             };
-            var result = await _dbContext.Dispatchers.AddAsync(_mapper.Map<Dispatcher, DispatcherDTO>(d));
-            return _mapper.Map<DispatcherDTO, Dispatcher>(result.Entity);
+            var result = await _dbContext.Dispatchers.AddAsync(_mapper.Map<Dispatcher, DispatcherDAO>(d));
+            return _mapper.Map<DispatcherDAO, Dispatcher>(result.Entity);
         }
 
         public async Task<IdentityResult> UpdateDispatcher(UpdateDispatcherModel model)
@@ -102,14 +102,14 @@ namespace DeliveryClub.Domain.Logic.Managers
             var d = GetDispatcher(id);
             d.IsActive = !d.IsActive;
 
-            _dbContext.Dispatchers.Update(_mapper.Map<Dispatcher, DispatcherDTO>(d));
+            _dbContext.Dispatchers.Update(_mapper.Map<Dispatcher, DispatcherDAO>(d));
             await _dbContext.SaveChangesAsync();
         }
 
         public Dispatcher GetNextActiveDispatcher(int prevId)
         {
             var nextDispatcher = _dbContext.Dispatchers.Where(d => d.IsActive).Where(d => d.Id > prevId).OrderBy(d => d.Id).FirstOrDefault();
-            return nextDispatcher != null ? _mapper.Map<DispatcherDTO, Dispatcher>(nextDispatcher) : _mapper.Map<DispatcherDTO, Dispatcher>(_dbContext.Dispatchers.Where(d => d.IsActive).FirstOrDefault());
+            return nextDispatcher != null ? _mapper.Map<DispatcherDAO, Dispatcher>(nextDispatcher) : _mapper.Map<DispatcherDAO, Dispatcher>(_dbContext.Dispatchers.Where(d => d.IsActive).FirstOrDefault());
         }
     }
 }

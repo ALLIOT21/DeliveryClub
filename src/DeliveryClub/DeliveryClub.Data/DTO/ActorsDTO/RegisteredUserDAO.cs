@@ -2,7 +2,7 @@
 
 namespace DeliveryClub.Data.DTO.ActorsDTO
 {
-    public class RegisteredUserDTO
+    public class RegisteredUserDAO
     {
         public int Id { get; set; }
 

@@ -2,7 +2,7 @@
 
 namespace DeliveryClub.Data.DTO.EntitiesDTO
 {
-    public class SpecializationDTO
+    public class SpecializationDAO
     {
         public int Id { get; set; }
 
@@ -10,6 +10,6 @@ namespace DeliveryClub.Data.DTO.EntitiesDTO
 
         public int RestaurantId { get; set; }
 
-        public RestaurantDTO Restaurant { get; set; }
+        public RestaurantDAO Restaurant { get; set; }
     }
 }

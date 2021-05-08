@@ -50,7 +50,7 @@ namespace DeliveryClub.Domain.Logic.Managers
 
         public async Task<int> CreateSpecialization(Restaurant restaurant, Specialization specialization)
         {
-            var specializationDTO = new SpecializationDTO()
+            var specializationDTO = new SpecializationDAO()
             {
                 RestaurantId = restaurant.Id,
                 Specialization = specialization,
@@ -62,7 +62,7 @@ namespace DeliveryClub.Domain.Logic.Managers
 
         public void DeleteSpecialization(Restaurant restaurant, Specialization specialization)
         {
-            var specializationDTO = new SpecializationDTO()
+            var specializationDTO = new SpecializationDAO()
             {
                 RestaurantId = restaurant.Id,
                 Specialization = specialization,

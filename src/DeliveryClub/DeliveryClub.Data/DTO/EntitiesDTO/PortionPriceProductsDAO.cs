@@ -4,14 +4,14 @@ using System.Text;
 
 namespace DeliveryClub.Data.DTO.EntitiesDTO
 {
-    public class PortionPriceProductsDTO
+    public class PortionPriceProductsDAO
     {
         public int ProductId { get; set; }
 
         public int PortionPriceId { get; set; }
 
-        public ProductDTO Product { get; set; }
+        public ProductDAO Product { get; set; }
 
-        public PortionPriceDTO PortionPrice { get; set; }
+        public PortionPriceDAO PortionPrice { get; set; }
     }
 }

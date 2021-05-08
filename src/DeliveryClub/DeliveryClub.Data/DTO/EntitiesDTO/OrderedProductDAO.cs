@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DeliveryClub.Data.DTO.EntitiesDTO
 {
-    public class OrderedProductDTO
+    public class OrderedProductDAO
     {
         public int Amount { get; set; }
 
@@ -14,10 +14,10 @@ namespace DeliveryClub.Data.DTO.EntitiesDTO
 
         public int PortionPriceId { get; set; }
 
-        public RestaurantOrderDTO RestaurantOrder { get; set; }
+        public RestaurantOrderDAO RestaurantOrder { get; set; }
 
-        public ProductDTO Product { get; set; }
+        public ProductDAO Product { get; set; }
 
-        public PortionPriceDTO PortionPrice { get; set; }
+        public PortionPriceDAO PortionPrice { get; set; }
     }
 }

@@ -41,7 +41,7 @@ namespace DeliveryClub.Domain.Logic.Managers
 
             restaurantOrder.OrderedProducts = ops;
 
-            return _mapper.Map<RestaurantOrderDTO, RestaurantOrder>(_dbContext.RestaurantOrders.Add(_mapper.Map<RestaurantOrder, RestaurantOrderDTO>(restaurantOrder)).Entity);
+            return _mapper.Map<RestaurantOrderDAO, RestaurantOrder>(_dbContext.RestaurantOrders.Add(_mapper.Map<RestaurantOrder, RestaurantOrderDAO>(restaurantOrder)).Entity);
         }
 
         public ICollection<RestaurantOrder> GetRestaurantOrders(int orderId)
@@ -51,7 +51,7 @@ namespace DeliveryClub.Domain.Logic.Managers
             var result = new List<RestaurantOrder>();
             foreach(var rodto in rosDTO)
             {
-                var ro = _mapper.Map<RestaurantOrderDTO, RestaurantOrder>(rodto);
+                var ro = _mapper.Map<RestaurantOrderDAO, RestaurantOrder>(rodto);
                 result.Add(ro); 
             }
 

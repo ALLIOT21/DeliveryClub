@@ -2,7 +2,7 @@
 
 namespace DeliveryClub.Data.DTO.EntitiesDTO
 {
-    public class RestaurantDTO
+    public class RestaurantDAO
     {
         public int Id { get; set; }
 
@@ -14,10 +14,10 @@ namespace DeliveryClub.Data.DTO.EntitiesDTO
 
         public string CoverImageName { get; set; }
 
-        public virtual HashSet<SpecializationDTO> Specializations { get; set; }
+        public virtual HashSet<SpecializationDAO> Specializations { get; set; }
 
-        public RestaurantAdditionalInfoDTO Info { get; set; }
+        public RestaurantAdditionalInfoDAO Info { get; set; }
 
-        public HashSet<ProductGroupDTO> Menu { get; set; }
+        public HashSet<ProductGroupDAO> Menu { get; set; }
     }
 }

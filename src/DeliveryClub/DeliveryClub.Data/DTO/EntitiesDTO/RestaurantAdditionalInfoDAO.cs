@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DeliveryClub.Data.DTO.EntitiesDTO
 {
-    public class RestaurantAdditionalInfoDTO
+    public class RestaurantAdditionalInfoDAO
     {
         public int Id { get; set; }
 
@@ -17,6 +17,6 @@ namespace DeliveryClub.Data.DTO.EntitiesDTO
 
         public int RestaurantId { get; set; }
 
-        public RestaurantDTO Restaurant { get; set; }
+        public RestaurantDAO Restaurant { get; set; }
     }
 }
