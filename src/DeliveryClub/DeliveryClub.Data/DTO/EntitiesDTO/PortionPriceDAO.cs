@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DeliveryClub.Data.DTO.EntitiesDTO
 {
-    public class PortionPriceDTO
+    public class PortionPriceDAO
     {
         public int Id { get; set; }
 

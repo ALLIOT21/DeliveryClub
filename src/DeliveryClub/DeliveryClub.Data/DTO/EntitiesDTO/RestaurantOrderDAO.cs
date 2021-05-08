@@ -3,17 +3,17 @@ using System.Collections.Generic;
 
 namespace DeliveryClub.Data.DTO.EntitiesDTO
 {
-    public class RestaurantOrderDTO
+    public class RestaurantOrderDAO
     {
         public int Id { get; set; }
 
-        public List<OrderedProductDTO> OrderedProducts { get; set; }
+        public List<OrderedProductDAO> OrderedProducts { get; set; }
 
-        public OrderDTO Order { get; set; }
+        public OrderDAO Order { get; set; }
 
         public int OrderId { get; set; }
 
-        public RestaurantDTO Restaurant { get; set; }
+        public RestaurantDAO Restaurant { get; set; }
 
         public int RestaurantId { get; set; }
     }

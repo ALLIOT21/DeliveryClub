@@ -6,7 +6,7 @@ using System.Text;
 
 namespace DeliveryClub.Data.DTO.ActorsDTO
 {
-    public class AdminDTO
+    public class AdminDAO
     {
         public int Id { get; set; }
 
@@ -16,6 +16,6 @@ namespace DeliveryClub.Data.DTO.ActorsDTO
 
         public int RestaurantId { get; set; }
 
-        public RestaurantDTO Restaurant { get; set; }                
+        public RestaurantDAO Restaurant { get; set; }                
     }
 }

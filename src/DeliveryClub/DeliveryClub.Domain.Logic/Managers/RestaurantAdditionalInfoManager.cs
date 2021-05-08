@@ -31,7 +31,7 @@ namespace DeliveryClub.Domain.Logic.Managers
         public RestaurantAdditionalInfo GetRestaurantAdditionalInfo(int id)
         {
             var restaurantAdditionalInfoDTO = _dbContext.RestaurantAdditionalInfos.Where(rai => rai.RestaurantId == id).FirstOrDefault();
-            var restaurantAdditionalInfo = _mapper.Map<RestaurantAdditionalInfoDTO, RestaurantAdditionalInfo>(restaurantAdditionalInfoDTO);
+            var restaurantAdditionalInfo = _mapper.Map<RestaurantAdditionalInfoDAO, RestaurantAdditionalInfo>(restaurantAdditionalInfoDTO);
 
             return restaurantAdditionalInfo;
         }
@@ -49,8 +49,8 @@ namespace DeliveryClub.Domain.Logic.Managers
             restaurantAdditionalInfo.DeliveryMaxTime = stringTimeSpanConverter.StringToTimeSpan(restaurantInfoModel.DeliveryMaxTime);
             restaurantAdditionalInfo.OrderTimeBegin = stringTimeSpanConverter.StringToTimeSpan(restaurantInfoModel.OrderTimeBegin);
             restaurantAdditionalInfo.OrderTimeEnd = stringTimeSpanConverter.StringToTimeSpan(restaurantInfoModel.OrderTimeEnd);
-            var updateResult = _dbContext.RestaurantAdditionalInfos.Update(_mapper.Map<RestaurantAdditionalInfo, RestaurantAdditionalInfoDTO>(restaurantAdditionalInfo));
-            return _mapper.Map<RestaurantAdditionalInfoDTO, RestaurantAdditionalInfo>(updateResult.Entity);
+            var updateResult = _dbContext.RestaurantAdditionalInfos.Update(_mapper.Map<RestaurantAdditionalInfo, RestaurantAdditionalInfoDAO>(restaurantAdditionalInfo));
+            return _mapper.Map<RestaurantAdditionalInfoDAO, RestaurantAdditionalInfo>(updateResult.Entity);
         }
     }
 }

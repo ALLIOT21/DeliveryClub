@@ -52,7 +52,7 @@ namespace DeliveryClub.Domain.Logic.Services
             var admins = new List<Admin>();
             foreach (var ad in adminsDto)
             {
-                admins.Add(_mapper.Map<AdminDTO, Admin>(ad));
+                admins.Add(_mapper.Map<AdminDAO, Admin>(ad));
             }
 
             var adminsView = new List<GetAdminModel>();
@@ -173,17 +173,17 @@ namespace DeliveryClub.Domain.Logic.Services
                 RestaurantId = restaurantId,
                 UserId = iuserId,
             };
-            var result = await _dbContext.Admins.AddAsync(_mapper.Map<Admin, AdminDTO>(admin));
-            return _mapper.Map<AdminDTO, Admin>(result.Entity);
+            var result = await _dbContext.Admins.AddAsync(_mapper.Map<Admin, AdminDAO>(admin));
+            return _mapper.Map<AdminDAO, Admin>(result.Entity);
         }
 
         private async Task<Restaurant> CreateRestaurant()
         {
             var restaurant = new Restaurant();
-            var createRestResult = await _dbContext.Restaurants.AddAsync(_mapper.Map<Restaurant, RestaurantDTO>(restaurant));
+            var createRestResult = await _dbContext.Restaurants.AddAsync(_mapper.Map<Restaurant, RestaurantDAO>(restaurant));
             await _dbContext.SaveChangesAsync();
             await CreateRestaurantAdditionalInfo(createRestResult.Entity.Id);
-            return _mapper.Map<RestaurantDTO, Restaurant>(_dbContext.Restaurants.Find(createRestResult.Entity.Id));
+            return _mapper.Map<RestaurantDAO, Restaurant>(_dbContext.Restaurants.Find(createRestResult.Entity.Id));
         }        
 
         private async Task<RestaurantAdditionalInfo> CreateRestaurantAdditionalInfo(int restaurantId)
@@ -192,9 +192,9 @@ namespace DeliveryClub.Domain.Logic.Services
             {
                 RestaurantId = restaurantId,
             };
-            var createResult = await _dbContext.RestaurantAdditionalInfos.AddAsync(_mapper.Map<RestaurantAdditionalInfo, RestaurantAdditionalInfoDTO>(info));
+            var createResult = await _dbContext.RestaurantAdditionalInfos.AddAsync(_mapper.Map<RestaurantAdditionalInfo, RestaurantAdditionalInfoDAO>(info));
             await _dbContext.SaveChangesAsync();
-            return _mapper.Map<RestaurantAdditionalInfoDTO, RestaurantAdditionalInfo>(createResult.Entity);
+            return _mapper.Map<RestaurantAdditionalInfoDAO, RestaurantAdditionalInfo>(createResult.Entity);
            
         }
 

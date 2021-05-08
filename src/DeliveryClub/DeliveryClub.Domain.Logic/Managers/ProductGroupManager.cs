@@ -37,11 +37,11 @@ namespace DeliveryClub.Domain.Logic.Managers
                 Name = model.Name,
                 RestaurantId = restaurant.Id,
             };
-            var newProductGroupDTO = _dbContext.ProductGroups.Add(_mapper.Map<ProductGroup, ProductGroupDTO>(newProductGroup));
+            var newProductGroupDTO = _dbContext.ProductGroups.Add(_mapper.Map<ProductGroup, ProductGroupDAO>(newProductGroup));
             _dbContext.SaveChanges();
             
             var portionPrices = _portionPriceManager.CreatePortionPrices(model.PortionPrices);
-            var portionPricesProductGroup = _portionPriceProductGroupManager.CreatePortionPricesProductGroup(portionPrices, _mapper.Map<ProductGroupDTO, ProductGroup>(newProductGroupDTO.Entity)).ToHashSet();
+            var portionPricesProductGroup = _portionPriceProductGroupManager.CreatePortionPricesProductGroup(portionPrices, _mapper.Map<ProductGroupDAO, ProductGroup>(newProductGroupDTO.Entity)).ToHashSet();
 
             newProductGroup.PortionPrices = portionPricesProductGroup;
             return newProductGroup;
@@ -65,7 +65,7 @@ namespace DeliveryClub.Domain.Logic.Managers
             var productGroups = new List<ProductGroup>();
             foreach (var pgdto in productGroupsDTO)
             {
-                var productGroup = _mapper.Map<ProductGroupDTO, ProductGroup>(pgdto);
+                var productGroup = _mapper.Map<ProductGroupDAO, ProductGroup>(pgdto);
                 productGroup.Products = _productManager.GetProducts(productGroup.Id).ToHashSet();
                 productGroups.Add(productGroup);
             }           
@@ -76,16 +76,16 @@ namespace DeliveryClub.Domain.Logic.Managers
         public async Task UpdateProductGroup(ProductGroupModel model)
         {
             var productGroupDTO = GetProductGroupDTOById(model.Id);
-            var productGroup = _mapper.Map<ProductGroupDTO, ProductGroup>(productGroupDTO);
+            var productGroup = _mapper.Map<ProductGroupDAO, ProductGroup>(productGroupDTO);
 
             productGroup.Name = model.Name;
             var portionPrices = _portionPriceManager.CreatePortionPrices(model.PortionPrices);
             _portionPriceProductGroupManager.UpdatePortionPricesProductGroup(portionPrices, productGroup);
-            _dbContext.ProductGroups.Update(_mapper.Map<ProductGroup, ProductGroupDTO>(productGroup));
+            _dbContext.ProductGroups.Update(_mapper.Map<ProductGroup, ProductGroupDAO>(productGroup));
             await _dbContext.SaveChangesAsync();
         }
 
-        public ProductGroupDTO GetProductGroupDTOById(int id)
+        public ProductGroupDAO GetProductGroupDTOById(int id)
         {
             var result = _dbContext.ProductGroups.Where(pg => pg.Id == id)
                 .FirstOrDefault();
@@ -122,7 +122,7 @@ namespace DeliveryClub.Domain.Logic.Managers
         {
             var productGroupDTO = _dbContext.ProductGroups.Where(pg => pg.RestaurantId == restaurantId)
                                                           .Where(pg => pg.Name == name).FirstOrDefault();
-            return _mapper.Map<ProductGroupDTO, ProductGroup>(productGroupDTO);
+            return _mapper.Map<ProductGroupDAO, ProductGroup>(productGroupDTO);
         }
     }
 }

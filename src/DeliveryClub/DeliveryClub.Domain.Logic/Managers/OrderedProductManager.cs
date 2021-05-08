@@ -39,7 +39,7 @@ namespace DeliveryClub.Domain.Logic.Managers
             var result = new List<OrderedProduct>();
             foreach(var opDTO in opsDTO)
             {
-                var op = _mapper.Map<OrderedProductDTO, OrderedProduct>(opDTO);
+                var op = _mapper.Map<OrderedProductDAO, OrderedProduct>(opDTO);
                 result.Add(op);
             }
 

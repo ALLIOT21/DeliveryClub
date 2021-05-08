@@ -22,7 +22,7 @@ namespace DeliveryClub.Domain.Logic.Managers
         public Admin GetAdmin(string id)
         {
             var admin = _dbContext.Admins.Where(a => a.UserId == id).FirstOrDefault();
-            return _mapper.Map<AdminDTO, Admin>(admin);
+            return _mapper.Map<AdminDAO, Admin>(admin);
         }
     }
 }

@@ -35,10 +35,10 @@ namespace DeliveryClub.Domain.Logic.Managers
                 portionPricesProductGroup.Add(newPortionPriceProductGroup);
             }
 
-            var portionPricesProductGroupDTO = new List<PortionPriceProductGroupsDTO>();
+            var portionPricesProductGroupDTO = new List<PortionPriceProductGroupsDAO>();
             foreach (var pppg in portionPricesProductGroup)
             {
-                portionPricesProductGroupDTO.Add(_mapper.Map<PortionPriceProductGroup, PortionPriceProductGroupsDTO>(pppg));
+                portionPricesProductGroupDTO.Add(_mapper.Map<PortionPriceProductGroup, PortionPriceProductGroupsDAO>(pppg));
             }
 
             _dbContext.PortionPriceProductGroups.AddRange(portionPricesProductGroupDTO);
@@ -46,7 +46,7 @@ namespace DeliveryClub.Domain.Logic.Managers
             var result = new List<PortionPriceProductGroup>();
             foreach (var pppg in portionPricesProductGroupDTO)
             {
-                result.Add(_mapper.Map<PortionPriceProductGroupsDTO, PortionPriceProductGroup>(pppg));
+                result.Add(_mapper.Map<PortionPriceProductGroupsDAO, PortionPriceProductGroup>(pppg));
             }
 
             return result;
@@ -61,11 +61,11 @@ namespace DeliveryClub.Domain.Logic.Managers
                 ProductGroupId = productGroup.Id,
             };
 
-            var portionPriceProductGroupDTO = _mapper.Map<PortionPriceProductGroup, PortionPriceProductGroupsDTO>(newPortionPriceProductGroup);
+            var portionPriceProductGroupDTO = _mapper.Map<PortionPriceProductGroup, PortionPriceProductGroupsDAO>(newPortionPriceProductGroup);
 
             _dbContext.PortionPriceProductGroups.Add(portionPriceProductGroupDTO);
 
-            var result = _mapper.Map<PortionPriceProductGroupsDTO, PortionPriceProductGroup>(portionPriceProductGroupDTO);
+            var result = _mapper.Map<PortionPriceProductGroupsDAO, PortionPriceProductGroup>(portionPriceProductGroupDTO);
 
             return result;
         }
@@ -118,14 +118,14 @@ namespace DeliveryClub.Domain.Logic.Managers
             var result = new List<PortionPriceProductGroup>();
             foreach (var pppgDTO in pppgsDTO)
             {
-                result.Add(_mapper.Map<PortionPriceProductGroupsDTO, PortionPriceProductGroup>(pppgDTO));
+                result.Add(_mapper.Map<PortionPriceProductGroupsDAO, PortionPriceProductGroup>(pppgDTO));
             }
             return result;
         }
 
         public void DeletePortionPriceProductGroup(PortionPriceProductGroup pppg)
         {
-            var pppgDTO = _mapper.Map<PortionPriceProductGroup, PortionPriceProductGroupsDTO>(pppg);
+            var pppgDTO = _mapper.Map<PortionPriceProductGroup, PortionPriceProductGroupsDAO>(pppg);
             _dbContext.PortionPriceProductGroups.Remove(pppgDTO);
             _dbContext.PortionPrices.Remove(pppgDTO.PortionPrice);
         }

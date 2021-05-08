@@ -10,43 +10,43 @@ namespace DeliveryClub.Domain.Logic.Mapping
     {
         public DomainMappingProfile()
         {
-            CreateMap<Admin, AdminDTO>()
+            CreateMap<Admin, AdminDAO>()
                 .ReverseMap();
 
-            CreateMap<Restaurant, RestaurantDTO>()
+            CreateMap<Restaurant, RestaurantDAO>()
                 .ForMember(m => m.Specializations, act => act.Ignore());
 
-            CreateMap<RestaurantDTO, Restaurant>()
+            CreateMap<RestaurantDAO, Restaurant>()
                 .ForMember(m => m.Specializations, act => act.Ignore());
 
-            CreateMap<RestaurantAdditionalInfoDTO, RestaurantAdditionalInfo>().
+            CreateMap<RestaurantAdditionalInfoDAO, RestaurantAdditionalInfo>().
                 ReverseMap();
 
-            CreateMap<PortionPrice, PortionPriceDTO>()
+            CreateMap<PortionPrice, PortionPriceDAO>()
                 .ReverseMap();
 
-            CreateMap<PortionPriceProductGroup, PortionPriceProductGroupsDTO>()
+            CreateMap<PortionPriceProductGroup, PortionPriceProductGroupsDAO>()
                 .ReverseMap();
 
-            CreateMap<ProductGroup, ProductGroupDTO>()
+            CreateMap<ProductGroup, ProductGroupDAO>()
                 .ReverseMap();
 
-            CreateMap<Product, ProductDTO>()
+            CreateMap<Product, ProductDAO>()
                 .ReverseMap();
 
-            CreateMap<PortionPriceProduct, PortionPriceProductsDTO>()
+            CreateMap<PortionPriceProduct, PortionPriceProductsDAO>()
                 .ReverseMap();
 
-            CreateMap<Dispatcher, DispatcherDTO>()
+            CreateMap<Dispatcher, DispatcherDAO>()
                 .ReverseMap();
 
-            CreateMap<Order, OrderDTO>()
+            CreateMap<Order, OrderDAO>()
                 .ReverseMap();
 
-            CreateMap<RestaurantOrder, RestaurantOrderDTO>()
+            CreateMap<RestaurantOrder, RestaurantOrderDAO>()
                 .ReverseMap();
 
-            CreateMap<OrderedProduct, OrderedProductDTO>()
+            CreateMap<OrderedProduct, OrderedProductDAO>()
                 .ReverseMap();
         }
     }

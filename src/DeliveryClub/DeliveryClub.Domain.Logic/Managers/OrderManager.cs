@@ -37,14 +37,14 @@ namespace DeliveryClub.Domain.Logic.Managers
             var orders = new List<Order>();
             foreach (var o in _dbContext.Orders.Where(o => o.DispatcherId == dispId).Where(o => o.Status == orderStatus).Where(o => o.DateTime.AddHours(3) > DateTime.UtcNow).ToList())
             {
-                orders.Add(_mapper.Map<OrderDTO, Order>(o));
+                orders.Add(_mapper.Map<OrderDAO, Order>(o));
             };
             return orders;
         }
 
         public Order GetOrder(int id)
         {
-            return _mapper.Map<OrderDTO, Order>(_dbContext.Orders.Where(o => o.Id == id).FirstOrDefault());
+            return _mapper.Map<OrderDAO, Order>(_dbContext.Orders.Where(o => o.Id == id).FirstOrDefault());
         }
 
         public Order GetFullOrder(int id)
@@ -64,7 +64,7 @@ namespace DeliveryClub.Domain.Logic.Managers
         public async Task SetOrderStatus(Order order, OrderStatus orderStatus)
         {
             order.Status = orderStatus;
-            _dbContext.Orders.Update(_mapper.Map<Order, OrderDTO>(order));
+            _dbContext.Orders.Update(_mapper.Map<Order, OrderDAO>(order));
             await _dbContext.SaveChangesAsync();
         }
 
@@ -90,7 +90,7 @@ namespace DeliveryClub.Domain.Logic.Managers
                 DispatcherId = nextDispatcherId,
             };
 
-            var newOrder = _dbContext.Orders.Add(_mapper.Map<Order, OrderDTO>(order)).Entity;
+            var newOrder = _dbContext.Orders.Add(_mapper.Map<Order, OrderDAO>(order)).Entity;
             _dbContext.SaveChanges();
 
             foreach(var ro in model.Orders)
@@ -99,12 +99,12 @@ namespace DeliveryClub.Domain.Logic.Managers
             }
 
             await _dbContext.SaveChangesAsync();
-            return _mapper.Map<OrderDTO, Order>(newOrder);
+            return _mapper.Map<OrderDAO, Order>(newOrder);
         }
 
         public Order GetLastOrder()
         {
-            return _mapper.Map<OrderDTO, Order>(_dbContext.Orders.OrderByDescending(p => p.Id).FirstOrDefault());
+            return _mapper.Map<OrderDAO, Order>(_dbContext.Orders.OrderByDescending(p => p.Id).FirstOrDefault());
         }
     }
 }

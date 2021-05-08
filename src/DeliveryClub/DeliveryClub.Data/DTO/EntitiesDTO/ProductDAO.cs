@@ -2,7 +2,7 @@
 
 namespace DeliveryClub.Data.DTO.EntitiesDTO
 {
-    public class ProductDTO
+    public class ProductDAO
     {
         public int Id { get; set; }
 
@@ -12,10 +12,10 @@ namespace DeliveryClub.Data.DTO.EntitiesDTO
 
         public string ImageName { get; set; }
 
-        public HashSet<PortionPriceProductsDTO> PortionPrices { get; set; }
+        public HashSet<PortionPriceProductsDAO> PortionPrices { get; set; }
 
         public int ProductGroupId { get; set; }
 
-        public ProductGroupDTO ProductGroup { get; set; }
+        public ProductGroupDAO ProductGroup { get; set; }
     }
 }
