@@ -43,12 +43,10 @@ namespace DeliveryClub.Domain.Logic.Managers
 
         public async Task<RestaurantAdditionalInfo> UpdateRestaurantAdditionalInfo(RestaurantAdditionalInfo restaurantAdditionalInfo, RestaurantInfoModel restaurantInfoModel)
         {
-            var stringTimeSpanConverter = new StringTimeSpanConverter();
-
             restaurantAdditionalInfo.Description = restaurantInfoModel.Description;
-            restaurantAdditionalInfo.DeliveryMaxTime = stringTimeSpanConverter.StringToTimeSpan(restaurantInfoModel.DeliveryMaxTime);
-            restaurantAdditionalInfo.OrderTimeBegin = stringTimeSpanConverter.StringToTimeSpan(restaurantInfoModel.OrderTimeBegin);
-            restaurantAdditionalInfo.OrderTimeEnd = stringTimeSpanConverter.StringToTimeSpan(restaurantInfoModel.OrderTimeEnd);
+            restaurantAdditionalInfo.DeliveryMaxTime = StringTimeSpanConverter.StringToTimeSpan(restaurantInfoModel.DeliveryMaxTime);
+            restaurantAdditionalInfo.OrderTimeBegin = StringTimeSpanConverter.StringToTimeSpan(restaurantInfoModel.OrderTimeBegin);
+            restaurantAdditionalInfo.OrderTimeEnd = StringTimeSpanConverter.StringToTimeSpan(restaurantInfoModel.OrderTimeEnd);
             var updateResult = _dbContext.RestaurantAdditionalInfos.Update(_mapper.Map<RestaurantAdditionalInfo, RestaurantAdditionalInfoDAO>(restaurantAdditionalInfo));
             return _mapper.Map<RestaurantAdditionalInfoDAO, RestaurantAdditionalInfo>(updateResult.Entity);
         }

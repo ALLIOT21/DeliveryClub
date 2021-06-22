@@ -4,9 +4,9 @@ using System.Text;
 
 namespace DeliveryClub.Domain.Logic
 {
-    public class StringTimeSpanConverter
+    public static class StringTimeSpanConverter
     {
-        public string TimeSpanToString(TimeSpan? timeSpan)
+        public static string TimeSpanToString(TimeSpan? timeSpan)
         {
             if (timeSpan.HasValue)
             {
@@ -18,7 +18,7 @@ namespace DeliveryClub.Domain.Logic
                 return "";
         }
 
-        public TimeSpan? StringToTimeSpan(string time)
+        public static TimeSpan? StringToTimeSpan(string time)
         {
             if (time != null)
             {

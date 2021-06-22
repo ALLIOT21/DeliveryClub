@@ -58,7 +58,5 @@ namespace DeliveryClub.Web.Controllers
             }
             return dovms;
         }
-
-
     }
 }

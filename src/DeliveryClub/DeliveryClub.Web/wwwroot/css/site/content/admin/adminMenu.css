@@ -196,14 +196,15 @@ input-edit-product_group-price {
     margin-top: 1vh;
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
 }
 
 .product-portion {
-    flex-grow: 1;
+    display: block;
 }
 
 .product-price {
-    flex-grow: 1;
+    display: block;
     text-align: right;
 }
 

@@ -37,13 +37,13 @@
     height: 20px;
     text-align: center;
     vertical-align: central;
+    font-weight: 900;
+    font-size: 13px;
 }
 
 .product-details {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
+    display: grid;
+    grid-template-columns : 1fr 1fr 1fr;
 }
 
 

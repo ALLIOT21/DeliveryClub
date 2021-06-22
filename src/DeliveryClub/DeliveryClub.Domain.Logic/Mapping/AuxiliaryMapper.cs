@@ -17,7 +17,6 @@ namespace DeliveryClub.Domain.Logic.Mapping
         public RestaurantInfoModel CreateRestaurantInfoModel(Restaurant restaurant)
         {
             var restaurantInfo = new RestaurantInfoModel();
-            var stringTimeSpanConverter = new StringTimeSpanConverter();
 
             restaurantInfo.Name = restaurant.Name;
             restaurantInfo.Specializations = CreateSpecializationModelList(restaurant.Specializations);
@@ -25,9 +24,9 @@ namespace DeliveryClub.Domain.Logic.Mapping
             restaurantInfo.MinimalOrderPrice = restaurant.MinimalOrderPrice;
             restaurantInfo.Description = restaurant.RestaurantAdditionalInfo.Description;
             restaurantInfo.CoverImageName = restaurant.CoverImageName;
-            restaurantInfo.DeliveryMaxTime = stringTimeSpanConverter.TimeSpanToString(restaurant.RestaurantAdditionalInfo.DeliveryMaxTime);
-            restaurantInfo.OrderTimeBegin = stringTimeSpanConverter.TimeSpanToString(restaurant.RestaurantAdditionalInfo.OrderTimeBegin);
-            restaurantInfo.OrderTimeEnd = stringTimeSpanConverter.TimeSpanToString(restaurant.RestaurantAdditionalInfo.OrderTimeEnd);
+            restaurantInfo.DeliveryMaxTime = StringTimeSpanConverter.TimeSpanToString(restaurant.RestaurantAdditionalInfo.DeliveryMaxTime);
+            restaurantInfo.OrderTimeBegin = StringTimeSpanConverter.TimeSpanToString(restaurant.RestaurantAdditionalInfo.OrderTimeBegin);
+            restaurantInfo.OrderTimeEnd = StringTimeSpanConverter.TimeSpanToString(restaurant.RestaurantAdditionalInfo.OrderTimeEnd);
             return restaurantInfo;
         }
 
@@ -193,17 +192,15 @@ namespace DeliveryClub.Domain.Logic.Mapping
 
         public RestaurantFullModel CreateRestaurantFullModel(Restaurant restaurant)
         {
-            var stringTimeSpanConverter = new StringTimeSpanConverter();
-
             var restaurantFullModel = new RestaurantFullModel
             {
                 Id = restaurant.Id,
                 Name = restaurant.Name,
                 DeliveryCost = restaurant.DeliveryCost,
                 MinimalOrderPrice = restaurant.MinimalOrderPrice,
-                DeliveryMaxTime = stringTimeSpanConverter.TimeSpanToString(restaurant.RestaurantAdditionalInfo.DeliveryMaxTime),
-                OrderTimeBegin = stringTimeSpanConverter.TimeSpanToString(restaurant.RestaurantAdditionalInfo.OrderTimeBegin),
-                OrderTimeEnd = stringTimeSpanConverter.TimeSpanToString(restaurant.RestaurantAdditionalInfo.OrderTimeEnd),
+                DeliveryMaxTime = StringTimeSpanConverter.TimeSpanToString(restaurant.RestaurantAdditionalInfo.DeliveryMaxTime),
+                OrderTimeBegin = StringTimeSpanConverter.TimeSpanToString(restaurant.RestaurantAdditionalInfo.OrderTimeBegin),
+                OrderTimeEnd = StringTimeSpanConverter.TimeSpanToString(restaurant.RestaurantAdditionalInfo.OrderTimeEnd),
                 Description = restaurant.RestaurantAdditionalInfo.Description,
                 Menu = CreateProductGroupModels(restaurant.Menu),
                 Specializations = CreateSpecializationModelList(restaurant.Specializations),
